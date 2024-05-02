@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.5-SNAPSHOT'
+	id 'fabric-loom' version '1.6-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -67,7 +67,6 @@ dependencies {
 	var modrinthList = List.of(
 			project.modmenu_version,
 			project.voicechat_version,
-			project.pehkui_version,
 			project.command_block_ide_version,
 			project.axiom_version
 	)
