@@ -37,7 +37,6 @@ import static dev.magyul.util.ClientUtil.cs;
 public class MTWModClient implements ClientModInitializer {
 	public static MTWModClient instance;
 	private boolean last100 = false;
-	public OverlayScreen overlayScreen;
 
 	private MinecraftClient client;
 
@@ -76,29 +75,6 @@ public class MTWModClient implements ClientModInitializer {
 
 		};
 		CNetwork.register();
-	}
-
-	public void setOverlayScreen(OverlayScreen screen) {
-		if (overlayScreen != null) {
-			overlayScreen.removed();
-		}
-
-		overlayScreen = screen;
-		if (overlayScreen != null) {
-			overlayScreen.onDisplayed();
-		}
-
-		BufferRenderer.reset();
-		if (screen != null) {
-			client.mouse.unlockCursor();
-			KeyBinding.unpressAll();
-			screen.init(client, client.getWindow().getScaledWidth(), client.getWindow().getScaledHeight());
-		} else {
-			if (client.currentScreen == null) {
-				client.getSoundManager().resumeAll();
-				client.mouse.lockCursor();
-			}
-		}
 	}
 
 	public void onChangeScreen(Screen screen) {
@@ -206,9 +182,5 @@ public class MTWModClient implements ClientModInitializer {
 				ClientPlayNetworking.send(new ErrorBlockUpdateC2SPacket(hand, level));
 			}
 		}
-	}
-
-	public static boolean checkOverlayUsed() {
-		return instance != null && instance.overlayScreen != null;
 	}
 }

@@ -1,6 +1,5 @@
 package dev.magyul.mixin.client.cocoainput;
 
-import arm32x.minecraft.commandblockide.client.gui.MultilineTextFieldWidget;
 import dev.magyul.others.cocoainput.util.Util;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -9,12 +8,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(MultilineTextFieldWidget.class)
+@Mixin(targets = "arm32x.minecraft.commandblockide.client.gui.MultilineTextFieldWidget")
 public class MultilineTextFieldWidgetMixin extends TextFieldWidgetMixin {
 
     @Inject(method = "renderWidget", at = @At(value = "INVOKE", target = "Larm32x/minecraft/commandblockide/client/gui/MultilineTextFieldWidget;isFocused()Z", ordinal = 2, shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
@@ -26,14 +24,15 @@ public class MultilineTextFieldWidgetMixin extends TextFieldWidgetMixin {
         }
     }
 
-    @Redirect(method = "renderWidget", at = @At(value = "INVOKE", target = "Larm32x/minecraft/commandblockide/client/gui/MultilineTextFieldWidget;isFocused()Z", ordinal = 1))
-    private boolean renderWidget(MultilineTextFieldWidget instance) {
-        if (wrapper.cursorVisible) {
-            return instance.isFocused();
-        } else {
-            return false;
-        }
-    }
+    // TODO: 모드 업데이트 되면 활성화!
+//    @Redirect(method = "renderWidget", at = @At(value = "INVOKE", target = "Larm32x/minecraft/commandblockide/client/gui/MultilineTextFieldWidget;isFocused()Z", ordinal = 1))
+//    private boolean renderWidget(arm32x.minecraft.commandblockide.client.gui.MultilineTextFieldWidget instance) {
+//        if (wrapper.cursorVisible) {
+//            return instance.isFocused();
+//        } else {
+//            return false;
+//        }
+//    }
 
     @Inject(method = "keyPressed", at = @At("HEAD"))
     private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {

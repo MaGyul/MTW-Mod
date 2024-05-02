@@ -47,7 +47,7 @@ public class ServerHandshakeNetworkHandlerMixin {
 
     @Unique
     private void rejectConnection(Text message) {
-        connection.setS2CPacketHandler(ConnectionIntent.LOGIN);
+//        connection.setS2CPacketHandler(ConnectionIntent.LOGIN);
         connection.send(new LoginDisconnectS2CPacket(message));
         connection.disconnect(message);
     }

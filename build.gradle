@@ -67,7 +67,6 @@ dependencies {
 	var modrinthList = List.of(
 			project.modmenu_version,
 			project.voicechat_version,
-			project.command_block_ide_version,
 			project.axiom_version
 	)
 
