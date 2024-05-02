@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "mtwmod:block/spruce_large_hall/spruce_large_hall",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "mtwmod:block/spruce_large_hall/spruce_large_hall"
+    },
+    "facing=south": {
+      "model": "mtwmod:block/spruce_large_hall/spruce_large_hall",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mtwmod:block/spruce_large_hall/spruce_large_hall",
+      "y": 270
+    }
+  }
+}

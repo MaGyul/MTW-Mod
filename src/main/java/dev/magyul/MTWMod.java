@@ -1,0 +1,192 @@
+package dev.magyul;
+
+import dev.magyul.blocks.ErrorBlock;
+import dev.magyul.data.ChunkData;
+import dev.magyul.data.PlayerData;
+import dev.magyul.data.WorldData;
+import dev.magyul.events.LivingEntityEvents;
+import dev.magyul.network.SNetwork;
+import dev.magyul.registers.*;
+import dev.magyul.util.ServerUtil;
+import dev.magyul.world.DevelopDimensions;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.player.*;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.GameMode;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.event.GameEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import virtuoel.pehkui.api.ScaleTypes;
+
+import java.util.Timer;
+
+import static java.lang.String.format;
+import static net.minecraft.text.Text.literal;
+
+public class MTWMod implements ModInitializer {
+    public static final Logger LOGGER = LoggerFactory.getLogger(MTWMod.class);
+	public static final String ID = "mtwmod";
+	public static String VERSION = "1.0.0";
+	@NotNull
+	public static String SERVER_VERSION = "none";
+	private static Timer regionViewer;
+
+	@Override
+	public void onInitialize() {
+		for (final var mod : FabricLoader.getInstance().getAllMods()) {
+			var metadata = mod.getMetadata();
+			if (metadata.getId().equals(MTWMod.ID)) {
+				var version = metadata.getVersion();
+				LOGGER.info("Found version: {}", version.getFriendlyString());
+				VERSION = version.getFriendlyString();
+			}
+		}
+
+		MTWBlocks.init();
+		MTWBlockEntities.init();
+		MTWItems.init();
+		MTWSounds.init();
+		MTWTags.init();
+		Other.init();
+		SNetwork.register();
+		CommandRegistrationCallback.EVENT.register(MTWCommands::register);
+		DevelopDimensions.register();
+
+		LivingEntityEvents.EQUIPMENT_CHANGE.register((entity, slot, from, to) -> {
+			if (entity instanceof PlayerEntity player) {
+				if  (to.isOf(MTWItems.ERROR_BLOCK)) {
+					var level = ErrorBlock.getLightOnStack(to);
+					player.sendMessage(Text.translatable("item.mtwmod.error_block_light", level), true);
+				}
+			}
+		});
+		AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> onClickBlock(player, hand, null));
+		UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> onClickBlock(player, hand, hitResult));
+		ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
+			if (oldPlayer.getWorld().getGameRules().getBoolean(GameRules.KEEP_INVENTORY)) {
+				return;
+			}
+
+			if (PlayerData.hasCarryState(oldPlayer)) {
+				var world = oldPlayer.getServerWorld();
+				oldPlayer.getInventory().armor.set(3, Items.AIR.getDefaultStack());
+				var carry = PlayerData.getCarryState(oldPlayer);
+				var context = new ItemPlacementContext(oldPlayer, Hand.MAIN_HAND, ItemStack.EMPTY, BlockHitResult.createMissed(Vec3d.ofCenter(oldPlayer.getBlockPos()), Direction.DOWN, oldPlayer.getBlockPos()));
+				var state = ServerUtil.getPlacementState(carry, oldPlayer, context, oldPlayer.getBlockPos());
+				var pos = ServerUtil.getDeathPlacementPos(state, oldPlayer);
+				var blockEntity = PlayerData.getCarryTile(oldPlayer, pos);
+				world.setBlockState(pos, state, 3);
+				if (blockEntity != null) {
+					world.addBlockEntity(blockEntity);
+				}
+				PlayerData.setCarryState(oldPlayer, null, null);
+			}
+		});
+		UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+//			LOGGER.info("{}, {}", entity.getClass().getName(), hitResult);
+			return ActionResult.PASS;
+		});
+		ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
+			if (entity instanceof ItemEntity) {
+				var data = ScaleTypes.BASE.getScaleData(entity);
+				data.setScaleTickDelay(0);
+				data.setScale(3f);
+			}
+		});
+		ServerLifecycleEvents.SERVER_STARTED.register(this::onServerStarted);
+		ServerLifecycleEvents.SERVER_STOPPING.register(this::onServerStopping);
+	}
+
+	private void onServerStarted(MinecraftServer server) {
+		regionViewer = ServerUtil.setInterval(() -> {
+			var pm = server.getPlayerManager();
+			for (var player : pm.getPlayerList()) {
+				if (!player.isCreative()) continue;
+				var mainHand = player.getMainHandStack();
+				if (mainHand.isOf(MTWItems.MTW_REGION_VIEWER)) {
+					var worldData = WorldData.get(player.getServerWorld());
+					var data = worldData.getChunkData(player.getBlockPos());
+                    var first = data.getFirst();
+                    var second = data.getSecond();
+                    MutableText text = literal("월드(").append(worldData.toString()).append(")\n");
+                    if (first != null && second != null) {
+                        text.append("현재 청크");
+						text.append(data.toString());
+						text.append("는 ");
+                        text.append(literal(format("%s %s", first, second)).styled(style -> style.withUnderline(true)));
+                        text.append(literal("입니다.").styled(style -> style.withUnderline(false)));
+                    } else {
+						text.append("현재 청크");
+						text.append(data.toString());
+						text.append("는 지역이 정해져 있지 않습니다.");
+                    }
+                    player.sendMessage(text, true);
+                }
+			}
+		}, 50);
+	}
+
+	private void onServerStopping(MinecraftServer server) {
+		ServerUtil.cancelTimer(regionViewer);
+	}
+
+	public static ActionResult onCarryUse(ServerPlayerEntity player) {
+		var inventory = player.getInventory();
+		var stack = PlayerData.getCarryItem(player);
+		if (stack.getItem() instanceof BlockItem) {
+			if (player.age == PlayerData.lastTick(player)) return ActionResult.PASS;
+			player.dropItem(stack, false);
+			player.swingHand(Hand.MAIN_HAND, true);
+
+			PlayerData.setCarryItem(player, ItemStack.EMPTY);
+			inventory.armor.set(3, ItemStack.EMPTY);
+			player.currentScreenHandler.sendContentUpdates();
+			return ActionResult.SUCCESS;
+		}
+		return ActionResult.PASS;
+	}
+
+	private ActionResult onClickBlock(PlayerEntity player, Hand hand, @Nullable BlockHitResult blockHit) {
+		var right = blockHit != null;
+		var world = player.getWorld();
+
+		if (player instanceof ServerPlayerEntity serverPlayer) {
+			// FallingBlockEntity.spawnFromBlock(world, pos, carry)
+			if (right && serverPlayer.interactionManager.getGameMode() == GameMode.ADVENTURE) {
+				return onCarryUse(serverPlayer);
+			}
+			if (ServerUtil.isKeyDown(player, GLFW.GLFW_KEY_LEFT_CONTROL)) {
+				if (player.getStackInHand(hand).isOf(MTWItems.ERROR_BLOCK)) {
+					return ActionResult.SUCCESS;
+				}
+			}
+		}
+		return ActionResult.PASS;
+	}
+}

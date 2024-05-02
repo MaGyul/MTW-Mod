@@ -1,0 +1,117 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_plate_wall/spruce_plate_wall_post"
+      },
+      "when": {
+        "OR": [
+          { "east": "false", "north": "false", "south": "false", "west": "false" },
+          { "east": "false", "north": "true", "south": "false", "west": "false" },
+          { "east": "false", "north": "false", "south": "true", "west": "false" },
+          { "east": "false", "north": "false", "south": "false", "west": "true" },
+          { "east": "true", "north": "false", "south": "false", "west": "false" },
+          { "east": "false", "north": "false", "south": "true", "west": "true" },
+          { "east": "false", "north": "true", "south": "false", "west": "true" },
+          { "east": "true", "north": "true", "south": "false", "west": "false" },
+          { "east": "true", "north": "false", "south": "true", "west": "false" },
+          { "east": "false", "north": "true", "south": "true", "west": "true" },
+          { "east": "true", "north": "false", "south": "true", "west": "true" },
+          { "east": "true", "north": "true", "south": "false", "west": "true" },
+          { "east": "true", "north": "true", "south": "true", "west": "false" },
+          { "east": "true", "north": "true", "south": "true", "west": "true" }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_plate_wall/spruce_plate_wall_center",
+        "uvlock": true
+      },
+      "when": { "east": "false", "north": "true", "south": "true", "west": "false" }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_plate_wall/spruce_plate_wall_center",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": { "east": "true", "north": "false", "south": "false", "west": "true" }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_plate_wall/spruce_plate_wall_side",
+        "uvlock": true
+      },
+      "when": {
+        "OR": [
+          { "east": "false", "north": "true", "south": "false", "west": "false" },
+
+          { "east": "true", "north": "true", "south": "false", "west": "false" },
+          { "east": "false", "north": "true", "south": "false", "west": "true" },
+          { "east": "false", "north": "true", "south": "true", "west": "true" },
+          { "east": "true", "north": "true", "south": "true", "west": "false" },
+          { "east": "true", "north": "true", "south": "false", "west": "true" },
+          { "east": "true", "north": "true", "south": "true", "west": "true" }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_plate_wall/spruce_plate_wall_side",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "OR": [
+          { "east": "true", "north": "false", "south": "false", "west": "false" },
+
+          { "east": "true", "north": "false", "south": "true", "west": "false" },
+          { "east": "true", "north": "true", "south": "false", "west": "false" },
+          { "east": "true", "north": "true", "south": "true", "west": "false" },
+          { "east": "true", "north": "true", "south": "false", "west": "true" },
+          { "east": "true", "north": "false", "south": "true", "west": "true" },
+          { "east": "true", "north": "true", "south": "true", "west": "true" }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_plate_wall/spruce_plate_wall_side",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "OR": [
+          { "east": "false", "north": "false", "south": "true", "west": "false" },
+
+          { "east": "true", "north": "false", "south": "true", "west": "false" },
+          { "east": "false", "north": "false", "south": "true", "west": "true" },
+          { "east": "false", "north": "true", "south": "true", "west": "true" },
+          { "east": "true", "north": "true", "south": "true", "west": "false" },
+          { "east": "true", "north": "false", "south": "true", "west": "true" },
+          { "east": "true", "north": "true", "south": "true", "west": "true" }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_plate_wall/spruce_plate_wall_side",
+        "uvlock": true,
+        "y": 270
+      },
+      "when": {
+        "OR": [
+          { "east": "false", "north": "false", "south": "false", "west": "true" },
+
+          { "east": "false", "north": "true", "south": "false", "west": "true" },
+          { "east": "false", "north": "false", "south": "true", "west": "true" },
+          { "east": "false", "north": "true", "south": "true", "west": "true" },
+          { "east": "true", "north": "true", "south": "false", "west": "true" },
+          { "east": "true", "north": "false", "south": "true", "west": "true" },
+          { "east": "true", "north": "true", "south": "true", "west": "true" }
+        ]
+      }
+    }
+  ]
+}

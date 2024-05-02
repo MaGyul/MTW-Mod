@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "mtwmod",
+	"version": "${version}",
+	"name": "MTWMod",
+	"description": "MTW에서 사용되는 모드",
+	"authors": [
+		"MaGyul"
+	],
+	"license": "MIT",
+	"icon": "assets/mtwmod/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"dev.magyul.MTWMod"
+		],
+		"client": [
+			"dev.magyul.MTWModClient"
+		]
+	},
+	"mixins": [
+		"mtwmod.mixins.json",
+		{
+			"config": "mtwmod.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.15.7",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*",
+		"voicechat": ">=1.20.4-2.5.7",
+		"mtwmod-resource": ">=1.0.0"
+	},
+	"accessWidener": "mtwmod.accesswidener"
+}

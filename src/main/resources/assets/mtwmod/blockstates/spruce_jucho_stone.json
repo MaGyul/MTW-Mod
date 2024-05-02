@@ -1,0 +1,130 @@
+{
+  "variants": {
+    "facing=east,shape=inner_left": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_inner",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=east,shape=inner_right": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_inner"
+    },
+    "facing=east,shape=outer_left": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_outer",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=east,shape=outer_right": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_outer"
+    },
+    "facing=east,shape=middle": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_middle"
+    },
+    "facing=east,shape=closed": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_closed"
+    },
+    "facing=east,shape=straight": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone"
+    },
+    "facing=north,shape=inner_left": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_inner",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=north,shape=inner_right": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_inner",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=north,shape=outer_left": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_outer",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=north,shape=outer_right": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_outer",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=north,shape=middle": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_middle",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=north,shape=closed": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_closed",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=north,shape=straight": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=south,shape=inner_left": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_inner"
+    },
+    "facing=south,shape=inner_right": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_inner",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=south,shape=outer_left": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_outer"
+    },
+    "facing=south,shape=outer_right": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_outer",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=south,shape=middle": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_middle",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=south,shape=closed": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_closed",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=south,shape=straight": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=west,shape=inner_left": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_inner",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=west,shape=inner_right": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_inner",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=west,shape=outer_left": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_outer",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=west,shape=outer_right": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_outer",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=west,shape=middle": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_middle",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=west,shape=closed": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone_closed",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=west,shape=straight": {
+      "model": "mtwmod:block/spruce_jucho_stone/spruce_jucho_stone",
+      "uvlock": true,
+      "y": 180
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "required": true,
+  "package": "dev.magyul.mixin.client",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "AllowedAddressResolverMixin",
+    "ChatHudMixin",
+    "ChatScreenMixin",
+    "ClearButtonMixin",
+    "ClearSliderButtonMixin",
+    "DisconnectedScreenMixin",
+    "GameMenuScreenMixin",
+    "GameRendererMixin",
+    "GameTitleMixin",
+    "HeldItemRendererMixin",
+    "IconsMixin",
+    "InGameHudMixin",
+    "KeyboardInputMixin",
+    "KeyboardMixin",
+    "MinecraftClientMixin",
+    "MouseMixin",
+    "PlayerEntityRendererMixin",
+    "QuickPlayMixin",
+    "SafetyScreenMixin",
+    "TitleScreenMixin",
+    "ToastMixin$Advancement",
+    "ToastMixin$Entry",
+    "ToastMixin$Recipe",
+    "ToastMixin$System",
+    "ToastMixin$Tutorial",
+    "cocoainput.BookEditScreenMixin",
+    "cocoainput.EditBoxWidgetMixin",
+    "cocoainput.MultilineTextFieldWidgetMixin",
+    "cocoainput.SignEditScreenMixin",
+    "cocoainput.TextFieldWidgetMixin",
+    "network.LegacyServerPingerMixin",
+    "voicechat.AudioChannelMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "PlayerEntityMixin",
+    "SlotMixin"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "mtwmod:block/spruce_rafters/spruce_rafters",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "mtwmod:block/spruce_rafters/spruce_rafters"
+    },
+    "facing=south": {
+      "model": "mtwmod:block/spruce_rafters/spruce_rafters",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mtwmod:block/spruce_rafters/spruce_rafters",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "parent": "mtwmod:block/parent/japanese_top_right",
+  "textures": {
+    "0": "mtwmod:block/japanese_oak_lower",
+    "2": "mtwmod:block/japanese_oak_lower",
+    "1": "mtwmod:block/japanese_oak_upper",
+    "particle": "mtwmod:block/japanese_oak_lower"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=east,lr=single": {
+      "model": "mtwmod:block/spruce_signboard/spruce_signboard",
+      "y": 270
+    },
+    "facing=north,lr=single": {
+      "model": "mtwmod:block/spruce_signboard/spruce_signboard",
+      "y": 180
+    },
+    "facing=south,lr=single": {
+      "model": "mtwmod:block/spruce_signboard/spruce_signboard"
+    },
+    "facing=west,lr=single": {
+      "model": "mtwmod:block/spruce_signboard/spruce_signboard",
+      "y": 90
+    },
+    "facing=east,lr=left": {
+      "model": "mtwmod:block/spruce_signboard/spruce_signboard_left",
+      "y": 270
+    },
+    "facing=north,lr=left": {
+      "model": "mtwmod:block/spruce_signboard/spruce_signboard_left",
+      "y": 180
+    },
+    "facing=south,lr=left": {
+      "model": "mtwmod:block/spruce_signboard/spruce_signboard_left"
+    },
+    "facing=west,lr=left": {
+      "model": "mtwmod:block/spruce_signboard/spruce_signboard_left",
+      "y": 90
+    },
+    "facing=east,lr=right": {
+      "model": "mtwmod:block/spruce_signboard/spruce_signboard_right",
+      "y": 270
+    },
+    "facing=north,lr=right": {
+      "model": "mtwmod:block/spruce_signboard/spruce_signboard_right",
+      "y": 180
+    },
+    "facing=south,lr=right": {
+      "model": "mtwmod:block/spruce_signboard/spruce_signboard_right"
+    },
+    "facing=west,lr=right": {
+      "model": "mtwmod:block/spruce_signboard/spruce_signboard_right",
+      "y": 90
+    },
+    "facing=east,lr=middle": {
+      "model": "mtwmod:block/spruce_signboard/spruce_signboard_middle",
+      "y": 270
+    },
+    "facing=north,lr=middle": {
+      "model": "mtwmod:block/spruce_signboard/spruce_signboard_middle",
+      "y": 180
+    },
+    "facing=south,lr=middle": {
+      "model": "mtwmod:block/spruce_signboard/spruce_signboard_middle"
+    },
+    "facing=west,lr=middle": {
+      "model": "mtwmod:block/spruce_signboard/spruce_signboard_middle",
+      "y": 90
+    }
+  }
+}

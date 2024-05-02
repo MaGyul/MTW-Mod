@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "mtwmod:block/spruce_linoleum/spruce_linoleum"
+    },
+    "facing=north": {
+      "model": "mtwmod:block/spruce_linoleum/spruce_linoleum"
+    },
+    "facing=south": {
+      "model": "mtwmod:block/spruce_linoleum/spruce_linoleum"
+    },
+    "facing=west": {
+      "model": "mtwmod:block/spruce_linoleum/spruce_linoleum"
+    }
+  }
+}

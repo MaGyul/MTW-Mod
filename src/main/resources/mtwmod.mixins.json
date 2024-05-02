@@ -1,0 +1,31 @@
+{
+  "required": true,
+  "package": "dev.magyul.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "ChunkSerializerMixin",
+    "GameRulesMixin",
+    "ItemEntityMixin",
+    "LivingEntityMixin",
+    "MinecraftDedicatedServerMixin",
+    "MinecraftDedicatedServerMixin$MinecraftDedicatedServerThreadMixin",
+    "MinecraftServerMixin",
+    "PlayerEntityMixin",
+    "PlayerManagerMixin",
+    "ServerWorldMixin",
+    "SetWorldSpawnCommandMixin",
+    "cocoainput.SharedConstantsMixin",
+    "commands.ArgumentTypesMixin",
+    "network.LegacyQueryHandlerMixin",
+    "network.LoginHelloC2SPacketMixin",
+    "network.PingResultS2CPacketMixin",
+    "network.QueryResponseS2CPacketMixin",
+    "network.ServerHandshakeNetworkHandlerMixin",
+    "tps.ServerWorldMixin",
+    "voicechat.NetworkMessageMixin",
+    "voicechat.ServerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+	}
+}

@@ -1,0 +1,157 @@
+{
+  "variants": {
+    "facing=east,half=lower,hinge=left,open=false": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_left_close_bottom",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=east,half=lower,hinge=left,open=true": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_right_open_bottom",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=north,half=lower,hinge=left,open=false": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_left_close_bottom",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=north,half=lower,hinge=left,open=true": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_right_open_bottom",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=south,half=lower,hinge=left,open=false": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_left_close_bottom",
+      "uvlock": true
+    },
+    "facing=south,half=lower,hinge=left,open=true": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_left_open_bottom",
+      "uvlock": true
+    },
+    "facing=west,half=lower,hinge=left,open=false": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_left_close_bottom",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=west,half=lower,hinge=left,open=true": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_left_open_bottom",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=east,half=upper,hinge=left,open=false": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_left_close_top",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=east,half=upper,hinge=left,open=true": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_right_open_top",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=north,half=upper,hinge=left,open=false": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_left_close_top",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=north,half=upper,hinge=left,open=true": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_right_open_top",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=south,half=upper,hinge=left,open=false": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_left_close_top",
+      "uvlock": true
+    },
+    "facing=south,half=upper,hinge=left,open=true": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_left_open_top",
+      "uvlock": true
+    },
+    "facing=west,half=upper,hinge=left,open=false": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_left_close_top",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=west,half=upper,hinge=left,open=true": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_left_open_top",
+      "uvlock": true,
+      "y": 90
+    },
+
+    "facing=east,half=lower,hinge=right,open=false": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_right_close_bottom",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=east,half=lower,hinge=right,open=true": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_left_open_bottom",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=north,half=lower,hinge=right,open=false": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_right_close_bottom",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=north,half=lower,hinge=right,open=true": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_left_open_bottom",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=south,half=lower,hinge=right,open=false": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_right_close_bottom",
+      "uvlock": true
+    },
+    "facing=south,half=lower,hinge=right,open=true": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_right_open_bottom",
+      "uvlock": true
+    },
+    "facing=west,half=lower,hinge=right,open=false": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_right_close_bottom",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=west,half=lower,hinge=right,open=true": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_right_open_bottom",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=east,half=upper,hinge=right,open=false": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_right_close_top",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=east,half=upper,hinge=right,open=true": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_left_open_top",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=north,half=upper,hinge=right,open=false": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_right_close_top",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=north,half=upper,hinge=right,open=true": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_left_open_top",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=south,half=upper,hinge=right,open=false": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_right_close_top",
+      "uvlock": true
+    },
+    "facing=south,half=upper,hinge=right,open=true": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_right_open_top",
+      "uvlock": true
+    },
+    "facing=west,half=upper,hinge=right,open=false": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_right_close_top",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=west,half=upper,hinge=right,open=true": {
+      "model": "mtwmod:block/oak_korean_paper_window/oak_korean_paper_window_right_open_top",
+      "uvlock": true,
+      "y": 90
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "block.garage": {
+    "subtitle": "subtitle.mtwmod.garage",
+    "sounds": [ "mtwmod:block/garage" ]
+  },
+  "block.shoji": {
+    "subtitle": "subtitle.mtwmod.shoji",
+    "sounds": [ "mtwmod:block/shoji" ]
+  }
+}

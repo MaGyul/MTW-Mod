@@ -1,0 +1,51 @@
+{
+  "variants": {
+    "facing=east,half=top": {
+      "model": "mtwmod:block/anvil/anvil_top",
+      "y": 270
+    },
+    "facing=north,half=top": {
+      "model": "mtwmod:block/anvil/anvil_top",
+      "y": 180
+    },
+    "facing=south,half=top": {
+      "model": "mtwmod:block/anvil/anvil_top"
+    },
+    "facing=west,half=top": {
+      "model": "mtwmod:block/anvil/anvil_top",
+      "y": 90
+    },
+
+    "facing=east,half=upper": {
+      "model": "mtwmod:block/anvil/anvil_upper",
+      "y": 270
+    },
+    "facing=north,half=upper": {
+      "model": "mtwmod:block/anvil/anvil_upper",
+      "y": 180
+    },
+    "facing=south,half=upper": {
+      "model": "mtwmod:block/anvil/anvil_upper"
+    },
+    "facing=west,half=upper": {
+      "model": "mtwmod:block/anvil/anvil_upper",
+      "y": 90
+    },
+
+    "facing=east,half=lower": {
+      "model": "mtwmod:block/anvil/anvil_lower",
+      "y": 270
+    },
+    "facing=north,half=lower": {
+      "model": "mtwmod:block/anvil/anvil_lower",
+      "y": 180
+    },
+    "facing=south,half=lower": {
+      "model": "mtwmod:block/anvil/anvil_lower"
+    },
+    "facing=west,half=lower": {
+      "model": "mtwmod:block/anvil/anvil_lower",
+      "y": 90
+    }
+  }
+}

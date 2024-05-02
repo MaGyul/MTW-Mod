@@ -1,0 +1,117 @@
+package dev.magyul.util;
+
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ServerAddress;
+import net.minecraft.client.network.ServerInfo;
+import net.minecraft.client.toast.SystemToast;
+import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.Text;
+import net.minecraft.util.Pair;
+import org.lwjgl.glfw.GLFW;
+
+import java.util.*;
+
+public class ClientUtil {
+    private static final UUID[] devs = new UUID[]{
+            UUID.fromString("98604430-65db-499b-be91-a9d6a2602304"),    // Boo
+            UUID.fromString("feb58aa8-56f6-4728-8546-82071e39dd24"),    // Main
+//            UUID.fromString("7a0f0c5a-6cb7-4c31-9cd7-1ff6ecf637e1"),    // Suhok
+    };
+    private static final UUID test = UUID.fromString("825203c1-484b-4935-bea2-3f7aa11e142a");
+    private static final boolean local = false;
+    public static final ServerInfo mtw_info = new ServerInfo("MTW Server", local ? "localhost" : "mathwor.com", ServerInfo.ServerType.OTHER) {
+        {
+            setResourcePackPolicy(ResourcePackPolicy.ENABLED);
+        }
+    };
+    public static final ServerAddress mtw_address = new ServerAddress(mtw_info.address, 25565);
+    public static final SystemToast.Type MTW_TOAST = new SystemToast.Type();
+    public static final Map<UUID, String> receivedAllMic = new HashMap<>();
+    public static ConnectServer cs;
+    public static Text playStatus;
+    private static boolean allMic = false;
+
+    public static boolean checkDev() {
+        var session = MinecraftClient.getInstance().getSession();
+        if (Objects.equals(session.getAccessToken(), "FabricMC")) return true;
+        var uuid = session.getUuidOrNull();
+        for (var dev : devs) {
+            if (dev.equals(uuid)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean checkTest() {
+        var session = MinecraftClient.getInstance().getSession();
+        return test.equals(session.getUuidOrNull());
+    }
+
+    public static boolean isAllMic() {
+        return allMic;
+    }
+
+    public static void setAllMic(boolean value) {
+        allMic = value;
+    }
+
+    public static void sleep(long delay) {
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException ignored) {}
+    }
+
+    public static Timer setTimeout(Runnable run, long delay) {
+        var timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                MinecraftClient.getInstance().execute(run);
+            }
+        }, delay);
+        return timer;
+    }
+
+    public static Timer setInterval(Runnable run, long period) {
+        var timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                MinecraftClient.getInstance().execute(run);
+            }
+        }, period, period);
+        return timer;
+    }
+
+    public static Timer setInterval(Runnable run, long delay, long period) {
+        var timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                MinecraftClient.getInstance().execute(run);
+            }
+        }, delay, period);
+        return timer;
+    }
+
+    public static void cancelTimer(Timer timer) {
+        timer.cancel();
+    }
+
+    public static boolean isKeyDown(int key) {
+        return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), key);
+    }
+
+    public static boolean isMouseDown(int key) {
+        return GLFW.glfwGetMouseButton(MinecraftClient.getInstance().getWindow().getHandle(), key) == 1;
+    }
+
+    public static Text getKeyName(int key) {
+        return InputUtil.fromKeyCode(key, -1).getLocalizedText();
+    }
+
+    public static Text getMouseName(int mouse) {
+        return InputUtil.Type.MOUSE.createFromCode(mouse).getLocalizedText();
+    }
+}

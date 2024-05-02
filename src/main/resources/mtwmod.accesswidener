@@ -1,0 +1,53 @@
+accessWidener v2 named
+
+accessible class net/minecraft/client/gui/screen/ingame/BookEditScreen$PageContent
+accessible class net/minecraft/client/gui/screen/ingame/BookEditScreen$Position
+accessible field net/minecraft/client/gui/screen/ingame/BookEditScreen$PageContent position Lnet/minecraft/client/gui/screen/ingame/BookEditScreen$Position;
+
+accessible class net/minecraft/client/option/SimpleOption$Callbacks
+
+accessible field net/minecraft/client/gui/screen/ingame/AbstractSignEditScreen ticksSinceOpened I
+
+accessible field net/minecraft/client/gui/screen/Screen textRenderer Lnet/minecraft/client/font/TextRenderer;
+accessible field net/minecraft/client/gui/screen/Screen drawables Ljava/util/List;
+
+accessible field net/minecraft/client/gui/widget/TextFieldWidget textRenderer Lnet/minecraft/client/font/TextRenderer;
+accessible field net/minecraft/client/gui/widget/TextFieldWidget text Ljava/lang/String;
+accessible field net/minecraft/client/gui/widget/TextFieldWidget selectionStart I
+accessible field net/minecraft/client/gui/widget/TextFieldWidget selectionEnd I
+accessible field net/minecraft/client/gui/widget/TextFieldWidget maxLength I
+accessible field net/minecraft/client/gui/widget/TextFieldWidget editable Z
+
+accessible method net/minecraft/client/gui/screen/ingame/AbstractSignEditScreen setCurrentRowMessage (Ljava/lang/String;)V
+accessible field net/minecraft/client/gui/screen/ingame/AbstractSignEditScreen text Lnet/minecraft/block/entity/SignText;
+accessible field net/minecraft/client/gui/screen/ingame/AbstractSignEditScreen currentRow I
+accessible field net/minecraft/client/gui/screen/ingame/AbstractSignEditScreen selectionManager Lnet/minecraft/client/util/SelectionManager;
+accessible field net/minecraft/client/gui/screen/ingame/AbstractSignEditScreen blockEntity Lnet/minecraft/block/entity/SignBlockEntity;
+
+accessible field net/minecraft/client/gui/screen/ingame/BookEditScreen signing Z
+accessible field net/minecraft/client/gui/screen/ingame/BookEditScreen title Ljava/lang/String;
+accessible method net/minecraft/client/gui/screen/ingame/BookEditScreen setPageContent (Ljava/lang/String;)V
+accessible method net/minecraft/client/gui/screen/ingame/BookEditScreen getCurrentPageContent ()Ljava/lang/String;
+accessible field net/minecraft/client/gui/screen/ingame/BookEditScreen bookTitleSelectionManager Lnet/minecraft/client/util/SelectionManager;
+accessible field net/minecraft/client/gui/screen/ingame/BookEditScreen currentPageSelectionManager Lnet/minecraft/client/util/SelectionManager;
+
+accessible field net/minecraft/client/gui/widget/EditBoxWidget editBox Lnet/minecraft/client/gui/EditBox;
+
+accessible field net/minecraft/client/gui/EditBox text Ljava/lang/String;
+accessible field net/minecraft/client/gui/EditBox selectionEnd I
+accessible field net/minecraft/client/gui/EditBox textRenderer Lnet/minecraft/client/font/TextRenderer;
+
+accessible method net/minecraft/client/Keyboard onChar (JII)V
+
+accessible method net/minecraft/client/network/AbstractClientPlayerEntity getPlayerListEntry ()Lnet/minecraft/client/network/PlayerListEntry;
+
+accessible class net/minecraft/client/render/item/HeldItemRenderer$HandRenderType
+
+accessible field net/minecraft/entity/FallingBlockEntity block Lnet/minecraft/block/BlockState;
+accessible field net/minecraft/entity/ItemEntity owner Ljava/util/UUID;
+accessible field net/minecraft/entity/ItemEntity pickupDelay I
+
+accessible method net/minecraft/world/GameRules$BooleanRule create (Z)Lnet/minecraft/world/GameRules$Type;
+accessible method net/minecraft/world/PersistentStateManager getFile (Ljava/lang/String;)Ljava/io/File;
+
+accessible class net/minecraft/item/ItemGroup$EntriesImpl

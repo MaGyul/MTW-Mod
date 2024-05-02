@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "mtwmod:block/spruce_shelf/spruce_shelf",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "mtwmod:block/spruce_shelf/spruce_shelf",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "mtwmod:block/spruce_shelf/spruce_shelf"
+    },
+    "facing=west": {
+      "model": "mtwmod:block/spruce_shelf/spruce_shelf",
+      "y": 90
+    }
+  }
+}
