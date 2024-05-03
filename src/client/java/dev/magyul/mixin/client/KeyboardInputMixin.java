@@ -1,5 +1,6 @@
 package dev.magyul.mixin.client;
 
+import dev.magyul.registers.MTWDataComponentTypes;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.input.KeyboardInput;
 import net.minecraft.client.option.KeyBinding;
@@ -16,13 +17,10 @@ public class KeyboardInputMixin {
     private boolean tick(KeyBinding instance) {
         var client = MinecraftClient.getInstance();
         if (client.player != null) {
-            var entry = client.player.getPlayerListEntry();
-            if (entry != null && entry.getGameMode() == GameMode.ADVENTURE) {
-                var inventory = client.player.getInventory();
-                var stack = inventory.getArmorStack(3);
-                if (!stack.isEmpty() && stack.getItem() instanceof BlockItem) {
-                    return true;
-                }
+            var inventory = client.player.getInventory();
+            var stack = inventory.getArmorStack(3);
+            if (!stack.isEmpty() && stack.getOrDefault(MTWDataComponentTypes.IS_CARRY, false)) {
+                return true;
             }
         }
         return instance.isPressed();

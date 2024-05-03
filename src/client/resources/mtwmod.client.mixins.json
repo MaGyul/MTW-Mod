@@ -10,7 +10,6 @@
     "ClearSliderButtonMixin",
     "DisconnectedScreenMixin",
     "GameMenuScreenMixin",
-    "GameRendererMixin",
     "GameTitleMixin",
     "HeldItemRendererMixin",
     "IconsMixin",
@@ -18,7 +17,6 @@
     "KeyboardInputMixin",
     "KeyboardMixin",
     "MinecraftClientMixin",
-    "MouseMixin",
     "PlayerEntityRendererMixin",
     "QuickPlayMixin",
     "SafetyScreenMixin",
@@ -30,7 +28,6 @@
     "ToastMixin$Tutorial",
     "cocoainput.BookEditScreenMixin",
     "cocoainput.EditBoxWidgetMixin",
-    "cocoainput.MultilineTextFieldWidgetMixin",
     "cocoainput.SignEditScreenMixin",
     "cocoainput.TextFieldWidgetMixin",
     "network.LegacyServerPingerMixin",
@@ -40,7 +37,6 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "PlayerEntityMixin",
     "SlotMixin"
   ]
 }

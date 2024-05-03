@@ -2,13 +2,14 @@ package dev.magyul.network;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
-public class SNetwork {
+import static dev.magyul.network.Namespaces.*;
 
+public class SNetwork {
     public static void register() {
-        ServerPlayNetworking.registerGlobalReceiver(KeyInputC2SPacket.TYPE, KeyInputC2SPacket::receive);
-        ServerPlayNetworking.registerGlobalReceiver(ErrorBlockUpdateC2SPacket.TYPE, ErrorBlockUpdateC2SPacket::receive);
-        ServerPlayNetworking.registerGlobalReceiver(AttackAirC2SPacket.TYPE, AttackAirC2SPacket::receive);
-        ServerPlayNetworking.registerGlobalReceiver(UseAirC2SPacket.TYPE, UseAirC2SPacket::receive);
-        ServerPlayNetworking.registerGlobalReceiver(PickupItemC2SPacket.TYPE, PickupItemC2SPacket::receive);
+        ServerPlayNetworking.registerGlobalReceiver(KEY_INPUT, KeyInputC2SPacket::receive);
+        ServerPlayNetworking.registerGlobalReceiver(ERROR_BLOCK_UPDATE, ErrorBlockUpdateC2SPacket::receive);
+        ServerPlayNetworking.registerGlobalReceiver(ATTACK_AIR, AttackAirC2SPacket::receive);
+        ServerPlayNetworking.registerGlobalReceiver(USE_AIR, UseAirC2SPacket::receive);
+        ServerPlayNetworking.registerGlobalReceiver(PICKUP_ITEM, PickupItemC2SPacket::receive);
     }
 }

@@ -1,5 +1,6 @@
 package dev.magyul.mixin.client;
 
+import com.google.common.collect.Lists;
 import dev.magyul.MTWMod;
 import dev.magyul.ServerPingPong;
 import dev.magyul.util.ConnectServer;
@@ -17,6 +18,7 @@ import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
+import net.minecraft.client.network.ServerInfo;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
@@ -73,15 +75,26 @@ public abstract class TitleScreenMixin extends Screen {
     @Unique
     private static final Text PINGING_TEXT = Text.translatable("multiplayer.status.pinging");
     @Shadow @Nullable private SplashTextRenderer splashText;
-    @Shadow @Final public static Text COPYRIGHT;
+    @Shadow @Final private static Text COPYRIGHT;
 
     @Shadow @Nullable protected abstract Text getMultiplayerDisabledText();
 
     @Shadow protected abstract boolean canReadDemoWorldData();
+
     @Unique
     private ButtonWidget play;
     @Unique
     private ButtonWidget cancel;
+    @Unique
+    @Nullable
+    private List<Text> playerListSummary;
+    @Unique
+    @Nullable
+    private Identifier statusIconTexture;
+    @Unique
+    @Nullable
+    private Text statusTooltipText;
+
     private TitleScreenMixin() {
         super(Text.translatable("narrator.screen.title"));
     }
@@ -165,80 +178,89 @@ public abstract class TitleScreenMixin extends Screen {
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)I", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, float f, float g, int i, String string) {
+    private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, float f, int i, String string) {
         context.drawTextWithShadow(textRenderer, "Make The World " + MTWMod.VERSION, 2, height - 20, 16777215 | i);
 
-        if (!mtw_info.online) {
-            mtw_info.online = true;
-            mtw_info.ping = -2L;
+
+        if (mtw_info.getStatus() == ServerInfo.Status.INITIAL) {
+            mtw_info.setStatus(ServerInfo.Status.PINGING);
             mtw_info.label = ScreenTexts.EMPTY;
             mtw_info.playerCountLabel = ScreenTexts.EMPTY;
-            ServerPingPong.startPinging();
+            ServerPingPong.startPinging(client, () -> {
+                mtw_info.setStatus(mtw_info.protocolVersion == SharedConstants.getGameVersion().getProtocolVersion() ? ServerInfo.Status.SUCCESSFUL : ServerInfo.Status.INCOMPATIBLE);
+                client.execute(this::update);
+            }, this::update);
         }
 
-        int width = this.width / 2 + 104; // playButton width ended
-        int height = (this.height / 4 + (48 + 12)) - 22;
-        boolean bl = !(mtw_info.protocolVersion == SharedConstants.getGameVersion().getProtocolVersion());
-        var text = bl ? mtw_info.version.copy().formatted(Formatting.RED) : mtw_info.playerCountLabel;
-        int j = textRenderer.getWidth(text);
-        context.drawText(textRenderer, text, width - j - 15 - 2, height + 1, -8355712, false);
-        Identifier pingTexture;
-        List<Text> playerList;
-        Text status;
-        if (bl) {
-            pingTexture = INCOMPATIBLE_TEXTURE;
-            status = INCOMPATIBLE_TEXT;
-            playerList = mtw_info.playerListSummary;
-        } else if (pinged()) {
-            if (mtw_info.ping < 0L) {
-                pingTexture = UNREACHABLE_TEXTURE;
-            } else if (mtw_info.ping < 150L) {
-                pingTexture = PING_5_TEXTURE;
-            } else if (mtw_info.ping < 300L) {
-                pingTexture = PING_4_TEXTURE;
-            } else if (mtw_info.ping < 600L) {
-                pingTexture = PING_3_TEXTURE;
-            } else if (mtw_info.ping < 1000L) {
-                pingTexture = PING_2_TEXTURE;
-            } else {
-                pingTexture = PING_1_TEXTURE;
+        if (mtw_info.getStatus() == ServerInfo.Status.PINGING) {
+            int level = (int) (Util.getMeasuringTimeMs() / 100L & 7L);
+            if (level > 4) {
+                level = 8 - level;
             }
 
-            if (mtw_info.ping < 0L) {
-                status = NO_CONNECTION_TEXT;
-                playerList = List.of();
-            } else {
-                status = Text.translatable("multiplayer.status.ping", mtw_info.ping);
-                playerList = mtw_info.playerListSummary;
-            }
-        } else {
-            int k = (int) (Util.getMeasuringTimeMs() / 100L & 7L);
-            if (k > 4) {
-                k = 8 - k;
-            }
-
-            pingTexture = switch (k) {
+            statusIconTexture = switch (level) {
                 case 1 -> PINGING_2_TEXTURE;
                 case 2 -> PINGING_3_TEXTURE;
                 case 3 -> PINGING_4_TEXTURE;
                 case 4 -> PINGING_5_TEXTURE;
                 default -> PINGING_1_TEXTURE;
             };
-            status = PINGING_TEXT;
-            playerList = List.of();
         }
 
-        context.drawGuiTexture(pingTexture, width - 15, height, 10, 8);
+        int width = this.width / 2 + 104; // playButton width ended
+        int height = (this.height / 4 + (48 + 12)) - 22;
+
+        if (statusIconTexture != null) {
+            context.drawGuiTexture(statusIconTexture, width - 15, height, 10, 8);
+        }
+        var text = mtw_info.getStatus() == ServerInfo.Status.INCOMPATIBLE
+                ? mtw_info.version.copy().formatted(Formatting.RED)
+                : mtw_info.playerCountLabel;
+        int j = textRenderer.getWidth(text);
+        context.drawText(textRenderer, text, width - j - 15 - 2, height + 1, -8355712, false);
+
         var m = mouseY - height;
-        if (mouseX >= width - 15 && mouseX <= width - 5 && m >= 0 && m <= 8) {
-            context.drawTooltip(textRenderer, List.of(status), mouseX, mouseY);
-        } else if (mouseX >= width - j - 15 - 2 && mouseX <= width - 15 - 2 && m >= 0 && m <= 8) {
-            context.drawTooltip(textRenderer, playerList, mouseX, mouseY);
+        if (statusTooltipText != null && mouseX >= width - 15 && mouseX <= width - 5 && m >= 0 && m <= 8) {
+            context.drawTooltip(textRenderer, List.of(statusTooltipText), mouseX, mouseY);
+        } else if (playerListSummary != null && mouseX >= width - j - 15 - 2 && mouseX <= width - 15 - 2 && m >= 0 && m <= 8) {
+            context.drawTooltip(textRenderer, playerListSummary, mouseX, mouseY);
         }
     }
 
     @Unique
-    private boolean pinged() {
-        return mtw_info.online && mtw_info.ping != -2L;
+    private void update() {
+        playerListSummary = null;
+        switch (mtw_info.getStatus()) {
+            case INITIAL:
+            case PINGING:
+                statusIconTexture = PING_1_TEXTURE;
+                statusTooltipText = PINGING_TEXT;
+                break;
+            case INCOMPATIBLE:
+                statusIconTexture = INCOMPATIBLE_TEXTURE;
+                statusTooltipText = INCOMPATIBLE_TEXT;
+                playerListSummary = mtw_info.playerListSummary;
+                break;
+            case UNREACHABLE:
+                statusIconTexture = UNREACHABLE_TEXTURE;
+                statusTooltipText = NO_CONNECTION_TEXT;
+                break;
+            case SUCCESSFUL:
+                if (mtw_info.ping < 150L) {
+                    statusIconTexture = PING_5_TEXTURE;
+                } else if (mtw_info.ping < 300L) {
+                    statusIconTexture = PING_4_TEXTURE;
+                } else if (mtw_info.ping < 600L) {
+                    statusIconTexture = PING_3_TEXTURE;
+                } else if (mtw_info.ping < 1000L) {
+                    statusIconTexture = PING_2_TEXTURE;
+                } else {
+                    statusIconTexture = PING_1_TEXTURE;
+                }
+
+                statusTooltipText = Text.translatable("multiplayer.status.ping", mtw_info.ping);
+                playerListSummary = mtw_info.playerListSummary;
+                break;
+        }
     }
 }

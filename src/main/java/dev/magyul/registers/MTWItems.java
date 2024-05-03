@@ -1,23 +1,20 @@
 package dev.magyul.registers;
 
 import dev.magyul.MTWMod;
+import dev.magyul.util.FoodBuilder;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.block.*;
-import net.minecraft.block.enums.Instrument;
-import net.minecraft.item.*;
+import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-
-import static net.minecraft.block.Blocks.OAK_PLANKS;
-import static net.minecraft.block.Blocks.SPRUCE_PLANKS;
 
 public class MTWItems {
     public static final Map<Type, List<Item>> ITEMMAP = new HashMap<>() {
@@ -26,10 +23,8 @@ public class MTWItems {
         }
     };
     public static final List<Item> ITEMS = new ArrayList<>();
-    public static final Item MTW_ICON = register("mtw_icon", new Item(new Item.Settings().food(new FoodComponent.Builder()
-            .alwaysEdible().hunger(2000000000).saturationModifier(Float.MAX_VALUE).snack().build())));
-    public static final Item MTW_REGION_VIEWER = register("mtw_region_viewer", new Item(new Item.Settings().food(new FoodComponent.Builder()
-            .alwaysEdible().hunger(2000000000).saturationModifier(Float.MAX_VALUE).snack().build())));
+    public static final Item MTW_ICON = register("mtw_icon", getFood());
+    public static final Item MTW_REGION_VIEWER = register("mtw_region_viewer", getFood());
     public static final Item ERROR_BLOCK = register("error_block", MTWBlocks.ERROR_BLOCK, Type.NORMAL);
 //    public static final Item OAK_JAPANESE_DOOR = register("oak_japanese_door", MTWBlocks.OAK_JAPANESE_DOOR);
     // Full Cute
@@ -92,6 +87,18 @@ public class MTWItems {
                 }
             }
         });
+    }
+
+    private static Item getFood() {
+        return new Item(new Item.Settings()
+                .food(new FoodBuilder()
+                    .alwaysEdible()
+                    .nutrition(2000000000)
+                    .saturationModifier(Float.MAX_VALUE)
+                    .eatSeconds(.1f)
+                    .build()
+                )
+                .maxCount(99));
     }
 
     public static void init() {

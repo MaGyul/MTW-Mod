@@ -9,7 +9,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -94,7 +93,6 @@ public class JapaneseDoors extends DoorBlock {
         this.blockSetType = type;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onStateReplaced(BlockState oldState, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (newState.isOf(this)) {
@@ -148,7 +146,8 @@ public class JapaneseDoors extends DoorBlock {
         builder.add(HALF, FACING, OPEN, HINGE, POWERED);
     }
 
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (!this.blockSetType.canOpenByHand()) {
             return ActionResult.PASS;
         } else {
@@ -160,6 +159,7 @@ public class JapaneseDoors extends DoorBlock {
         }
     }
 
+    @Override
     public void setOpen(@Nullable Entity entity, World world, BlockState state, BlockPos pos, boolean open) {
         if (state.isOf(this) && state.get(OPEN) != open) {
             world.setBlockState(pos, state.with(OPEN, open), 10);
@@ -168,6 +168,7 @@ public class JapaneseDoors extends DoorBlock {
         }
     }
 
+    @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         boolean bl = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(pos.offset(state.get(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
         if (!this.getDefaultState().isOf(sourceBlock) && bl != state.get(POWERED)) {

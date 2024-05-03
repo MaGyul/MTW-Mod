@@ -21,7 +21,6 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 
-@SuppressWarnings("deprecation")
 public class JuchoStoneBlock extends Block {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     public static final EnumProperty<JuchoShape> SHAPE = MTWProperties.JUCHO_SHAPE;
@@ -35,6 +34,7 @@ public class JuchoStoneBlock extends Block {
         this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(SHAPE, JuchoShape.STRAIGHT));
     }
 
+    @Override
     public boolean hasSidedTransparency(BlockState state) {
         return true;
     }
@@ -44,6 +44,7 @@ public class JuchoStoneBlock extends Block {
         return BASE;
     }
 
+    @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockPos pos = ctx.getBlockPos();
         var world = ctx.getWorld();
@@ -52,6 +53,7 @@ public class JuchoStoneBlock extends Block {
         return state.with(SHAPE, getStairShape(state, world, pos));
     }
 
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         return direction.getAxis().isHorizontal() ?
                 state.with(SHAPE, getStairShape(state, world, pos)) :
@@ -100,10 +102,12 @@ public class JuchoStoneBlock extends Block {
         return !isStairs(blockState) || blockState.get(FACING) != state.get(FACING);
     }
 
+    @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         Direction direction = state.get(FACING);
         JuchoShape stairShape = state.get(SHAPE);
@@ -141,11 +145,13 @@ public class JuchoStoneBlock extends Block {
         return super.mirror(state, mirror);
     }
 
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING, SHAPE);
     }
 
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    @Override
+    public boolean canPathfindThrough(BlockState state, NavigationType type) {
         return false;
     }
 

@@ -8,12 +8,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.LeadItem;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -24,11 +21,11 @@ import net.minecraft.world.WorldAccess;
 
 import java.util.Objects;
 
-@SuppressWarnings("deprecation")
 public class WallBlock extends HorizontalConnectingBlock {
     public static final MapCodec<WallBlock> CODEC = createCodec(WallBlock::new);
     private final VoxelShape[] cullingShapes;
 
+    @Override
     public MapCodec<WallBlock> getCodec() {
         return CODEC;
     }
@@ -39,15 +36,18 @@ public class WallBlock extends HorizontalConnectingBlock {
         this.cullingShapes = this.createShapes(3.0F, 2.0F, 16.0F, 6.0F, 15.0F);
     }
 
+    @Override
     public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
         return this.cullingShapes[this.getShapeIndex(state)];
     }
 
+    @Override
     public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return this.getOutlineShape(state, world, pos, context);
     }
 
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    @Override
+    protected boolean canPathfindThrough(BlockState state, NavigationType type) {
         return false;
     }
 
@@ -75,15 +75,12 @@ public class WallBlock extends HorizontalConnectingBlock {
         return false;
     }
 
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient) {
-            ItemStack itemStack = player.getStackInHand(hand);
-            return itemStack.isOf(Items.LEAD) ? ActionResult.SUCCESS : ActionResult.PASS;
-        } else {
-            return LeadItem.attachHeldMobsToBlock(player, world, pos);
-        }
+    @Override
+    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        return !world.isClient() ? LeadItem.attachHeldMobsToBlock(player, world, pos) : ActionResult.PASS;
     }
 
+    @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockView blockView = ctx.getWorld();
         BlockPos blockPos = ctx.getBlockPos();
@@ -104,6 +101,7 @@ public class WallBlock extends HorizontalConnectingBlock {
                 .with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
     }
 
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (state.get(WATERLOGGED)) {
             world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
@@ -121,6 +119,7 @@ public class WallBlock extends HorizontalConnectingBlock {
         }
     }
 
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(NORTH, EAST, WEST, SOUTH, WATERLOGGED);
     }

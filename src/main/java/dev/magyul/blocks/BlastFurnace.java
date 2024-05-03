@@ -1,6 +1,7 @@
 package dev.magyul.blocks;
 
 import com.mojang.serialization.MapCodec;
+import dev.magyul.util.MathHelper;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.LivingEntity;
@@ -12,7 +13,6 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -22,7 +22,6 @@ import net.minecraft.world.WorldView;
 
 import java.util.stream.Stream;
 
-@SuppressWarnings("deprecation")
 public class BlastFurnace extends HorizontalFacingBlock {
     public static final MapCodec<BlastFurnace> CODEC = createCodec(BlastFurnace::new);
     public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
@@ -37,11 +36,13 @@ public class BlastFurnace extends HorizontalFacingBlock {
         return CODEC;
     }
 
+    @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         var half = state.get(HALF);
         return half == DoubleBlockHalf.UPPER ? Shape.UPPER_SHAPE : Shape.LOWER_SHAPE;
     }
 
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         DoubleBlockHalf half = state.get(HALF);
         if (direction.getAxis() == Direction.Axis.Y && half == DoubleBlockHalf.LOWER == (direction == Direction.UP)) {
@@ -51,16 +52,19 @@ public class BlastFurnace extends HorizontalFacingBlock {
         }
     }
 
+    @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         BlockPos blockPos = pos.down();
         BlockState blockState = world.getBlockState(blockPos);
         return state.get(HALF) == DoubleBlockHalf.LOWER ? blockState.isSideSolidFullSquare(world, blockPos, Direction.UP) : blockState.isOf(this);
     }
 
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(HALF, FACING);
     }
 
+    @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
@@ -70,10 +74,12 @@ public class BlastFurnace extends HorizontalFacingBlock {
         return null;
     }
 
+    @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         world.setBlockState(pos.up(), state.with(HALF, DoubleBlockHalf.UPPER), 3);
     }
 
+    @Override
     public long getRenderingSeed(BlockState state, BlockPos pos) {
         return MathHelper.hashCode(pos.getX(), pos.down(state.get(HALF) == DoubleBlockHalf.LOWER ? 0 : 1).getY(), pos.getZ());
     }

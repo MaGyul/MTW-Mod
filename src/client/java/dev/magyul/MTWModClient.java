@@ -9,9 +9,7 @@ import dev.magyul.network.KeyInputC2SPacket;
 import dev.magyul.network.UseAirC2SPacket;
 import dev.magyul.others.cocoainput.CocoaInput;
 import dev.magyul.registers.MTWItems;
-import dev.magyul.screen.OverlayScreen;
 import dev.magyul.util.ClientUtil;
-import dev.magyul.util.ServerUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -21,8 +19,6 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -57,7 +53,7 @@ public class MTWModClient implements ClientModInitializer {
 		AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> onClickBlock(player, hand, null));
 		UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> onClickBlock(player, hand, hitResult));
 		ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
-		ErrorBlock.clientCallback = (stack, view, tooltip, options) -> {
+		ErrorBlock.clientCallback = (stack, context, tooltip, options) -> {
 			if (ClientUtil.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
 				tooltip.add(Text.literal(""));
 				tooltip.add(Text.translatable("item.mtwmod.error_block_light+",
@@ -70,9 +66,6 @@ public class MTWModClient implements ClientModInitializer {
 				tooltip.add(Text.translatable("item.mtwmod.more_info", ClientUtil.getKeyName(GLFW.GLFW_KEY_LEFT_SHIFT)));
 			}
 			return null;
-		};
-		ServerUtil.clientCallSignBoardEntity = (sbe) -> {
-
 		};
 		CNetwork.register();
 	}

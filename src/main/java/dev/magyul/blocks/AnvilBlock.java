@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import dev.magyul.blocks.enums.TripleBlockHalf;
 import dev.magyul.registers.MTWProperties;
 import dev.magyul.util.DirectionUtil;
+import dev.magyul.util.MathHelper;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -13,7 +14,6 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -22,7 +22,6 @@ import net.minecraft.world.WorldAccess;
 
 import java.util.stream.Stream;
 
-@SuppressWarnings("deprecation")
 public class AnvilBlock extends HorizontalFacingBlock {
     public static final MapCodec<AnvilBlock> CODEC = createCodec(AnvilBlock::new);
     public static final EnumProperty<TripleBlockHalf> HALF = MTWProperties.TRIPLE_BLOCK_HALF;
@@ -35,6 +34,7 @@ public class AnvilBlock extends HorizontalFacingBlock {
         return CODEC;
     }
 
+    @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         var half = state.get(HALF);
         var facing = state.get(FACING);
@@ -71,6 +71,7 @@ public class AnvilBlock extends HorizontalFacingBlock {
         }
     }
 
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         var half = state.get(HALF);
         if (half == TripleBlockHalf.TOP) {
@@ -92,10 +93,12 @@ public class AnvilBlock extends HorizontalFacingBlock {
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(HALF, FACING);
     }
 
+    @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         var facing = ctx.getHorizontalPlayerFacing();
         var world = ctx.getWorld();
@@ -112,12 +115,14 @@ public class AnvilBlock extends HorizontalFacingBlock {
         return null;
     }
 
+    @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         var facing = state.get(FACING);
         world.setBlockState(pos.offset(DirectionUtil.getLeft(facing)), state.with(HALF, TripleBlockHalf.TOP), 3);
         world.setBlockState(pos.offset(DirectionUtil.getRight(facing)), state.with(HALF, TripleBlockHalf.LOWER), 3);
     }
 
+    @Override
     public long getRenderingSeed(BlockState state, BlockPos pos) {
         var half = state.get(HALF);
         var facing = state.get(FACING);

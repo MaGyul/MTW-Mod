@@ -1,9 +1,11 @@
 package dev.magyul.mixin.client;
 
+import dev.magyul.MTWMod;
 import dev.magyul.MTWModClient;
 import dev.magyul.ServerPingPong;
 import dev.magyul.events.PlayerInteractEvents;
 import dev.magyul.network.PickupItemC2SPacket;
+import dev.magyul.registers.MTWGameRules;
 import dev.magyul.util.ClientUtil;
 import dev.magyul.util.ItemUtil;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -15,7 +17,6 @@ import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.Window;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -23,10 +24,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -46,8 +45,6 @@ public class MinecraftClientMixin {
     @Shadow @Nullable public ClientPlayerInteractionManager interactionManager;
 
     @Shadow @Nullable public ClientWorld world;
-
-    @Shadow @Final private Window window;
 
     @Redirect(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/KeyBinding;wasPressed()Z", ordinal = 4))
     private boolean handleInputEvents(KeyBinding instance) {
@@ -80,20 +77,13 @@ public class MinecraftClientMixin {
 
     @Inject(method = "doItemUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isRiding()Z", shift = At.Shift.AFTER), cancellable = true)
     private void tryPickupItem(CallbackInfo cb) {
-        if (cameraEntity != null && interactionManager != null && player != null && interactionManager.getCurrentGameMode() == GameMode.ADVENTURE) {
-            var entity = ItemUtil.raycastItem(cameraEntity, interactionManager.getReachDistance());
+        if (cameraEntity != null && interactionManager != null && player != null && world != null && interactionManager.getCurrentGameMode() == GameMode.ADVENTURE) {
+            var entity = ItemUtil.raycastItem(cameraEntity, ClientUtil.pickupReach / 10f);
             if (entity != null) {
                 ClientPlayNetworking.send(new PickupItemC2SPacket(entity.getUuid()));
                 player.swingHand(Hand.MAIN_HAND);
                 cb.cancel();
             }
-        }
-    }
-
-    @Inject(method = "onResolutionChanged", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;getFramebuffer()Lnet/minecraft/client/gl/Framebuffer;", shift = At.Shift.BEFORE))
-    private void onResolutionChanged(CallbackInfo ci) {
-        if (MTWModClient.checkOverlayUsed()) {
-            MTWModClient.instance.overlayScreen.resize(This(), this.window.getScaledWidth(), this.window.getScaledHeight());
         }
     }
 
@@ -113,10 +103,5 @@ public class MinecraftClientMixin {
         MTWModClient.instance.onChangeScreen(screen);
 
         return screen;
-    }
-
-    @Unique
-    private MinecraftClient This() {
-        return (MinecraftClient) (Object) this;
     }
 }

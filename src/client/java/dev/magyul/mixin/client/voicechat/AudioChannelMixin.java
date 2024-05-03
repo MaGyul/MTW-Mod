@@ -41,7 +41,7 @@ public abstract class AudioChannelMixin {
     @Inject(method = "writeToSpeaker", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD, remap = false)
     private void writeToSpeaker(SoundPacket<?> packet, short[] monoData, CallbackInfo ci, float channelVolume, float volume) {
         if (packet instanceof AllSoundPacket) {
-            ClientUtil.receivedAllMic.put(packet.getSender(), ((AllSoundPacket) packet).getSenderName().getString());
+            ClientUtil.receivedAllMic.put(packet.getSender(), ((AllSoundPacket) packet).getSenderName());
             var processedMonoData = PluginManager.instance().onReceiveStaticClientSound(this.uuid, monoData);
             speaker.play(processedMonoData, volume, packet.getCategory());
             client.getTalkCache().updateTalking(this.uuid, false);

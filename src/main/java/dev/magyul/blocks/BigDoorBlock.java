@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.magyul.blocks.enums.TripleBlockHalf;
 import dev.magyul.registers.MTWProperties;
+import dev.magyul.util.MathHelper;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.DoorHinge;
 import net.minecraft.entity.Entity;
@@ -22,11 +23,9 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -40,7 +39,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
-@SuppressWarnings("deprecation")
 public class BigDoorBlock extends Block {
     public static final MapCodec<BigDoorBlock> CODEC = RecordCodecBuilder.mapCodec((instance) ->
             instance.group(BlockSetType.CODEC.fieldOf("block_set_type").forGetter(BigDoorBlock::getBlockSetType), createSettingsCodec()).apply(instance, BigDoorBlock::new));
@@ -59,6 +57,7 @@ public class BigDoorBlock extends Block {
     protected static final VoxelShape X_AXIS_CULL_SHAPE = VoxelShapes.union(Block.createCuboidShape(6.0, 5.0, 0.0, 10.0, 16.0, 2.0), Block.createCuboidShape(6.0, 5.0, 14.0, 10.0, 16.0, 16.0));
     private final BlockSetType blockSetType;
 
+    @Override
     public MapCodec<? extends BigDoorBlock> getCodec() {
         return CODEC;
     }
@@ -73,10 +72,12 @@ public class BigDoorBlock extends Block {
         return this.blockSetType;
     }
 
+    @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return state.get(FACING).getAxis() == Direction.Axis.X ? X_AXIS_SHAPE : Z_AXIS_SHAPE;
     }
 
+    @Override
     public VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos) {
         if (state.get(OPEN)) {
             return VoxelShapes.empty();
@@ -85,6 +86,7 @@ public class BigDoorBlock extends Block {
         }
     }
 
+    @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         if (state.get(OPEN)) {
             return VoxelShapes.empty();
@@ -93,10 +95,12 @@ public class BigDoorBlock extends Block {
         }
     }
 
+    @Override
     public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
         return state.get(FACING).getAxis() == Direction.Axis.X ? X_AXIS_CULL_SHAPE : Z_AXIS_CULL_SHAPE;
     }
 
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
 //        MTWMod.LOGGER.info("getStateForNeighborUpdate: state({}) / neighborState({})", state.get(HALF), neighborState.get(HALF));
         TripleBlockHalf doubleBlockHalf = state.get(HALF);
@@ -113,6 +117,7 @@ public class BigDoorBlock extends Block {
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
+    @Override
     public void onExploded(BlockState state, World world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> stackMerger) {
         if (explosion.getDestructionType() == Explosion.DestructionType.TRIGGER_BLOCK && state.get(HALF) == TripleBlockHalf.LOWER && !world.isClient() && this.blockSetType.canOpenByWindCharge() && !(Boolean)state.get(POWERED)) {
             this.setOpen(null, world, state, pos, !this.isOpen(state));
@@ -121,6 +126,7 @@ public class BigDoorBlock extends Block {
         super.onExploded(state, world, pos, explosion, stackMerger);
     }
 
+    @Override
     public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient && (player.isCreative() || !player.canHarvest(state))) {
             TripleBlockHalf doubleBlockHalf = state.get(HALF);
@@ -147,13 +153,15 @@ public class BigDoorBlock extends Block {
         return super.onBreak(world, pos, state, player);
     }
 
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    @Override
+    public boolean canPathfindThrough(BlockState state, NavigationType type) {
         return switch (type) {
             case LAND, AIR -> state.get(OPEN);
             case WATER -> false;
         };
     }
 
+    @Override
     @Nullable
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockPos blockPos = ctx.getBlockPos();
@@ -174,6 +182,7 @@ public class BigDoorBlock extends Block {
         else return super.getRenderType(state);
     }
 
+    @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         world.setBlockState(pos.up(), state.with(HALF, TripleBlockHalf.UPPER), 3);
         world.setBlockState(pos.up().up(), state.with(HALF, TripleBlockHalf.TOP), 3);
@@ -213,7 +222,8 @@ public class BigDoorBlock extends Block {
         }
     }
 
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (!this.blockSetType.canOpenByHand()) {
             return ActionResult.PASS;
         } else {
@@ -237,6 +247,7 @@ public class BigDoorBlock extends Block {
         }
     }
 
+    @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         boolean bl = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(pos.offset(state.get(HALF) == TripleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
         if (!this.getDefaultState().isOf(sourceBlock) && bl != state.get(POWERED)) {
@@ -250,6 +261,7 @@ public class BigDoorBlock extends Block {
 
     }
 
+    @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         BlockPos blockPos = pos.down();
         BlockState blockState = world.getBlockState(blockPos);
@@ -260,18 +272,22 @@ public class BigDoorBlock extends Block {
         world.playSound(entity, pos, open ? this.blockSetType.doorOpen() : this.blockSetType.doorClose(), SoundCategory.BLOCKS, 1.0F, world.getRandom().nextFloat() * 0.1F + 0.9F);
     }
 
+    @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return mirror == BlockMirror.NONE ? state : state.rotate(mirror.getRotation(state.get(FACING))).cycle(HINGE);
     }
 
+    @Override
     public long getRenderingSeed(BlockState state, BlockPos pos) {
         return MathHelper.hashCode(pos.getX(), pos.down(state.get(HALF) == TripleBlockHalf.LOWER ? 0 : 1).getY(), pos.getZ());
     }
 
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(HALF, FACING, OPEN, HINGE, POWERED);
     }

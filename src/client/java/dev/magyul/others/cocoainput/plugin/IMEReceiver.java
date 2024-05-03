@@ -28,7 +28,6 @@ public abstract class IMEReceiver {
     }
 
     public void setMarkedText(String aString, int pos, int length) {
-//        CocoaInput.LOGGER.info("setMarkedText: {} {} {} {}", aString, pos, length, preeditBegin);
         if (!preeditBegin) {
             originalCursorPosition = getCursorPos();
             preeditBegin = true;

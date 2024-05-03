@@ -8,16 +8,12 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
-@SuppressWarnings("deprecation")
 public class ShelfBlock extends HorizontalFacingBlock {
     public static final MapCodec<ShelfBlock> CODEC = createCodec(ShelfBlock::new);
-//    private static final VoxelShape X_AXIS_SHAPE = Block.createCuboidShape(12, 0, 0, 16, 16, 16);
-//    private static final VoxelShape Z_AXIS_SHAPE = Block.createCuboidShape(0, 0, 12, 16, 16, 16);
     protected static final VoxelShape EAST = Block.createCuboidShape(
             12, 0, 0, 20, 16, 16);
     protected static final VoxelShape WEST = Block.createCuboidShape(
@@ -35,14 +31,17 @@ public class ShelfBlock extends HorizontalFacingBlock {
         return CODEC;
     }
 
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
+    @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
     }
 
+    @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return switch (state.get(FACING)) {
             case EAST -> EAST;
@@ -51,7 +50,5 @@ public class ShelfBlock extends HorizontalFacingBlock {
             case SOUTH -> SOUTH;
             default -> VoxelShapes.empty();
         };
-//        Direction direction = state.get(FACING);
-//        return direction.getAxis() == Direction.Axis.X ? X_AXIS_SHAPE : Z_AXIS_SHAPE;
     }
 }

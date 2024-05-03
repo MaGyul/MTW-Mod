@@ -43,11 +43,16 @@ accessible method net/minecraft/client/network/AbstractClientPlayerEntity getPla
 
 accessible class net/minecraft/client/render/item/HeldItemRenderer$HandRenderType
 
+accessible field net/minecraft/entity/EntityType$Builder dimensions Lnet/minecraft/entity/EntityDimensions;
+
 accessible field net/minecraft/entity/FallingBlockEntity block Lnet/minecraft/block/BlockState;
 accessible field net/minecraft/entity/ItemEntity owner Ljava/util/UUID;
 accessible field net/minecraft/entity/ItemEntity pickupDelay I
 
+accessible method net/minecraft/world/GameRules$BooleanRule create (ZLjava/util/function/BiConsumer;)Lnet/minecraft/world/GameRules$Type;
 accessible method net/minecraft/world/GameRules$BooleanRule create (Z)Lnet/minecraft/world/GameRules$Type;
+accessible method net/minecraft/world/GameRules$IntRule create (ILjava/util/function/BiConsumer;)Lnet/minecraft/world/GameRules$Type;
+accessible method net/minecraft/world/GameRules$IntRule create (I)Lnet/minecraft/world/GameRules$Type;
 accessible method net/minecraft/world/PersistentStateManager getFile (Ljava/lang/String;)Ljava/io/File;
 
 accessible class net/minecraft/item/ItemGroup$EntriesImpl

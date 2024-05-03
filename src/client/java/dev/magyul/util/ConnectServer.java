@@ -1,7 +1,6 @@
 package dev.magyul.util;
 
 import com.mojang.logging.LogUtils;
-import dev.magyul.MTWMod;
 import dev.magyul.ServerPingPong;
 import io.netty.channel.ChannelFuture;
 import net.minecraft.client.MinecraftClient;
@@ -11,10 +10,10 @@ import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.network.*;
 import net.minecraft.client.resource.server.ServerResourcePackManager;
 import net.minecraft.client.session.report.ReporterEnvironment;
-import net.minecraft.client.toast.SystemToast;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.NetworkSide;
 import net.minecraft.network.packet.c2s.login.LoginHelloC2SPacket;
+import net.minecraft.network.state.LoginStates;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
@@ -48,27 +47,7 @@ public class ConnectServer {
         this.connectFailedTitle = text;
     }
 
-    private static void showToast(MinecraftClient client, Text title, Text reason) {
-        var toast = client.getToastManager();
-        try {
-            toast.add(SystemToast.create(client, ClientUtil.MTW_TOAST, title, reason));
-        } catch (Exception ex) {
-            MTWMod.LOGGER.error("Error: ", ex);
-        }
-    }
-
     public static ConnectServer startConnecting(MinecraftClient mc, ServerAddress address, ServerInfo info) {
-        /*
-        if (!ServerPingPong.versionMatched && address.getAddress().equals(mtw_info.address)) {
-            showToast(mc, Text.translatable("disconnect.lost"),
-                    Text.translatable("disconnect.versionNotMatched", MTWMod.SERVER_VERSION, MTWMod.VERSION));
-            if (!(mc.currentScreen instanceof TitleScreen)) {
-                mc.setScreen(new TitleScreen());
-            }
-            return null;
-        }
-        a
-         */
         ServerPingPong.joinStart();
         ServerPingPong.serverJoined = true;
         ConnectServer cs = new ConnectServer(mc, ScreenTexts.CONNECT_FAILED);
@@ -77,10 +56,11 @@ public class ConnectServer {
         mc.ensureAbuseReportContext(ReporterEnvironment.ofThirdPartyServer(info.address));
         mc.getQuickPlayLogger().setWorld(QuickPlayLogger.WorldType.MULTIPLAYER, info.address, info.name);
         cs.connect(mc, address, info);
+
         return cs;
     }
 
-    private void connect(final MinecraftClient minecraft, final ServerAddress address, @Nullable final ServerInfo info) {
+    private void connect(final MinecraftClient client, final ServerAddress address, final ServerInfo info) {
         playStatus = Text.translatable("connect.connecting");
         LOGGER.info("Connecting to {}, {}", address.getAddress(), address.getPort());
         Thread thread = new Thread("Server Connector #"  + UNIQUE_THREAD_ID.incrementAndGet()) {
@@ -95,8 +75,8 @@ public class ConnectServer {
 
                     if (optional.isEmpty()) {
                         LOGGER.error("Couldn't connect to server: Unknown host \"{}\"", address.getAddress());
-                        minecraft.execute(() ->
-                                minecraft.setScreen(new DisconnectedScreen(new TitleScreen(), connectFailedTitle, UNKNOWN_HOST_MESSAGE)));
+                        client.execute(() ->
+                                client.setScreen(new DisconnectedScreen(new TitleScreen(), connectFailedTitle, UNKNOWN_HOST_MESSAGE)));
                         return;
                     }
 
@@ -106,8 +86,8 @@ public class ConnectServer {
                         if (cancel) return;
 
                         connection = new ClientConnection(NetworkSide.CLIENTBOUND);
-                        connection.resetPacketSizeLog(minecraft.getDebugHud().getPacketSizeLog());
-                        channelFuture = ClientConnection.connect(isa, minecraft.options.shouldUseNativeTransport(), connection);
+                        connection.resetPacketSizeLog(client.getDebugHud().getPacketSizeLog());
+                        channelFuture = ClientConnection.connect(isa, client.options.shouldUseNativeTransport(), connection);
                     }
 
                     channelFuture.syncUninterruptibly();
@@ -118,11 +98,11 @@ public class ConnectServer {
                         }
 
                         ConnectServer.this.connection = connection;
-                        minecraft.getServerResourcePackProvider().init(connection, info != null ? convertPackStatus(info.getResourcePackPolicy()) : ServerResourcePackManager.AcceptanceStatus.PENDING);
+                        client.getServerResourcePackProvider().init(connection, convertPackStatus(info.getResourcePackPolicy()));
                     }
 
-                    connection.connect(isa.getHostName(), isa.getPort(), new ClientLoginNetworkHandler(connection, minecraft, info, new TitleScreen(), false, null, ConnectServer.this::updateStatus));
-                    connection.send(new LoginHelloC2SPacket(minecraft.getSession().getUsername(), minecraft.getSession().getUuidOrNull()));
+                    connection.connect(isa.getHostName(), isa.getPort(), LoginStates.C2S, LoginStates.S2C, new ClientLoginNetworkHandler(connection, client, info, new TitleScreen(), false, null, ConnectServer.this::updateStatus, null), false);
+                    connection.send(new LoginHelloC2SPacket(client.getSession().getUsername(), client.getSession().getUuidOrNull()));
                 } catch (Exception ex) {
                     if (cancel) return;
 
@@ -136,8 +116,8 @@ public class ConnectServer {
 
                     LOGGER.error("Couldn't connect to server", ex);
                     String str = isa == null ? exp.getMessage() : exp.getMessage().replaceAll(isa.getHostName() + ":" + isa.getPort(), "").replaceAll(isa.toString(), "");
-                    minecraft.execute(() ->
-                            minecraft.setScreen(new DisconnectedScreen(new TitleScreen(), connectFailedTitle, Text.translatable("disconnect.genericReason", str))));
+                    client.execute(() ->
+                            client.setScreen(new DisconnectedScreen(new TitleScreen(), connectFailedTitle, Text.translatable("disconnect.genericReason", str))));
                 }
             }
 

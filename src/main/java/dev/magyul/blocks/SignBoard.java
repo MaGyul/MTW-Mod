@@ -18,7 +18,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("deprecation")
 public class SignBoard extends Block {
     public static final MapCodec<SignBoard> CODEC = RecordCodecBuilder.mapCodec((instance) ->
             instance.group(WoodType.CODEC.fieldOf("wood_type").forGetter(signBoard -> signBoard.getWoodType()), createSettingsCodec()).apply(instance, SignBoard::new));

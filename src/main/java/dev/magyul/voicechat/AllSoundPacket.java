@@ -1,17 +1,15 @@
 package dev.magyul.voicechat;
 
-import de.maxhenkel.voicechat.voice.common.GroupSoundPacket;
 import de.maxhenkel.voicechat.voice.common.SoundPacket;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.Text;
 
 import java.util.UUID;
 
 public class AllSoundPacket extends SoundPacket<AllSoundPacket> {
 
-    private Text senderName;
+    private String senderName;
 
-    public AllSoundPacket(UUID sender, byte[] data, long sequenceNumber, Text senderName) {
+    public AllSoundPacket(UUID sender, byte[] data, long sequenceNumber, String senderName) {
         super(sender, sender, data, sequenceNumber, null);
         this.senderName = senderName;
     }
@@ -19,7 +17,7 @@ public class AllSoundPacket extends SoundPacket<AllSoundPacket> {
     public AllSoundPacket() {
     }
 
-    public Text getSenderName() {
+    public String getSenderName() {
         return senderName;
     }
 
@@ -33,7 +31,7 @@ public class AllSoundPacket extends SoundPacket<AllSoundPacket> {
         if (this.hasFlag(data, (byte)2)) {
             soundPacket.category = buf.readString(16);
         }
-        soundPacket.senderName = buf.readText();
+        soundPacket.senderName = buf.readString();
 
         return soundPacket;
     }
@@ -53,6 +51,6 @@ public class AllSoundPacket extends SoundPacket<AllSoundPacket> {
             buf.writeString(this.category, 16);
         }
 
-        buf.writeText(senderName);
+        buf.writeString(senderName);
     }
 }

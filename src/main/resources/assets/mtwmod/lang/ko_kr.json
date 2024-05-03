@@ -3,6 +3,9 @@
 
   "disconnect.versionNotMatched": "서버와 클라이언트의 MTW 모드 버전이 일치하지 않습니다. (서버: %s / 클라이언트: %s)",
 
+  "gamerule.doPickupMode": "아이템 Carry 혹은 픽업",
+  "gamerule.pickupReach": "아이템 Carry 픽업 리치",
+
   "item.mtwmod.more_info": "§7숨겨진 내용을 보려면 %s§7를 누르세요.",
 
   "subtitle.mtwmod.shoji": "쇼지 도어 열림",

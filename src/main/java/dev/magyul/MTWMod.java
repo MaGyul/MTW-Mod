@@ -1,48 +1,36 @@
 package dev.magyul;
 
 import dev.magyul.blocks.ErrorBlock;
-import dev.magyul.data.ChunkData;
 import dev.magyul.data.PlayerData;
 import dev.magyul.data.WorldData;
 import dev.magyul.events.LivingEntityEvents;
+import dev.magyul.network.NetworkCodecs;
 import dev.magyul.network.SNetwork;
 import dev.magyul.registers.*;
 import dev.magyul.util.ServerUtil;
 import dev.magyul.world.DevelopDimensions;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.player.*;
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.event.GameEvent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import virtuoel.pehkui.api.ScaleTypes;
 
 import java.util.Timer;
 
@@ -53,8 +41,6 @@ public class MTWMod implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MTWMod.class);
 	public static final String ID = "mtwmod";
 	public static String VERSION = "1.0.0";
-	@NotNull
-	public static String SERVER_VERSION = "none";
 	private static Timer regionViewer;
 
 	@Override
@@ -69,11 +55,12 @@ public class MTWMod implements ModInitializer {
 		}
 
 		MTWBlocks.init();
-		MTWBlockEntities.init();
+		MTWDataComponentTypes.init();
 		MTWItems.init();
 		MTWSounds.init();
 		MTWTags.init();
 		Other.init();
+		NetworkCodecs.register();
 		SNetwork.register();
 		CommandRegistrationCallback.EVENT.register(MTWCommands::register);
 		DevelopDimensions.register();
@@ -88,36 +75,9 @@ public class MTWMod implements ModInitializer {
 		});
 		AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> onClickBlock(player, hand, null));
 		UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> onClickBlock(player, hand, hitResult));
-		ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
-			if (oldPlayer.getWorld().getGameRules().getBoolean(GameRules.KEEP_INVENTORY)) {
-				return;
-			}
-
-			if (PlayerData.hasCarryState(oldPlayer)) {
-				var world = oldPlayer.getServerWorld();
-				oldPlayer.getInventory().armor.set(3, Items.AIR.getDefaultStack());
-				var carry = PlayerData.getCarryState(oldPlayer);
-				var context = new ItemPlacementContext(oldPlayer, Hand.MAIN_HAND, ItemStack.EMPTY, BlockHitResult.createMissed(Vec3d.ofCenter(oldPlayer.getBlockPos()), Direction.DOWN, oldPlayer.getBlockPos()));
-				var state = ServerUtil.getPlacementState(carry, oldPlayer, context, oldPlayer.getBlockPos());
-				var pos = ServerUtil.getDeathPlacementPos(state, oldPlayer);
-				var blockEntity = PlayerData.getCarryTile(oldPlayer, pos);
-				world.setBlockState(pos, state, 3);
-				if (blockEntity != null) {
-					world.addBlockEntity(blockEntity);
-				}
-				PlayerData.setCarryState(oldPlayer, null, null);
-			}
-		});
 		UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
 //			LOGGER.info("{}, {}", entity.getClass().getName(), hitResult);
 			return ActionResult.PASS;
-		});
-		ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-			if (entity instanceof ItemEntity) {
-				var data = ScaleTypes.BASE.getScaleData(entity);
-				data.setScaleTickDelay(0);
-				data.setScale(3f);
-			}
 		});
 		ServerLifecycleEvents.SERVER_STARTED.register(this::onServerStarted);
 		ServerLifecycleEvents.SERVER_STOPPING.register(this::onServerStopping);

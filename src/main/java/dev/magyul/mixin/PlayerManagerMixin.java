@@ -2,6 +2,9 @@ package dev.magyul.mixin;
 
 
 import com.mojang.authlib.GameProfile;
+import dev.magyul.network.PickupReachS2CPacket;
+import dev.magyul.registers.MTWGameRules;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.registry.RegistryKey;
@@ -28,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Optional;
 
-@Mixin({PlayerManager.class})
+@Mixin(PlayerManager.class)
 public abstract class PlayerManagerMixin {
     @Shadow @Final private MinecraftServer server;
 
@@ -39,7 +42,7 @@ public abstract class PlayerManagerMixin {
     public PlayerManagerMixin() {
     }
 
-    @Inject(method = "onPlayerConnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;setGameMode(Lnet/minecraft/nbt/NbtCompound;)V", shift = At.Shift.AFTER))
+    @Inject(method = "onPlayerConnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;readGameModeNbt(Lnet/minecraft/nbt/NbtCompound;)V", shift = At.Shift.AFTER))
     private void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player, ConnectedClientData commonListenerCookie, CallbackInfo ci) {
         if (!isOp(player) && player.interactionManager.getGameMode() == GameMode.ADVENTURE) {
             var world = player.getServerWorld();
@@ -47,6 +50,13 @@ public abstract class PlayerManagerMixin {
             player.setYaw(world.getSpawnAngle());
             player.setPitch(0f);
         }
+    }
+
+    @Inject(method = "onPlayerConnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V", ordinal = 4, shift = At.Shift.AFTER))
+    private void onPlayerConnectPacket(ClientConnection connection, ServerPlayerEntity player, ConnectedClientData clientData, CallbackInfo ci) {
+        var world = player.getServerWorld();
+        var reach = world.getGameRules().getInt(MTWGameRules.PICKUP_REACH);
+        ServerPlayNetworking.send(player, new PickupReachS2CPacket(reach));
     }
 
     @Inject(method = "respawnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;getServerWorld()Lnet/minecraft/server/world/ServerWorld;", ordinal = 1, shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
@@ -113,7 +123,7 @@ public abstract class PlayerManagerMixin {
         if (this.server.isHost(player.getGameProfile()) && nbtCompound != null) {
             nbtCompound2 = nbtCompound;
         } else {
-            nbtCompound2 = this.saveHandler.loadPlayerData(player);
+            nbtCompound2 = this.saveHandler.loadPlayerData(player).orElse(null);
         }
 
         return nbtCompound2;

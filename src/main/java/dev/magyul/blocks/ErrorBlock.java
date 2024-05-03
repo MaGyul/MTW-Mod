@@ -4,18 +4,18 @@ import com.mojang.datafixers.util.Function4;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.BlockStateComponent;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldView;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.ToIntFunction;
@@ -25,7 +25,7 @@ public class ErrorBlock extends Block {
     public static final int MIN_LEVEL = 0;
     public static final IntProperty LEVEL = Properties.LEVEL_15;
     public static final ToIntFunction<BlockState> LIGHT_EMISSION = (state) -> state.get(LEVEL);
-    public static Function4<ItemStack, @Nullable BlockView, List<Text>, TooltipContext, Void> clientCallback = null;
+    public static Function4<ItemStack, Item.TooltipContext, List<Text>, TooltipType, Void> clientCallback = null;
 
     @Override
     protected MapCodec<? extends Block> getCodec() {
@@ -38,20 +38,11 @@ public class ErrorBlock extends Block {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
-        var tag = stack.getOrCreateNbt();
-        if (tag.contains("BlockStateTag")) {
-            tag = tag.getCompound("BlockStateTag");
-            if (tag.contains(LEVEL.getName())) {
-                var level = tag.getInt(LEVEL.getName());
-                tooltip.add(Text.translatable("item.mtwmod.error_block_light", level));
-            }
-        } else {
-            tooltip.add(Text.translatable("item.mtwmod.error_block_light", 0));
-        }
+    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
+        tooltip.add(Text.translatable("item.mtwmod.error_block_light", getLightOnStack(stack)));
 
         if (clientCallback != null) {
-            clientCallback.apply(stack, world, tooltip, options);
+            clientCallback.apply(stack, context, tooltip, options);
         }
     }
 
@@ -67,12 +58,10 @@ public class ErrorBlock extends Block {
 
     public static int getLightOnStack(ItemStack item) {
         var level = 0;
-        var tag = item.getOrCreateNbt();
-        if (tag.contains("BlockStateTag")) {
-            tag = tag.getCompound("BlockStateTag");
-            if (tag.contains(LEVEL.getName())) {
-                level = tag.getInt(LEVEL.getName());
-            }
+        var data = item.get(DataComponentTypes.BLOCK_STATE);
+        if (data != null) {
+            var getLevel = data.getValue(LEVEL);
+            if (getLevel != null) level = getLevel;
         }
 
         return level;
@@ -80,11 +69,13 @@ public class ErrorBlock extends Block {
 
     public static ItemStack setLightOnStack(ItemStack item, int lightLevel) {
         if (lightLevel != MIN_LEVEL) {
-            NbtCompound tag = new NbtCompound();
-            tag.putInt(LEVEL.getName(), lightLevel);
-            item.setSubNbt("BlockStateTag", tag);
+            item.set(DataComponentTypes.BLOCK_STATE, BlockStateComponent.DEFAULT.with(LEVEL, lightLevel));
         } else {
-            item.removeSubNbt("BlockStateTag");
+            var data = item.get(DataComponentTypes.BLOCK_STATE);
+            if (data != null) {
+                data.properties().remove(LEVEL.getName());
+                item.set(DataComponentTypes.BLOCK_STATE, data);
+            }
         }
 
         return item;

@@ -3,7 +3,6 @@ package dev.magyul.mixin;
 import dev.magyul.MTWMod;
 import dev.magyul.data.WorldData;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtSizeTracker;
 import net.minecraft.server.world.ServerWorld;

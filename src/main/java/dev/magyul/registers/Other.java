@@ -2,18 +2,12 @@ package dev.magyul.registers;
 
 import dev.magyul.MTWMod;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
 
 public class Other {
     public static final ItemGroup ITEM_GROUP = register("mtwmod_group", FabricItemGroup.builder()

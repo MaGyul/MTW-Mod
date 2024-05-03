@@ -30,6 +30,7 @@ public abstract class SafetyScreenMixin extends WarningScreen {
         super(HEADER, MESSAGE, CHECK_MESSAGE, NARRATED_TEXT);
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Inject(method = "method_57752", at = @At("HEAD"), cancellable = true)
     private void proceedButton(ButtonWidget buttonWidget, CallbackInfo cb) {
         cb.cancel();

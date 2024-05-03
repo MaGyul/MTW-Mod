@@ -2,10 +2,8 @@ package dev.magyul.registers;
 
 import dev.magyul.MTWMod;
 import dev.magyul.blocks.AnvilBlock;
-import dev.magyul.blocks.TransparentBlock;
 import dev.magyul.blocks.WallBlock;
 import dev.magyul.blocks.*;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.Instrument;
 import net.minecraft.block.piston.PistonBehavior;
@@ -14,7 +12,6 @@ import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
-import virtuoel.pehkui.api.ScaleTypes;
 
 import static net.minecraft.block.Blocks.*;
 

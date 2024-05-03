@@ -1,7 +1,6 @@
 package dev.magyul.blocks;
 
 import com.mojang.serialization.MapCodec;
-import dev.magyul.registers.MTWBlocks;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -13,6 +12,7 @@ public class MoreSlabBlock extends HorizontalFacingBlock {
     public static final MapCodec<MoreSlabBlock> CODEC = createCodec(MoreSlabBlock::new);
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0, 13.0, 0.0, 16.0, 16.0, 16.0);
 
+    @Override
     public MapCodec<? extends MoreSlabBlock> getCodec() {
         return CODEC;
     }
@@ -21,14 +21,17 @@ public class MoreSlabBlock extends HorizontalFacingBlock {
         super(settings);
     }
 
+    @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE;
     }
 
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
+    @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }

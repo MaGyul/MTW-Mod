@@ -6,7 +6,6 @@ import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
-import net.minecraft.util.Pair;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
@@ -27,6 +26,7 @@ public class ClientUtil {
     public static final ServerAddress mtw_address = new ServerAddress(mtw_info.address, 25565);
     public static final SystemToast.Type MTW_TOAST = new SystemToast.Type();
     public static final Map<UUID, String> receivedAllMic = new HashMap<>();
+    public static int pickupReach = 45;
     public static ConnectServer cs;
     public static Text playStatus;
     private static boolean allMic = false;

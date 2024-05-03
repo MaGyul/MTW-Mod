@@ -19,32 +19,6 @@ public class QuickPlayMixin {
         client.setScreen(new TitleScreen());
         if (ClientUtil.checkTest()) return;
 
-        /*
-        if (!pinged() && !mtw_info.online) {
-            mtw_info.online = true;
-            mtw_info.ping = -2L;
-            mtw_info.label = ScreenTexts.EMPTY;
-            mtw_info.playerCountLabel = ScreenTexts.EMPTY;
-            ServerPingPong.startPinging();
-        }
-
-        a
-         */
-
         ClientUtil.cs = ConnectServer.startConnecting(client, ClientUtil.mtw_address, ClientUtil.mtw_info);
     }
-    /*
-        final Timer[] timer = new Timer[1];
-        timer[0] = ClientUtil.setInterval(() -> {
-            if (pinged() && mtw_info.ping >= 0L) {
-                timer[0].cancel();
-            }
-        }, 100);
-    }
-
-    @Unique
-    private static boolean pinged() {
-        return ClientUtil.mtw_info.online && ClientUtil.mtw_info.ping != -2L;
-    }
-     */
 }

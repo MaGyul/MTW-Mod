@@ -1,50 +1,34 @@
 package dev.magyul.network;
 
-import dev.magyul.MTWMod;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
+import dev.magyul.blocks.ErrorBlock;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 
-public record ErrorBlockUpdateC2SPacket(Hand hand, int lightLevel) implements FabricPacket {
-    public static final PacketType<ErrorBlockUpdateC2SPacket> TYPE = PacketType.create(new Identifier(MTWMod.ID, "error_block_update"), ErrorBlockUpdateC2SPacket::new);
+public record ErrorBlockUpdateC2SPacket(Hand hand, int lightLevel) implements CustomPayload {
 
     public ErrorBlockUpdateC2SPacket(PacketByteBuf buf) {
         this(buf.readEnumConstant(Hand.class), buf.readInt());
     }
 
-    @Override
     public void write(PacketByteBuf buf) {
         buf.writeEnumConstant(hand);
         buf.writeInt(lightLevel);
     }
 
-    public void receive(ServerPlayerEntity player, PacketSender ignoredSender) {
+    public void receive(ServerPlayNetworking.Context context) {
+        var player = context.player();
         if (player != null) {
             var stack = player.getStackInHand(hand);
             if (!stack.isEmpty()) {
-                setLightOnStack(stack, lightLevel);
+                ErrorBlock.setLightOnStack(stack, lightLevel);
             }
         }
     }
 
     @Override
-    public PacketType<?> getType() {
-        return TYPE;
-    }
-
-    private static void setLightOnStack(ItemStack item, int lightLevel) {
-        if (lightLevel != 0) {
-            NbtCompound tag = new NbtCompound();
-            tag.putInt("level", lightLevel);
-            item.setSubNbt("BlockStateTag", tag);
-        } else {
-            item.removeSubNbt("BlockStateTag");
-        }
+    public Id<? extends CustomPayload> getId() {
+        return Namespaces.ERROR_BLOCK_UPDATE;
     }
 }

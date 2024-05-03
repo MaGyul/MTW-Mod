@@ -1,36 +1,32 @@
 package dev.magyul.network;
 
-import dev.magyul.MTWMod;
 import dev.magyul.data.PlayerData;
+import dev.magyul.registers.MTWDataComponentTypes;
 import dev.magyul.registers.MTWGameRules;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.stat.Stats;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.GameMode;
 
 import java.util.UUID;
 
-public record PickupItemC2SPacket(UUID uuid) implements FabricPacket {
-    public static final PacketType<PickupItemC2SPacket> TYPE = PacketType.create(new Identifier(MTWMod.ID, "pickup_item"), PickupItemC2SPacket::new);
+public record PickupItemC2SPacket(UUID uuid) implements CustomPayload {
 
     public PickupItemC2SPacket(PacketByteBuf buf) {
         this(buf.readUuid());
     }
 
-    @Override
     public void write(PacketByteBuf buf) {
         buf.writeUuid(uuid);
     }
 
-    public void receive(ServerPlayerEntity player, PacketSender ignoredSender) {
+    public void receive(ServerPlayNetworking.Context context) {
+        var player = context.player();
         if (player.interactionManager.getGameMode() != GameMode.ADVENTURE) return;
         var server = player.getServerWorld();
         var world = player.getServerWorld();
@@ -43,7 +39,7 @@ public record PickupItemC2SPacket(UUID uuid) implements FabricPacket {
             if (stack.getItem() instanceof BlockItem && !doPickupMode.get()) {
                 if (!PlayerData.getCarryItem(player).isEmpty()) return;
                 PlayerData.setCarryItem(player, stack.copyWithCount(1));
-                inventory.armor.set(3, PlayerData.getCarryItem(player));
+                inventory.armor.set(3, addFakeItem(PlayerData.getCarryItem(player)));
 
                 stack.decrement(1);
                 if (stack.isEmpty()) {
@@ -69,35 +65,13 @@ public record PickupItemC2SPacket(UUID uuid) implements FabricPacket {
         }
     }
 
-    /*
-    var pos = blockHit.getBlockPos();
-    if (!ServerUtil.canCarryGeneral(serverPlayer, Vec3d.ofCenter(pos))) return ActionResult.PASS;
-    var target = world.getBlockState(pos);
-    if (!target.isIn(MTWTags.CARRY_ON)) return ActionResult.PASS;
-    var blockEntity = world.getBlockEntity(pos);
-
-    if (blockEntity != null) {
-        var nbt = blockEntity.createNbtWithId();
-        if (nbt.contains("Lock") && !nbt.getString("Lock").isEmpty())
-            return ActionResult.PASS;
+    private ItemStack addFakeItem(ItemStack stack) {
+        stack.set(MTWDataComponentTypes.IS_CARRY, true);
+        return stack;
     }
 
-    var doPickup = PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(world, player, pos, target, blockEntity);
-    if (!doPickup) return ActionResult.PASS;
-
-    PlayerData.setCarryState(serverPlayer, target, blockEntity);
-
-    var item = target.getBlock().asItem();
-    inventory.armor.set(3, item.getDefaultStack());
-
-    world.removeBlockEntity(pos);
-    world.removeBlock(pos, false);
-    serverPlayer.currentScreenHandler.sendContentUpdates();
-    return ActionResult.SUCCESS;
-     */
-
     @Override
-    public PacketType<?> getType() {
-        return TYPE;
+    public Id<? extends CustomPayload> getId() {
+        return Namespaces.PICKUP_ITEM;
     }
 }

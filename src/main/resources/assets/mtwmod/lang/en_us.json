@@ -3,6 +3,9 @@
 
   "disconnect.versionNotMatched": "The MTW mod versions on the server and client don't match. (Server: %s / Client: %s)",
 
+  "gamerule.doPickupMode": "Carry or pick up items",
+  "gamerule.pickupReach": "Item Carry Pickup Reach",
+
   "item.mtwmod.more_info": "§7Press %s §7to see the hidden content.",
 
   "subtitle.mtwmod.shoji": "Open Shoji Door",

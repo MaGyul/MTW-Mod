@@ -18,7 +18,6 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -53,6 +52,7 @@ public class WindowBlock extends HorizontalFacingBlock {
     protected static final VoxelShape X_AXIS_CULL_SHAPE = VoxelShapes.union(Block.createCuboidShape(6.0, 5.0, 0.0, 10.0, 16.0, 2.0), Block.createCuboidShape(6.0, 5.0, 14.0, 10.0, 16.0, 16.0));
     private final WoodType type;
 
+    @Override
     public MapCodec<WindowBlock> getCodec() {
         return CODEC;
     }
@@ -63,10 +63,12 @@ public class WindowBlock extends HorizontalFacingBlock {
         this.setDefaultState(this.stateManager.getDefaultState().with(OPEN, false).with(POWERED, false).with(HALF, DoubleBlockHalf.LOWER).with(HINGE, DoorHinge.LEFT));
     }
 
+    @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return state.get(FACING).getAxis() == Direction.Axis.X ? X_AXIS_SHAPE : Z_AXIS_SHAPE;
     }
 
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         DoubleBlockHalf doubleBlockHalf = state.get(HALF);
         if (direction.getAxis() == Direction.Axis.Y && doubleBlockHalf == DoubleBlockHalf.LOWER == (direction == Direction.UP)) {
@@ -76,6 +78,7 @@ public class WindowBlock extends HorizontalFacingBlock {
         }
     }
 
+    @Override
     public VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos) {
         if (state.get(OPEN)) {
             return VoxelShapes.empty();
@@ -84,6 +87,7 @@ public class WindowBlock extends HorizontalFacingBlock {
         }
     }
 
+    @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         if (state.get(OPEN)) {
             return VoxelShapes.empty();
@@ -92,17 +96,20 @@ public class WindowBlock extends HorizontalFacingBlock {
         }
     }
 
+    @Override
     public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
         return state.get(FACING).getAxis() == Direction.Axis.X ? X_AXIS_CULL_SHAPE : Z_AXIS_CULL_SHAPE;
     }
 
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    @Override
+    protected boolean canPathfindThrough(BlockState state, NavigationType type) {
         return switch (type) {
             case LAND, AIR -> state.get(OPEN);
             default -> false;
         };
     }
 
+    @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         World world = ctx.getWorld();
         BlockPos blockPos = ctx.getBlockPos();
@@ -115,7 +122,8 @@ public class WindowBlock extends HorizontalFacingBlock {
         }
     }
 
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    @Override
+    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (state.get(OPEN)) {
             state = state.with(OPEN, false);
             world.setBlockState(pos, state, 10);
@@ -140,6 +148,7 @@ public class WindowBlock extends HorizontalFacingBlock {
         world.setBlockState(pos.up(), state.with(HALF, DoubleBlockHalf.UPPER), 3);
     }
 
+    @Override
     public void onExploded(BlockState state, World world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> stackMerger) {
         if (explosion.getDestructionType() == Explosion.DestructionType.TRIGGER_BLOCK && state.get(HALF) == DoubleBlockHalf.LOWER && !world.isClient() && !(Boolean)state.get(POWERED)) {
             this.setOpen(null, world, state, pos, !this.isOpen(state));
@@ -148,6 +157,7 @@ public class WindowBlock extends HorizontalFacingBlock {
         super.onExploded(state, world, pos, explosion, stackMerger);
     }
 
+    @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         boolean bl = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(pos.offset(state.get(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
         if (!this.getDefaultState().isOf(sourceBlock) && bl != state.get(POWERED)) {
@@ -177,6 +187,7 @@ public class WindowBlock extends HorizontalFacingBlock {
         return MathHelper.hashCode(pos.getX(), pos.down(state.get(HALF) == DoubleBlockHalf.LOWER ? 0 : 1).getY(), pos.getZ());
     }
 
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(HALF, FACING, OPEN, HINGE, POWERED);
     }

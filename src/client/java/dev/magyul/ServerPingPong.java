@@ -1,8 +1,8 @@
 package dev.magyul;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import dev.magyul.api.ModInfo;
 import dev.magyul.util.ClientUtil;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;
 import net.minecraft.client.network.Address;
 import net.minecraft.client.network.AllowedAddressResolver;
@@ -19,7 +19,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.logging.UncaughtExceptionLogger;
-import net.minecraft.util.profiler.PerformanceLog;
+import net.minecraft.util.profiler.MultiValueDebugSampleLogImpl;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -31,7 +31,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import static dev.magyul.util.ClientUtil.mtw_info;
 
 public class ServerPingPong {
-    public static boolean versionMatched = true;
     public static boolean serverJoined = false;
     public static Runnable joinStart;
     public static Runnable tick;
@@ -76,10 +75,10 @@ public class ServerPingPong {
                 }
             }
         }
-        mtw_info.online = false;
+        mtw_info.setStatus(ServerInfo.Status.INITIAL);
     }
 
-    public static void startPinging() {
+    public static void startPinging(MinecraftClient client, Runnable pingCallback, Runnable update) {
         if (isPinging) return;
         if (serverJoined) return;
         SERVER_PINGER_THREAD_POOL.submit(() -> {
@@ -88,15 +87,14 @@ public class ServerPingPong {
                 final var address = ClientUtil.mtw_address;
                 var optional = AllowedAddressResolver.DEFAULT.resolve(address).map(Address::getInetSocketAddress);
                 if (optional.isEmpty()) {
-                    MTWMod.LOGGER.error("Can't ping: {}", ConnectScreen.BLOCKED_HOST_TEXT.getString());
+                    MTWMod.LOGGER.error("Can't ping: {}", ConnectScreen.UNKNOWN_HOST_TEXT.getString());
                     mtw_info.label = Text.translatable("multiplayer.status.cannot_connect").withColor(-65536);
                     mtw_info.playerCountLabel = ScreenTexts.EMPTY;
                 } else {
                     isPinging = true;
                     final var isa = optional.get();
-                    final var connection = ClientConnection.connect(isa, false, (PerformanceLog) null);
+                    final var connection = ClientConnection.connect(isa, false, (MultiValueDebugSampleLogImpl) null);
                     mtw_info.label = Text.translatable("multiplayer.status.pinging");
-                    mtw_info.ping = -1L;
                     mtw_info.playerListSummary = List.of();
                     joinStart = () -> {
                         if (connection.isOpen()) {
@@ -112,10 +110,10 @@ public class ServerPingPong {
                             connection.handleDisconnection();
                         }
                     };
-                    var listener = new CQPListener(connection);
+                    var listener = new CQPListener(connection, pingCallback);
                     try {
                         connection.connect(address.getAddress(), address.getPort(), listener);
-                        connection.send(new QueryRequestC2SPacket());
+                        connection.send(QueryRequestC2SPacket.INSTANCE);
                     } catch (Throwable thr) {
                         MTWMod.LOGGER.error("Failed to ping mtw server", thr);
                     }
@@ -124,11 +122,13 @@ public class ServerPingPong {
                 isPinging = false;
                 //noinspection ConstantValue
                 if (ex instanceof UnknownHostException) {
-                    mtw_info.ping = -1L;
+                    mtw_info.setStatus(ServerInfo.Status.UNREACHABLE);
                     mtw_info.label = Text.translatable("multiplayer.status.cannot_resolve").withColor(-65536);
+                    client.execute(update);
                 } else {
-                    mtw_info.ping = -1L;
+                    mtw_info.setStatus(ServerInfo.Status.UNREACHABLE);
                     mtw_info.label = Text.translatable("multiplayer.status.cannot_connect").withColor(-65536);
+                    client.execute(update);
                 }
             }
         });
@@ -137,12 +137,14 @@ public class ServerPingPong {
 
     private static class CQPListener implements ClientQueryPacketListener {
         private final ClientConnection connection;
+        private final Runnable pingCallback;
         private boolean sentQuery;
         private boolean received;
         private long startTime;
 
-        private CQPListener(ClientConnection connection) {
+        private CQPListener(ClientConnection connection, Runnable pingCallback) {
             this.connection = connection;
+            this.pingCallback = pingCallback;
         }
 
         @Override
@@ -194,13 +196,8 @@ public class ServerPingPong {
         @Override
         public void onPingResult(PingResultS2CPacket packet) {
             mtw_info.ping = Util.getMeasuringTimeMs() - startTime;
-            if (packet instanceof ModInfo info) {
-                var showLog = info.mtwmod$version() == null || !MTWMod.SERVER_VERSION.equals(info.mtwmod$version());
-                MTWMod.SERVER_VERSION = info.mtwmod$version() == null ? "none" : info.mtwmod$version();
-                if (showLog) MTWMod.LOGGER.info("Server Version: {}", MTWMod.SERVER_VERSION);
-                versionMatched = MTWMod.VERSION.equalsIgnoreCase(MTWMod.SERVER_VERSION);
-            }
             connection.disconnect(Text.translatable("multiplayer.status.finished"));
+            pingCallback.run();
             isPinging = false;
         }
 

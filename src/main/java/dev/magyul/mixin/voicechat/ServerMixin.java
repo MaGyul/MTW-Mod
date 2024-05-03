@@ -40,7 +40,7 @@ public abstract class ServerMixin {
                     var receiverState = playerStateManager.getState(target.getUuid());
                     if (receiverState == null) continue;
 
-                    var soundPacket = new AllSoundPacket(player.getUuid(), packet.getData(), packet.getSequenceNumber(), player.getName());
+                    var soundPacket = new AllSoundPacket(player.getUuid(), packet.getData(), packet.getSequenceNumber(), player.getName().getString());
                     var connection = getConnection(receiverState.getUuid());
                     sendSoundPacket(player, state, target, receiverState, connection, soundPacket, "all");
                 }
