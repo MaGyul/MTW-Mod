@@ -19,7 +19,7 @@ public class RegionSecondArgument implements ArgumentType<String> {
     // 함경도
     private static final List<String> HamgYeongDo = List.of("온성", "경원", "경흥", "종성", "회령", "부령", "경성", "무산", "명천", "길주", "갑산", "단천", "삼수", "장진", "북청", "함흥", "정평", "영흥", "덕원", "안변");
     // 평안도
-    private static final List<String> PyeongAnDo = List.of("후주", "강계", "위원", "초산", "희천", "벽동", "창성", "삭주", "의주", "용천", "선천", "구성", "운산", "영변", "정주", "맹산", "개천", "안주", "숙천", "은신", "성천", "양덕", "상원", "평양", "증산", "삼화");
+    private static final List<String> PyeongAnDo = List.of("후주", "강계", "위원", "초산", "희천", "벽동", "창성", "삭주", "의주", "용천", "선천", "구성", "운산", "영변", "정주", "맹산", "개천", "안주", "숙천", "은산", "성천", "양덕", "상원", "평양", "증산", "삼화");
     // 황해도
     private static final List<String> HwangHaeDo = List.of("곡산", "수안", "신계", "토산", "서흥", "평산", "배천", "황주", "봉산", "재령", "해주", "강령", "옹진", "안악", "문화", "은율", "풍천", "장연");
     // 강원도

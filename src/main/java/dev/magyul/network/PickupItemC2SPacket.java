@@ -39,7 +39,7 @@ public record PickupItemC2SPacket(UUID uuid) implements CustomPayload {
             if (stack.getItem() instanceof BlockItem && !doPickupMode.get()) {
                 if (!PlayerData.getCarryItem(player).isEmpty()) return;
                 PlayerData.setCarryItem(player, stack.copyWithCount(1));
-                inventory.armor.set(3, addFakeItem(PlayerData.getCarryItem(player)));
+                inventory.armor.set(3, addFakeItem(stack.copyWithCount(1)));
 
                 stack.decrement(1);
                 if (stack.isEmpty()) {

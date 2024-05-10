@@ -1,7 +1,7 @@
 package dev.magyul.mixin.client.cocoainput;
 
-import dev.magyul.others.cocoainput.util.Util;
-import dev.magyul.others.cocoainput.wrapper.TextFieldWidgetWrapper;
+import dev.magyul.cocoainput.util.Util;
+import dev.magyul.cocoainput.wrapper.TextFieldWidgetWrapper;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;

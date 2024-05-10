@@ -75,6 +75,8 @@ dependencies {
 	}
 	modImplementation "dev.mtwmod:mtwmod-resource:1.0.0"
 	include modImplementation("dev.mtwmod:mtwmod-skinpreset:1.0.1")
+	include modImplementation("dev.mtwmod:mtwmod-animation:1.0.0")
+//	modImplementation "dev.mtwmod:improved-animations:1.0.2"
 
 	implementation "dnsjava:dnsjava:3.5.3"
 	implementation "dev.mtwmod:terminalconsoleappender:1.4.0"

@@ -7,7 +7,7 @@ import dev.magyul.network.CNetwork;
 import dev.magyul.network.ErrorBlockUpdateC2SPacket;
 import dev.magyul.network.KeyInputC2SPacket;
 import dev.magyul.network.UseAirC2SPacket;
-import dev.magyul.others.cocoainput.CocoaInput;
+import dev.magyul.cocoainput.CocoaInput;
 import dev.magyul.registers.MTWItems;
 import dev.magyul.util.ClientUtil;
 import net.fabricmc.api.ClientModInitializer;
