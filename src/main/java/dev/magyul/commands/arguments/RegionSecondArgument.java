@@ -5,7 +5,6 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import dev.magyul.MTWMod;
 import dev.magyul.util.StringUtil;
 
 import java.util.ArrayList;
@@ -25,15 +24,13 @@ public class RegionSecondArgument implements ArgumentType<String> {
     // 강원도
     private static final List<String> GangWonDo = List.of("이천", "평강", "회양", "고성", "금성", "철원", "춘천", "인제", "양양", "홍천", "강릉", "원주", "영월", "삼척", "울진");
     // 전라도
-    private static final List<String> JeolLaDo = List.of("금산", "무주", "전주", "옥구", "임실", "남원", "부안", "흥덕", "담양", "광주", "함평", "순천", "광양", "낙안", "장흥", "나주", "함평", "해남", "진도");
+    private static final List<String> JeolLaDo = List.of("금산", "무주", "전주", "옥구", "임실", "남원", "부안", "흥덕", "담양", "광주", "함평", "순천", "광양", "낙안", "장흥", "나주", "함평", "해남", "진도", "제주", "대정", "정의");
     // 경상도
     private static final List<String> GyeongSangSo = List.of("봉화", "예천", "문경", "안동", "영해", "청송", "의성", "선산", "상주", "인동", "영일", "경주", "대구", "성주", "대구", "거창", "합천", "밍양", "울주", "동래", "김해", "창원", "함안", "고성", "거제", "남해", "진주", "함양", "울릉");
     // 충청도
     private static final List<String> ChungCheongDo = List.of("제천", "단양", "충주", "괴산", "청주", "천안", "보은", "옥천", "영동", "공주", "아산", "예산", "공주", "연산", "부여", "홍주", "당진", "서산", "태안", "보령", "비인", "서천");
     // 경기도
     private static final List<String> GyeonGgiDo = List.of("삭령", "장단", "파주", "포천", "가평", "양주", "한성", "통진", "강화", "부평", "인천", "광주", "용인", "이천", "여주", "안성", "수원", "남양");
-    // 제주도
-    private static final List<String> JeJuDo = List.of("제주", "대정", "정의");
 
     private RegionSecondArgument() {
     }
@@ -82,9 +79,6 @@ public class RegionSecondArgument implements ArgumentType<String> {
                 break;
             case "경기도":
                 StringUtil.copyPartialMatches(builder.getRemainingLowerCase(), GyeonGgiDo, result);
-                break;
-            case "제주도":
-                StringUtil.copyPartialMatches(builder.getRemainingLowerCase(), JeJuDo, result);
                 break;
         }
         for (var suggest : result) {

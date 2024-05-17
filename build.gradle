@@ -11,11 +11,6 @@ base {
 }
 
 repositories {
-	// Add repositories to retrieve artifacts from in here.
-	// You should only use this when depending on other mods because
-	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
-	// for more information about repositories.
 	maven {
 		url = "https://cursemaven.com"
 	}
@@ -67,15 +62,19 @@ dependencies {
 	var modrinthList = List.of(
 			project.modmenu_version,
 			project.voicechat_version,
-			project.axiom_version
+			project.axiom_version,
+			project.command_macros_version
 	)
 
 	for (String mod : modrinthList) {
 		modImplementation "maven.modrinth:$mod"
 	}
+
 	modImplementation "dev.mtwmod:mtwmod-resource:1.0.0"
 	include modImplementation("dev.mtwmod:mtwmod-skinpreset:1.0.1")
 	include modImplementation("dev.mtwmod:mtwmod-animation:1.0.0")
+	include modImplementation("dev.mtwmod:better-third-person:1.0.0")
+	modApi "dev.mtwmod:kyrptconfig:1.6.0-1.20.6"
 //	modImplementation "dev.mtwmod:improved-animations:1.0.2"
 
 	implementation "dnsjava:dnsjava:3.5.3"
@@ -102,7 +101,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 17
+	it.options.release = 21
 }
 
 java {
@@ -111,8 +110,8 @@ java {
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {

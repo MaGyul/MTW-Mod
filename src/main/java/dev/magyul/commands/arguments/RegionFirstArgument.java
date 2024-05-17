@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class RegionFirstArgument implements ArgumentType<String> {
     public static final String DELETE = "제거";
-    private static final List<String> list = List.of("함경도", "평안도", "황해도", "강원도", "전라도", "경상도", "충청도", "경기도", "제주도", "경상도", "바다", DELETE);
+    private static final List<String> list = List.of("함경도", "평안도", "황해도", "강원도", "전라도", "경상도", "충청도", "경기도", "경상도", "바다", DELETE);
 
     private RegionFirstArgument() {
     }

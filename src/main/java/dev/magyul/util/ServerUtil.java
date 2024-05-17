@@ -1,7 +1,9 @@
 package dev.magyul.util;
 
+import dev.magyul.registers.MTWItems;
 import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -17,6 +19,14 @@ public class ServerUtil {
         if (map == null) return false;
         if (!map.containsKey(key)) return false;
         return map.get(key);
+    }
+
+    public static boolean isRegionRootMod(@NotNull PlayerEntity player) {
+        var mainHand = player.getMainHandStack();
+        return isKeyDown(player, GLFW.GLFW_KEY_LEFT_CONTROL) &&
+                player.isCreative() &&
+                player.hasPermissionLevel(2) &&
+                mainHand.isOf(MTWItems.MTW_REGION_VIEWER);
     }
 
     public static void sleep(long delay) {

@@ -2,8 +2,10 @@ package dev.magyul;
 
 import dev.magyul.blocks.ErrorBlock;
 import dev.magyul.data.PlayerData;
+import dev.magyul.data.RegionRoot;
 import dev.magyul.data.WorldData;
 import dev.magyul.events.LivingEntityEvents;
+import dev.magyul.events.PlayerInteractEvents;
 import dev.magyul.network.NetworkCodecs;
 import dev.magyul.network.SNetwork;
 import dev.magyul.registers.*;
@@ -24,6 +26,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.world.GameMode;
@@ -73,6 +76,30 @@ public class MTWMod implements ModInitializer {
 				}
 			}
 		});
+		PlayerInteractEvents.ATTACK_AIR_EVENT.register(player -> {
+			if (ServerUtil.isRegionRootMod(player)) {
+				var world = player.getServerWorld();
+				var worldData = WorldData.get(world);
+				var chunkData = worldData.getChunkData(player.getBlockPos());
+				var first = chunkData.getFirst();
+				var second = chunkData.getSecond();
+				MutableText text = literal("월드(").append(worldData.toString()).append(") ");
+				if (first != null && second != null) {
+					worldData.setRegionRoot(RegionRoot.fromPlayer(player), first, second);
+					text.append("현재 청크");
+					text.append(chunkData.toString());
+					text.append("의 ");
+					text.append(literal(format("%s %s", first, second)).styled(style -> style.withUnderline(true)));
+					text.append(literal("의 대표 위치가 현재 위치로 지정되었습니다.").styled(style -> style.withUnderline(false)));
+					player.sendMessage(text);
+				} else {
+					text.append("현재 청크");
+					text.append(chunkData.toString());
+					text.append("는 지역이 정해져 있지 않습니다.");
+					player.sendMessage(text);
+				}
+			}
+		});
 		AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> onClickBlock(player, hand, null));
 		UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> onClickBlock(player, hand, hitResult));
 		UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
@@ -87,7 +114,6 @@ public class MTWMod implements ModInitializer {
 		regionViewer = ServerUtil.setInterval(() -> {
 			var pm = server.getPlayerManager();
 			for (var player : pm.getPlayerList()) {
-				if (!player.isCreative()) continue;
 				var mainHand = player.getMainHandStack();
 				if (mainHand.isOf(MTWItems.MTW_REGION_VIEWER)) {
 					var worldData = WorldData.get(player.getServerWorld());
@@ -106,6 +132,10 @@ public class MTWMod implements ModInitializer {
 						text.append(data.toString());
 						text.append("는 지역이 정해져 있지 않습니다.");
                     }
+					if (ServerUtil.isRegionRootMod(player)) {
+						text.append(literal("\n★ 대표 청크 설정모드 활성화 ★").styled(style -> style.withColor(Formatting.GOLD)));
+						text.append(literal("\n좌클릭시 대표 청크가 설정됩니다."));
+					}
                     player.sendMessage(text, true);
                 }
 			}

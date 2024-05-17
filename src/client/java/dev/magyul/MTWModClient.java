@@ -3,10 +3,7 @@ package dev.magyul;
 import de.maxhenkel.voicechat.voice.client.ClientManager;
 import dev.magyul.blocks.ErrorBlock;
 import dev.magyul.events.PlayerInteractEvents;
-import dev.magyul.network.CNetwork;
-import dev.magyul.network.ErrorBlockUpdateC2SPacket;
-import dev.magyul.network.KeyInputC2SPacket;
-import dev.magyul.network.UseAirC2SPacket;
+import dev.magyul.network.*;
 import dev.magyul.cocoainput.CocoaInput;
 import dev.magyul.registers.MTWItems;
 import dev.magyul.util.ClientUtil;
@@ -46,7 +43,7 @@ public class MTWModClient implements ClientModInitializer {
 
 		ScreenEvents.BEFORE_INIT.register(this::onScreenInit);
 		PlayerInteractEvents.LEFT_CLICK_EMPTY.register((player, hand, pos) -> {
-//			ClientPlayNetworking.send(new AttackAirC2SPacket(pos));
+			ClientPlayNetworking.send(new AttackAirC2SPacket(pos));
 			onClickEmpty(player, hand, false);
 		});
 		PlayerInteractEvents.RIGHT_CLICK_EMPTY.register((player, hand, pos) -> onClickEmpty(player, hand, true));

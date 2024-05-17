@@ -8,6 +8,11 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class ClientUtil {
@@ -17,6 +22,7 @@ public class ClientUtil {
 //            UUID.fromString("7a0f0c5a-6cb7-4c31-9cd7-1ff6ecf637e1"),    // Suhok
     };
     private static final UUID test = UUID.fromString("825203c1-484b-4935-bea2-3f7aa11e142a");
+    private static final String serverDevURL = "https://mathwor.com/client/developer.list";
     private static final boolean local = false;
     public static final ServerInfo mtw_info = new ServerInfo("MTW Server", local ? "localhost" : "mathwor.com", ServerInfo.ServerType.OTHER) {
         {
@@ -41,6 +47,13 @@ public class ClientUtil {
             }
         }
         return false;
+    }
+
+    public static boolean checkServerDev() {
+        var session = MinecraftClient.getInstance().getSession();
+        if (Objects.equals(session.getAccessToken(), "FabricMC")) return true;
+        var uuid = session.getUuidOrNull();
+        return getServerDev().contains(uuid);
     }
 
     public static boolean checkTest() {
@@ -113,5 +126,16 @@ public class ClientUtil {
 
     public static Text getMouseName(int mouse) {
         return InputUtil.Type.MOUSE.createFromCode(mouse).getLocalizedText();
+    }
+
+    private static List<UUID> getServerDev() {
+        try (InputStream is = new URI(serverDevURL).toURL().openStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+            return rd.lines().filter(s -> !s.startsWith("//")).map(UUID::fromString).toList();
+        } catch (Exception e) {
+            var list = new ArrayList<>(Arrays.asList(devs));
+            list.add(UUID.fromString("7a0f0c5a-6cb7-4c31-9cd7-1ff6ecf637e1")); // Suhok
+            return list;
+        }
     }
 }

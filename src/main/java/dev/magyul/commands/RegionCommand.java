@@ -5,11 +5,15 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.magyul.commands.arguments.RegionFirstArgument;
 import dev.magyul.commands.arguments.RegionSecondArgument;
 import dev.magyul.data.WorldData;
+import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Formatting;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.Objects;
 
 import static java.lang.String.format;
@@ -28,6 +32,13 @@ public class RegionCommand {
                         )
                 )
         );
+        var tp = CommandManager.literal("tp");
+        tp.then(CommandManager.argument("target", EntityArgumentType.players())
+                .then(CommandManager.argument("first", RegionFirstArgument.first())
+                        .then(CommandManager.argument("second", RegionSecondArgument.second())
+                                .executes(context ->
+                                        teleport(context.getSource(), EntityArgumentType.getPlayers(context, "target"), RegionFirstArgument.getFirst(context, "first"), RegionSecondArgument.getSecond(context, "second"))))));
+        command.then(tp);
         dispatcher.register(command);
     }
 
@@ -81,6 +92,27 @@ public class RegionCommand {
             text.append(" 지역이 ");
             text.append(format("%s %s", first, second));
             text.append("으로 업데이트 되었습니다.");
+            source.sendFeedback(() -> text, true);
+        }
+        return 0;
+    }
+
+    private static int teleport(ServerCommandSource source, @NotNull Collection<ServerPlayerEntity> targets, @NotNull String first, @NotNull String second) {
+        var world = source.getWorld();
+        var worldData = WorldData.get(world);
+        var root = worldData.getRegionRoot(first, second);
+        if (root == null) {
+            source.sendError(literal("해당 구역은 대표 청크가 정해져 있지 않습니다."));
+        } else {
+            for (var target : targets) {
+                root.teleport(target);
+            }
+            var players = targets.size() == 1 ? targets.iterator().next().getDisplayName() : literal(targets.size() + "명의 플레이어");
+            var text = literal("");
+            text.append(players);
+            text.append("이(가) ");
+            text.append(format("%s %s", first, second));
+            text.append("으로 순간이동 되었습니다.");
             source.sendFeedback(() -> text, true);
         }
         return 0;

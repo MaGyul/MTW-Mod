@@ -19,6 +19,10 @@ public class MTWModMixinPlugin implements IMixinConfigPlugin {
                     fabricLoader.isModLoaded("command-block-ide");
             case "dev.magyul.mixin.client.voicechat.AudioChannelMixin", "dev.magyul.mixin.voicechat.NetworkMessageMixin", "dev.magyul.mixin.voicechat.ServerMixin" ->
                     fabricLoader.isModLoaded("voicechat");
+            case "dev.magyul.mixin.client.cmdkeybind.ConfigSectionMixin" ->
+                    fabricLoader.isModLoaded("kyrptconfig");
+            case "dev.magyul.mixin.client.cmdkeybind.MacroScreenFactoryMixin" ->
+                    fabricLoader.isModLoaded("cmdkeybind");
             default -> true;
         };
     }
