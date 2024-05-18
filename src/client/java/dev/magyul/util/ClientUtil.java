@@ -19,7 +19,7 @@ public class ClientUtil {
     };
     private static final UUID test = UUID.fromString("825203c1-484b-4935-bea2-3f7aa11e142a");
     private static final boolean local = false;
-    public static final ServerInfo mtw_info = new ServerInfo("MTW Server", local ? "localhost" : "mathwor.com", ServerInfo.ServerType.OTHER) {
+    public static final ServerInfo mtw_info = new ServerInfo("MTW Server", local ? "localhost" : "play.mathwor.com", ServerInfo.ServerType.OTHER) {
         {
             setResourcePackPolicy(ResourcePackPolicy.ENABLED);
         }
