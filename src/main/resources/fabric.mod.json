@@ -16,6 +16,12 @@
 		],
 		"client": [
 			"dev.magyul.MTWModClient"
+		],
+		"preLaunch": [
+			{
+				"adapter": "mtwmod:preload",
+				"value": ""
+			}
 		]
 	},
 	"mixins": [
@@ -32,6 +38,9 @@
 		"fabric-api": "*",
 		"voicechat": ">=1.20.4-2.5.7",
 		"mtwmod-resource": ">=1.0.0"
+	},
+	"languageAdapters": {
+		"mtwmod:preload": "dev.magyul.MTWModPreload"
 	},
 	"accessWidener": "mtwmod.accesswidener"
 }

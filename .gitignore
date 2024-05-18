@@ -112,3 +112,6 @@ modules.xml
 /libs/
 /backup/
 /run-server/
+/.agent/
+/.github/
+/_develop.json
