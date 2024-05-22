@@ -39,6 +39,7 @@
 
   "disconnected.gui.reconnect": "다시 접속하기",
   "disconnected.gui.close": "닫기",
+  "reloading.resource": "리소스 리로드 중...",
 
   "mtwclient.menu.play": "멕더월 플레이 하기",
 
@@ -47,6 +48,12 @@
   "mtwmod.command.move": "%s 차원으로 이동했습니다.",
   "mtwmod.command.move.single": "%s을(를) %s 차원으로 이동했습니다.",
   "mtwmod.command.move.multiple": "%d명의 플레이어를 %s 차원으로 이동했습니다.",
+  "mtwmod.command.customname.current": "%s의 현재 커스텀 이름은 %s입니다.",
+  "mtwmod.command.customname.current.single": "현재 커스텀 이름은 %s입니다.",
+  "mtwmod.command.customname.removed.single": "커스텀 이름이 제거되었습니다.",
+  "mtwmod.command.customname.removed": "%s의 커스텀 이름이 제거되었습니다.",
+  "mtwmod.command.customname.changed.single": "커스텀 이름이 %s으로 변경되었습니다.",
+  "mtwmod.command.customname.changed": "%s의 커스텀 이름이 %s으로 변경되었습니다.",
 
   "mtwmod.enabled.allmic": "전체 마이크 켜짐",
   "mtwmod.received.allmic":  "%s으로 부터 듣는중",

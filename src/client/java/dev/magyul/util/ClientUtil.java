@@ -1,5 +1,7 @@
 package dev.magyul.util;
 
+import dev.magyul.MTWMod;
+import dev.magyul.mixin.client.accessor.ToastManagerAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
@@ -118,6 +120,12 @@ public class ClientUtil {
 
     public static boolean isMouseDown(int key) {
         return GLFW.glfwGetMouseButton(MinecraftClient.getInstance().getWindow().getHandle(), key) == 1;
+    }
+
+    public static boolean isShowingToast() {
+        var client = MinecraftClient.getInstance();
+        var manager = ((ToastManagerAccessor) client.getToastManager());
+        return !manager.getVisibleEntries().isEmpty() || !manager.getToastQueue().isEmpty();
     }
 
     public static Text getKeyName(int key) {

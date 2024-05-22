@@ -38,6 +38,10 @@ accessible field net/minecraft/client/gui/EditBox selectionEnd I
 accessible field net/minecraft/client/gui/EditBox textRenderer Lnet/minecraft/client/font/TextRenderer;
 
 accessible method net/minecraft/client/Keyboard onChar (JII)V
+accessible field net/minecraft/client/MinecraftClient overlay Lnet/minecraft/client/gui/screen/Overlay;
+accessible class net/minecraft/client/MinecraftClient$LoadingContext
+
+accessible class net/minecraft/client/toast/ToastManager$Entry
 
 accessible method net/minecraft/client/network/AbstractClientPlayerEntity getPlayerListEntry ()Lnet/minecraft/client/network/PlayerListEntry;
 

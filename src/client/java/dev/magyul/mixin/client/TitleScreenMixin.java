@@ -33,7 +33,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
@@ -177,10 +179,14 @@ public abstract class TitleScreenMixin extends Screen {
         );
     }
 
+    @ModifyConstant(method = "render", constant = @Constant(floatValue = 2000.0F, ordinal = 0), require = 0)
+    private float changeAnimationSpeed(float constant) {
+        return 1000.0F * 2.0F;
+    }
+
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)I", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
     private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, float f, int i, String string) {
         context.drawTextWithShadow(textRenderer, "Make The World " + MTWMod.VERSION, 2, height - 20, 16777215 | i);
-
 
         if (mtw_info.getStatus() == ServerInfo.Status.INITIAL) {
             mtw_info.setStatus(ServerInfo.Status.PINGING);

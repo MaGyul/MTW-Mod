@@ -28,18 +28,26 @@
     "ToastMixin$Tutorial",
     "accessor.ChatInputSuggestorAccessor",
     "accessor.ChatInputSuggestorAccessor$SuggestionWindowAccessor",
+    "accessor.ToastManagerAccessor",
     "cmdkeybind.ConfigSectionMixin",
     "cocoainput.BookEditScreenMixin",
     "cocoainput.EditBoxWidgetMixin",
     "cocoainput.SignEditScreenMixin",
     "cocoainput.TextFieldWidgetMixin",
     "network.LegacyServerPingerMixin",
+    "rrls.DrawContextMixin",
+    "rrls.GameRendererMixin",
+    "rrls.OverlayMixin",
+    "rrls.RendererKeyboardMouseMixin",
+    "rrls.SplashOverlayMixin",
+    "rrls.VertexBufferMixin",
     "voicechat.AudioChannelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
+    "PlayerEntityMixin",
     "SlotMixin",
     "cmdkeybind.MacroScreenFactoryMixin"
   ]

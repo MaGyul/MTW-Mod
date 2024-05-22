@@ -8,6 +8,7 @@ import dev.magyul.cocoainput.CocoaInput;
 import dev.magyul.registers.MTWItems;
 import dev.magyul.util.ClientUtil;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -65,6 +66,7 @@ public class MTWModClient implements ClientModInitializer {
 			return null;
 		};
 		CNetwork.register();
+
 	}
 
 	public void onChangeScreen(Screen screen) {

@@ -42,5 +42,12 @@
 	"languageAdapters": {
 		"mtwmod:preload": "dev.magyul.MTWModPreload"
 	},
+	"custom": {
+		"loom:injected_interfaces": {
+			"net/minecraft/class_4071": [
+				"dev/magyul/api/OverlayExtender"
+			]
+		}
+	},
 	"accessWidener": "mtwmod.accesswidener"
 }

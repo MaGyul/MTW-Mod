@@ -75,6 +75,7 @@ dependencies {
 	include modImplementation("dev.mtwmod:mtwmod-animation:1.0.0")
 	include modImplementation("dev.mtwmod:better-third-person:1.0.0")
 	modApi "dev.mtwmod:kyrptconfig:1.6.0-1.20.6"
+//	modApi "maven.modrinth:rrls:Ip08v0S2"
 //	modImplementation "dev.mtwmod:improved-animations:1.0.2"
 
 	implementation "dnsjava:dnsjava:3.5.3"

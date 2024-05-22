@@ -39,6 +39,7 @@
 
   "disconnected.gui.reconnect": "Reconnect",
   "disconnected.gui.close": "Close",
+  "reloading.resource": "Reloading resources...",
 
   "mtwclient.menu.play": "Play MTW",
 
@@ -47,6 +48,12 @@
   "mtwmod.command.move": "Moved to %s dimension.",
   "mtwmod.command.move.single": "Moved %s to %s dimension.",
   "mtwmod.command.move.multiple": "Moved %d players to %s dimension.",
+  "mtwmod.command.customname.current": "The current custom name for %s is %s.",
+  "mtwmod.command.customname.current.single": "The current custom name is %s.",
+  "mtwmod.command.customname.removed.single": "The custom name has been removed.",
+  "mtwmod.command.customname.removed": "The custom name of %s was removed.",
+  "mtwmod.command.customname.changed.single": "The custom name was changed to %s.",
+  "mtwmod.command.customname.changed": "The custom name of %s was changed to %s.",
 
   "mtwmod.enabled.allmic": "Overall Mic on",
   "mtwmod.received.allmic":  "Listening to %s",

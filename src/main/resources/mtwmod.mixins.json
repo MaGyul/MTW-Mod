@@ -13,6 +13,8 @@
     "MinecraftServerMixin",
     "PlayerEntityMixin",
     "PlayerManagerMixin",
+    "ServerPlayerEntityMixin",
+    "ServerPlayNetworkHandlerMixin",
     "ServerWorldMixin",
     "cocoainput.StringHelperMixin",
     "commands.ArgumentTypesMixin",

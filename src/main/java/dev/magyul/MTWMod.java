@@ -13,6 +13,7 @@ import dev.magyul.util.ServerUtil;
 import dev.magyul.world.DevelopDimensions;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -106,6 +107,9 @@ public class MTWMod implements ModInitializer {
 //			LOGGER.info("{}, {}", entity.getClass().getName(), hitResult);
 			return ActionResult.PASS;
 		});
+		ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
+			newPlayer.setCustomName(oldPlayer.getCustomName());
+		});
 		ServerLifecycleEvents.SERVER_STARTED.register(this::onServerStarted);
 		ServerLifecycleEvents.SERVER_STOPPING.register(this::onServerStopping);
 	}
@@ -164,7 +168,6 @@ public class MTWMod implements ModInitializer {
 
 	private ActionResult onClickBlock(PlayerEntity player, Hand hand, @Nullable BlockHitResult blockHit) {
 		var right = blockHit != null;
-		var world = player.getWorld();
 
 		if (player instanceof ServerPlayerEntity serverPlayer) {
 			// FallingBlockEntity.spawnFromBlock(world, pos, carry)
