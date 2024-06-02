@@ -1,9 +1,12 @@
 package dev.magyul.data;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ChunkData {
     private final World world;
@@ -16,10 +19,12 @@ public class ChunkData {
         this.pos = pos;
     }
 
+    @Nullable
     public String getFirst() {
         return first;
     }
 
+    @Nullable
     public String getSecond() {
         return second;
     }
@@ -39,9 +44,16 @@ public class ChunkData {
     public void update() {
         var chunk = world.getChunk(pos.x, pos.z);
         chunk.setNeedsSaving(true);
+        if (world instanceof ServerWorld serverWorld) {
+            for (var player : serverWorld.getPlayers()) {
+                player.networkHandler.sendPacket(new ChunkDataS2CPacket(chunk, world.getLightingProvider(), null, null));
+            }
+        }
     }
 
     public void readNbt(NbtCompound nbt) {
+        first = null;
+        second = null;
         if (nbt.contains("region")) {
             var region = nbt.getCompound("region");
             first = region.getString("first");

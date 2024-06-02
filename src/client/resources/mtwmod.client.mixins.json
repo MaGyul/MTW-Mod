@@ -34,6 +34,7 @@
     "cocoainput.EditBoxWidgetMixin",
     "cocoainput.SignEditScreenMixin",
     "cocoainput.TextFieldWidgetMixin",
+    "network.ClientPlayNetworkHandlerMixin",
     "network.LegacyServerPingerMixin",
     "rrls.DrawContextMixin",
     "rrls.GameRendererMixin",
@@ -49,6 +50,7 @@
   "mixins": [
     "PlayerEntityMixin",
     "SlotMixin",
+    "axiom.EditorUIMixin",
     "cmdkeybind.MacroScreenFactoryMixin"
   ]
 }

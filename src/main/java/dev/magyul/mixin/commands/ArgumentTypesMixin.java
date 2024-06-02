@@ -1,6 +1,7 @@
 package dev.magyul.mixin.commands;
 
 import com.mojang.brigadier.arguments.ArgumentType;
+import dev.magyul.commands.arguments.PlayerNameArgumentType;
 import dev.magyul.commands.arguments.RegionFirstArgument;
 import dev.magyul.commands.arguments.RegionSecondArgument;
 import net.fabricmc.fabric.impl.gametest.FabricGameTestHelper;
@@ -28,5 +29,6 @@ public abstract class ArgumentTypesMixin {
     private static void register(Registry<ArgumentSerializer<?, ?>> registry, CallbackInfoReturnable<ArgumentSerializer<?, ?>> cb) {
         register(registry, "region:first", RegionFirstArgument.class, ConstantArgumentSerializer.of(RegionFirstArgument::first));
         register(registry, "region:second", RegionSecondArgument.class, ConstantArgumentSerializer.of(RegionSecondArgument::second));
+        register(registry, "brigadier:playername", PlayerNameArgumentType.class, ConstantArgumentSerializer.of(PlayerNameArgumentType::pn));
     }
 }

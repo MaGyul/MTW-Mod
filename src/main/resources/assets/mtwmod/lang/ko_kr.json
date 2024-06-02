@@ -4,6 +4,7 @@
   "disconnect.versionNotMatched": "서버와 클라이언트의 MTW 모드 버전이 일치하지 않습니다. (서버: %s / 클라이언트: %s)",
 
   "gamerule.doPickupMode": "아이템 Carry 혹은 픽업",
+  "gamerule.showRegionInfo": "지역 이동 시 제목 표시",
   "gamerule.pickupReach": "아이템 Carry 픽업 리치",
 
   "item.mtwmod.more_info": "§7숨겨진 내용을 보려면 %s§7를 누르세요.",
@@ -23,9 +24,7 @@
   "block.mtwmod.earth_wall": "토벽 §7| 강송",
   "block.mtwmod.spruce_plate_wall": "판벽 §7| 강송",
   "block.mtwmod.spruce_earth_wall_frame": "토벽 틀 §7| 강송",
-  "block.mtwmod.spruce_earth_wall_pillar": "토벽 기둥 §7| 강송",
   "block.mtwmod.spruce_plate_wall_frame": "판벽 틀 §7| 강송",
-  "block.mtwmod.spruce_plate_wall_pillar": "판벽 기둥 §7| 강송",
   "block.mtwmod.spruce_large_hall": "대청 §7| 강송",
   "block.mtwmod.spruce_jucho_stone": "추조석 §7| 강송",
   "block.mtwmod.spruce_rafters": "서까래 §7| 강송",
@@ -33,9 +32,13 @@
   "block.mtwmod.spruce_linoleum": "장판 §7| 강송",
   "block.mtwmod.spruce_signboard": "현판 §7| 강송",
   "block.mtwmod.spruce_shelf": "선반 §7| 강송",
+  "block.mtwmod.spruce_lattice_window": "살창 §7| 강송",
   "block.mtwmod.linoleum_bricks": "석재 장판",
   "block.mtwmod.anvil": "모루",
   "block.mtwmod.blast_furnace": "용광로",
+  "block.mtwmod.sandstone_lantern": "사암 랜턴",
+  "block.mtwmod.spruce_earth_wall": "토벽 청 §7| 강송",
+  "block.mtwmod.spruce_wall_pillar": "기둥 §7| 강송",
 
   "disconnected.gui.reconnect": "다시 접속하기",
   "disconnected.gui.close": "닫기",
@@ -181,5 +184,6 @@
   "block.minecraft.chiseled_bookshelf": "장",
   "block.minecraft.barrel": "토기통",
 
-  "item.minecraft.brush": "빗자루"
+  "item.minecraft.brush": "빗자루",
+  "axiom.editorui.mainmenu.edit": "편집"
 }

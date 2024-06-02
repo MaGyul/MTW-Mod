@@ -18,6 +18,7 @@
     "ServerWorldMixin",
     "cocoainput.StringHelperMixin",
     "commands.ArgumentTypesMixin",
+    "network.ChunkDataS2CPacketMixin",
     "network.LegacyQueryHandlerMixin",
     "network.LoginHelloC2SPacketMixin",
     "network.QueryResponseS2CPacketMixin",

@@ -4,6 +4,7 @@
   "disconnect.versionNotMatched": "The MTW mod versions on the server and client don't match. (Server: %s / Client: %s)",
 
   "gamerule.doPickupMode": "Carry or pick up items",
+  "gamerule.showRegionInfo": "Show titles when moving regions",
   "gamerule.pickupReach": "Item Carry Pickup Reach",
 
   "item.mtwmod.more_info": "§7Press %s §7to see the hidden content.",
@@ -23,9 +24,7 @@
   "block.mtwmod.earth_wall": "Earth Wall",
   "block.mtwmod.spruce_plate_wall": "Spruce Plate Wall",
   "block.mtwmod.spruce_earth_wall_frame": "Spruce Earth Wall Frame",
-  "block.mtwmod.spruce_earth_wall_pillar": "Spruce Earth Wall Pillar",
   "block.mtwmod.spruce_plate_wall_frame": "Spruce Plate Wall Frame",
-  "block.mtwmod.spruce_plate_wall_pillar": "Spruce Plate Wall Pillar",
   "block.mtwmod.spruce_large_hall": "Spruce Large Hall",
   "block.mtwmod.spruce_jucho_stone": "Spruce Jucho Stone",
   "block.mtwmod.spruce_rafters": "Spruce Rafters",
@@ -33,9 +32,13 @@
   "block.mtwmod.spruce_linoleum": "Spruce Linoleum",
   "block.mtwmod.spruce_signboard": "Spruce SignBoard",
   "block.mtwmod.spruce_shelf": "Spruce Shelf",
+  "block.mtwmod.spruce_lattice_window": "Spruce Lattice Window",
   "block.mtwmod.linoleum_bricks": "Linoleum Bricks",
   "block.mtwmod.anvil": "Anvil",
   "block.mtwmod.blast_furnace": "Blast Furnace",
+  "block.mtwmod.sandstone_lantern": "Sandstone Lantern",
+  "block.mtwmod.spruce_earth_wall": "Spruce Earth Wall",
+  "block.mtwmod.spruce_wall_pillar": "Spruce Wall Pillar",
 
   "disconnected.gui.reconnect": "Reconnect",
   "disconnected.gui.close": "Close",

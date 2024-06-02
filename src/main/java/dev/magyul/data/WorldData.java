@@ -1,10 +1,10 @@
 package dev.magyul.data;
 
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,10 +16,16 @@ public class WorldData {
 
     private final Map<Long, ChunkData> chunkDataCache = new HashMap<>();
     private final Map<String, RegionRoot> regionRootMap = new HashMap<>();
-    private final ServerWorld world;
+    private final World world;
 
-    public WorldData(ServerWorld world) {
+    public WorldData(World world) {
         this.world = world;
+    }
+
+    @NotNull
+    public ChunkData getChunkData(int x, int z) {
+        var chunkLong = ChunkPos.toLong(x, z);
+        return chunkDataCache.computeIfAbsent(chunkLong, (l) -> new ChunkData(world, new ChunkPos(x, z)));
     }
 
     @NotNull
@@ -33,7 +39,7 @@ public class WorldData {
         return getChunkData(new ChunkPos(pos));
     }
 
-    public static WorldData get(ServerWorld world) {
+    public static WorldData get(World world) {
         var value = world.getRegistryKey().getValue();
         return worldDataCache.computeIfAbsent(value, (id) -> new WorldData(world));
     }
@@ -48,6 +54,7 @@ public class WorldData {
     }
 
     public void readNbt(NbtCompound nbt) {
+        regionRootMap.clear();
         if (nbt.contains("regionRoots")) {
             var regionRoots = nbt.getCompound("regionRoots");
             for (var key : regionRoots.getKeys()) {

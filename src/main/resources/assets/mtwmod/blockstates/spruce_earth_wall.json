@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "facing=east,type=bottom": {
+      "model": "mtwmod:block/spruce_earth_wall/spruce_earth_wall_bottom",
+      "y": 270
+    },
+    "facing=north,type=bottom": {
+      "model": "mtwmod:block/spruce_earth_wall/spruce_earth_wall_bottom",
+      "y": 180
+    },
+    "facing=south,type=bottom": {
+      "model": "mtwmod:block/spruce_earth_wall/spruce_earth_wall_bottom"
+    },
+    "facing=west,type=bottom": {
+      "model": "mtwmod:block/spruce_earth_wall/spruce_earth_wall_bottom",
+      "y": 90
+    },
+    "facing=east,type=double": {
+      "model": "mtwmod:block/spruce_earth_wall/spruce_earth_wall_double",
+      "y": 270
+    },
+    "facing=north,type=double": {
+      "model": "mtwmod:block/spruce_earth_wall/spruce_earth_wall_double",
+      "y": 180
+    },
+    "facing=south,type=double": {
+      "model": "mtwmod:block/spruce_earth_wall/spruce_earth_wall_double"
+    },
+    "facing=west,type=double": {
+      "model": "mtwmod:block/spruce_earth_wall/spruce_earth_wall_double",
+      "y": 90
+    },
+    "facing=east,type=top": {
+      "model": "mtwmod:block/spruce_earth_wall/spruce_earth_wall_top",
+      "y": 270
+    },
+    "facing=north,type=top": {
+      "model": "mtwmod:block/spruce_earth_wall/spruce_earth_wall_top",
+      "y": 180
+    },
+    "facing=south,type=top": {
+      "model": "mtwmod:block/spruce_earth_wall/spruce_earth_wall_top"
+    },
+    "facing=west,type=top": {
+      "model": "mtwmod:block/spruce_earth_wall/spruce_earth_wall_top",
+      "y": 90
+    }
+  }
+}

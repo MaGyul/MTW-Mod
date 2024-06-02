@@ -11,7 +11,6 @@ public class MTWTags {
     public static TagKey<Block> PLATES = register("plates");
     public static TagKey<Block> WALLS = register("walls");
     public static TagKey<Block> CONNECTED_WALLS = register("connected_walls");
-    public static TagKey<Block> CARRY_ON = register("carry_on");
 
     @SuppressWarnings("SameParameterValue")
     private static TagKey<Block> register(String id) {

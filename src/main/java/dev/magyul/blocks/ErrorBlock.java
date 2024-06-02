@@ -18,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.ToIntFunction;
 
 public class ErrorBlock extends Block {
@@ -68,15 +69,8 @@ public class ErrorBlock extends Block {
     }
 
     public static ItemStack setLightOnStack(ItemStack item, int lightLevel) {
-        if (lightLevel != MIN_LEVEL) {
-            item.set(DataComponentTypes.BLOCK_STATE, BlockStateComponent.DEFAULT.with(LEVEL, lightLevel));
-        } else {
-            var data = item.get(DataComponentTypes.BLOCK_STATE);
-            if (data != null) {
-                data.properties().remove(LEVEL.getName());
-                item.set(DataComponentTypes.BLOCK_STATE, data);
-            }
-        }
+        var data = item.get(DataComponentTypes.BLOCK_STATE);
+        item.set(DataComponentTypes.BLOCK_STATE, Objects.requireNonNullElse(data, BlockStateComponent.DEFAULT).with(LEVEL, lightLevel));
 
         return item;
     }

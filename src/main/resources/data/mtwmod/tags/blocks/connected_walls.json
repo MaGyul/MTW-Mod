@@ -4,6 +4,7 @@
     "minecraft:spruce_wood",
     "minecraft:stone_bricks",
     "minecraft:cracked_stone_bricks",
-    "minecraft:mossy_stone_bricks"
+    "minecraft:mossy_stone_bricks",
+    "mtwmod:spruce_wall_pillar"
   ]
 }

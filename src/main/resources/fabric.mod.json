@@ -46,6 +46,9 @@
 		"loom:injected_interfaces": {
 			"net/minecraft/class_4071": [
 				"dev/magyul/api/OverlayExtender"
+			],
+			"net/minecraft/class_2672": [
+				"dev/magyul/api/ChunkDataPacketAccessor"
 			]
 		}
 	},

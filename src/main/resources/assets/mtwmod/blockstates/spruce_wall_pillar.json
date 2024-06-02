@@ -1,0 +1,193 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_wall_pillar/notting"
+      }
+    },
+
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_wall_pillar/spruce_earth_wall_top",
+        "uvlock": true
+      },
+      "when": {
+        "north": "spruce_earth_wall_top"
+      }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_wall_pillar/spruce_earth_wall_top",
+        "y": 90,
+        "uvlock": true
+      },
+      "when": {
+        "east": "spruce_earth_wall_top"
+      }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_wall_pillar/spruce_earth_wall_top",
+        "y": 180,
+        "uvlock": true
+      },
+      "when": {
+        "south": "spruce_earth_wall_top"
+      }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_wall_pillar/spruce_earth_wall_top",
+        "y": 270,
+        "uvlock": true
+      },
+      "when": {
+        "west": "spruce_earth_wall_top"
+      }
+    },
+
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_wall_pillar/spruce_earth_wall_bottom",
+        "uvlock": true
+      },
+      "when": {
+        "north": "spruce_earth_wall_bottom"
+      }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_wall_pillar/spruce_earth_wall_bottom",
+        "y": 90,
+        "uvlock": true
+      },
+      "when": {
+        "east": "spruce_earth_wall_bottom"
+      }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_wall_pillar/spruce_earth_wall_bottom",
+        "y": 180,
+        "uvlock": true
+      },
+      "when": {
+        "south": "spruce_earth_wall_bottom"
+      }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_wall_pillar/spruce_earth_wall_bottom",
+        "y": 270,
+        "uvlock": true
+      },
+      "when": {
+        "west": "spruce_earth_wall_bottom"
+      }
+    },
+
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_wall_pillar/spruce_earth_wall_pillar",
+        "uvlock": true
+      },
+      "when": {
+        "OR": [
+          {"north": "spruce_earth_wall_frame"},
+          {"north": "earth_wall"}
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_wall_pillar/spruce_earth_wall_pillar",
+        "y": 90,
+        "uvlock": true
+      },
+      "when": {
+        "OR": [
+          {"east": "spruce_earth_wall_frame"},
+          {"east": "earth_wall"}
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_wall_pillar/spruce_earth_wall_pillar",
+        "y": 180,
+        "uvlock": true
+      },
+      "when": {
+        "OR": [
+          {"south": "spruce_earth_wall_frame"},
+          {"south": "earth_wall"}
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_wall_pillar/spruce_earth_wall_pillar",
+        "y": 270,
+        "uvlock": true
+      },
+      "when": {
+        "OR": [
+          {"west": "spruce_earth_wall_frame"},
+          {"west": "earth_wall"}
+        ]
+      }
+    },
+
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_wall_pillar/spruce_plate_wall_pillar",
+        "uvlock": true
+      },
+      "when": {
+        "OR": [
+          {"north": "spruce_plate_wall_frame"},
+          {"north": "spruce_plate_wall"}
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_wall_pillar/spruce_plate_wall_pillar",
+        "y": 90,
+        "uvlock": true
+      },
+      "when": {
+        "OR": [
+          {"east": "spruce_plate_wall_frame"},
+          {"east": "spruce_plate_wall"}
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_wall_pillar/spruce_plate_wall_pillar",
+        "y": 180,
+        "uvlock": true
+      },
+      "when": {
+        "OR": [
+          {"south": "spruce_plate_wall_frame"},
+          {"south": "spruce_plate_wall"}
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "mtwmod:block/spruce_wall_pillar/spruce_plate_wall_pillar",
+        "y": 270,
+        "uvlock": true
+      },
+      "when": {
+        "OR": [
+          {"west": "spruce_plate_wall_frame"},
+          {"west": "spruce_plate_wall"}
+        ]
+      }
+    }
+  ]
+}

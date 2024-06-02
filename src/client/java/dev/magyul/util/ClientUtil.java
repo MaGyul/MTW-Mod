@@ -2,12 +2,15 @@ package dev.magyul.util;
 
 import dev.magyul.MTWMod;
 import dev.magyul.mixin.client.accessor.ToastManagerAccessor;
+import dev.magyul.registers.MTWItems;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.BufferedReader;
@@ -120,6 +123,14 @@ public class ClientUtil {
 
     public static boolean isMouseDown(int key) {
         return GLFW.glfwGetMouseButton(MinecraftClient.getInstance().getWindow().getHandle(), key) == 1;
+    }
+
+    public static boolean isRegionRootMod(@NotNull PlayerEntity player) {
+        var mainHand = player.getMainHandStack();
+        return isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL) &&
+                player.isCreative() &&
+                player.hasPermissionLevel(2) &&
+                mainHand.isOf(MTWItems.MTW_REGION_VIEWER);
     }
 
     public static boolean isShowingToast() {

@@ -62,7 +62,7 @@ public class ToastMixin {
         }
     }
 
-    @Mixin(targets = "net.minecraft.client.toast.ToastManager$Entry")
+    @Mixin(ToastManager.Entry.class)
     public static abstract class Entry<T extends Toast> {
         @Shadow private long startTime;
 

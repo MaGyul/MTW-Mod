@@ -1,7 +1,7 @@
 {
   "values": [
     "mtwmod:earth_wall",
-    "mtwmod:spruce_earth_wall_pillar",
-    "mtwmod:spruce_earth_wall_frame"
+    "mtwmod:spruce_earth_wall_frame",
+    "mtwmod:spruce_earth_wall"
   ]
 }

@@ -18,7 +18,7 @@ public class MTWGameRules {
         }));
     }
 
-    public static interface RegisterMethod {
+    public interface RegisterMethod {
         <T extends GameRules.Rule<T>> GameRules.Key<T> register(String name, GameRules.Category category, GameRules.Type<T> type);
     }
 }

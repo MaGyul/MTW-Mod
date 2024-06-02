@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "half=upper": {
+            "model": "mtwmod:block/sandstone_lantern/sandstone_lantern_upper"
+        },
+        "half=lower": {
+            "model": "mtwmod:block/sandstone_lantern/sandstone_lantern_lower"
+        }
+    }
+}

@@ -63,14 +63,15 @@ dependencies {
 			project.modmenu_version,
 			project.voicechat_version,
 			project.axiom_version,
-			project.command_macros_version
+			project.command_macros_version,
+			project.pehkui_version
 	)
 
 	for (String mod : modrinthList) {
 		modImplementation "maven.modrinth:$mod"
 	}
 
-	modImplementation "dev.mtwmod:mtwmod-resource:1.0.0"
+	modImplementation "dev.mtwmod:mtwmod-resource:1.0.2"
 	include modImplementation("dev.mtwmod:mtwmod-skinpreset:1.0.1")
 	include modImplementation("dev.mtwmod:mtwmod-animation:1.0.0")
 	include modImplementation("dev.mtwmod:better-third-person:1.0.0")
@@ -118,22 +119,5 @@ java {
 jar {
 	from("LICENSE") {
 		rename { "${it}_${project.base.archivesName.get()}"}
-	}
-}
-
-// configure the maven publication
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-		}
-	}
-
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
 	}
 }
