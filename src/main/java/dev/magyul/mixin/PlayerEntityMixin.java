@@ -1,11 +1,14 @@
 package dev.magyul.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.mojang.authlib.GameProfile;
 import dev.magyul.data.PlayerData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,6 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntity.class)
 public class PlayerEntityMixin {
+    @Shadow @Final private GameProfile gameProfile;
+
     @ModifyReturnValue(method = "getName", at = @At("RETURN"))
     private Text getName(Text original) {
         if (This().hasCustomName()) {
@@ -28,6 +33,7 @@ public class PlayerEntityMixin {
 
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
     private void save(NbtCompound nbt, CallbackInfo cb) {
+        nbt.putString("RealName", gameProfile.getName());
         PlayerData.save(This(), nbt);
     }
 

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "mtwmod:block/spruce_planks_chair/spruce_planks_chair",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "mtwmod:block/spruce_planks_chair/spruce_planks_chair"
+    },
+    "facing=south": {
+      "model": "mtwmod:block/spruce_planks_chair/spruce_planks_chair",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mtwmod:block/spruce_planks_chair/spruce_planks_chair",
+      "y": 270
+    }
+  }
+}

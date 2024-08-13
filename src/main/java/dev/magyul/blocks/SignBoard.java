@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class SignBoard extends Block {
     public static final MapCodec<SignBoard> CODEC = RecordCodecBuilder.mapCodec((instance) ->
-            instance.group(WoodType.CODEC.fieldOf("wood_type").forGetter(signBoard -> signBoard.getWoodType()), createSettingsCodec()).apply(instance, SignBoard::new));
+            instance.group(WoodType.CODEC.fieldOf("wood_type").forGetter(SignBoard::getWoodType), createSettingsCodec()).apply(instance, SignBoard::new));
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final EnumProperty<BlockLR> BLOCK_LR = MTWProperties.BLOCK_LR;
 
@@ -101,16 +101,5 @@ public class SignBoard extends Block {
         if (rightPos == null) return false;
         var blockState = world.getBlockState(rightPos);
         return blockState.getBlock() instanceof SignBoard;
-    }
-
-    public static WoodType getWoodType(Block block) {
-        WoodType woodType;
-        if (block instanceof SignBoard) {
-            woodType = ((SignBoard) block).getWoodType();
-        } else {
-            woodType = WoodType.OAK;
-        }
-
-        return woodType;
     }
 }

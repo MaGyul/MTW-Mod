@@ -2,9 +2,11 @@ package dev.magyul.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.function.BooleanBiFunction;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static net.minecraft.block.Block.createCuboidShape;
@@ -418,5 +420,397 @@ public class Shapes {
                         createCuboidShape(15.05025, 1.05025, 1, 18.05025, 8.05025, 15)
                 ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get()
         ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
+    }
+
+    static class SprucePlanksChair {
+        protected static final VoxelShape NORTH = Stream.of(
+                Block.createCuboidShape(12, 0, 13, 14, 25, 15),
+                Block.createCuboidShape(2, 0, 13, 4, 25, 15),
+                Block.createCuboidShape(12, 0, 3, 14, 8, 5),
+                Block.createCuboidShape(12, 8, 2, 14, 10, 13),
+                Block.createCuboidShape(2, 8, 2, 4, 10, 13),
+                Block.createCuboidShape(2, 0, 3, 4, 8, 5),
+                Block.createCuboidShape(3, 3, 5, 13, 5, 6),
+                Block.createCuboidShape(3, 2, 5, 4, 4, 13),
+                Block.createCuboidShape(12, 2, 5, 13, 4, 13),
+                Block.createCuboidShape(4, 3, 14, 12, 5, 15),
+                Block.createCuboidShape(4, 21, 13, 12, 23, 15),
+                Block.createCuboidShape(0, 10, 1, 16, 11, 14)
+        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
+
+        protected static final VoxelShape WEST = Stream.of(
+                Block.createCuboidShape(13, 0, 2, 15, 25, 4),
+                Block.createCuboidShape(13, 0, 12, 15, 25, 14),
+                Block.createCuboidShape(3, 0, 2, 5, 8, 4),
+                Block.createCuboidShape(2, 8, 2, 13, 10, 4),
+                Block.createCuboidShape(2, 8, 12, 13, 10, 14),
+                Block.createCuboidShape(3, 0, 12, 5, 8, 14),
+                Block.createCuboidShape(5, 3, 3, 6, 5, 13),
+                Block.createCuboidShape(5, 2, 12, 13, 4, 13),
+                Block.createCuboidShape(5, 2, 3, 13, 4, 4),
+                Block.createCuboidShape(14, 3, 4, 15, 5, 12),
+                Block.createCuboidShape(13, 21, 4, 15, 23, 12),
+                Block.createCuboidShape(1, 10, 0, 14, 11, 16)
+        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
+
+        protected static final VoxelShape EAST = Stream.of(
+                Block.createCuboidShape(1, 0, 12, 3, 25, 14),
+                Block.createCuboidShape(1, 0, 2, 3, 25, 4),
+                Block.createCuboidShape(11, 0, 12, 13, 8, 14),
+                Block.createCuboidShape(3, 8, 12, 14, 10, 14),
+                Block.createCuboidShape(3, 8, 2, 14, 10, 4),
+                Block.createCuboidShape(11, 0, 2, 13, 8, 4),
+                Block.createCuboidShape(10, 3, 3, 11, 5, 13),
+                Block.createCuboidShape(3, 2, 3, 11, 4, 4),
+                Block.createCuboidShape(3, 2, 12, 11, 4, 13),
+                Block.createCuboidShape(1, 3, 4, 2, 5, 12),
+                Block.createCuboidShape(1, 21, 4, 3, 23, 12),
+                Block.createCuboidShape(2, 10, 0, 15, 11, 16)
+        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
+
+        protected static final VoxelShape SOUTH = Stream.of(
+                Block.createCuboidShape(2, 0, 1, 4, 25, 3),
+                Block.createCuboidShape(12, 0, 1, 14, 25, 3),
+                Block.createCuboidShape(2, 0, 11, 4, 8, 13),
+                Block.createCuboidShape(2, 8, 3, 4, 10, 14),
+                Block.createCuboidShape(12, 8, 3, 14, 10, 14),
+                Block.createCuboidShape(12, 0, 11, 14, 8, 13),
+                Block.createCuboidShape(3, 3, 10, 13, 5, 11),
+                Block.createCuboidShape(12, 2, 3, 13, 4, 11),
+                Block.createCuboidShape(3, 2, 3, 4, 4, 11),
+                Block.createCuboidShape(4, 3, 1, 12, 5, 2),
+                Block.createCuboidShape(4, 21, 1, 12, 23, 3),
+                Block.createCuboidShape(0, 10, 2, 16, 11, 15)
+        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
+    }
+
+    static class FoodTableBlock {
+        protected static final VoxelShape SHAPE_Z = Stream.of(
+                Stream.of(
+                        Block.createCuboidShape(14, 0, 12, 15, 8, 14),
+                        Block.createCuboidShape(14, 0, 2, 15, 8, 4),
+                        Block.createCuboidShape(1, 0, 2, 2, 8, 4),
+                        Block.createCuboidShape(1, 0, 12, 2, 8, 14)
+                ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                Stream.of(
+                        Block.createCuboidShape(1, 8, 1, 15, 9, 15),
+                        Block.createCuboidShape(0, 8, 15, 16, 9.5, 16),
+                        Block.createCuboidShape(0, 8, 0, 16, 9.5, 1),
+                        Block.createCuboidShape(15, 8, 1, 16, 9.5, 15),
+                        Block.createCuboidShape(0, 8, 1, 1, 9.5, 15)
+                ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                Stream.of(
+                        Block.createCuboidShape(14, 0, 4, 15, 1, 12),
+                        Block.createCuboidShape(14, 4, 4, 15, 5, 12),
+                        Block.createCuboidShape(14, 6, 4, 15, 8, 12),
+                        Block.createCuboidShape(2, 4, 13, 14, 5, 14),
+                        Block.createCuboidShape(4, 7, 13, 12, 8, 14),
+                        Block.createCuboidShape(12, 6, 13, 14, 8, 14),
+                        Block.createCuboidShape(2, 6, 13, 4, 8, 14),
+                        Block.createCuboidShape(1, 0, 4, 2, 1, 12),
+                        Block.createCuboidShape(1, 4, 4, 2, 5, 12),
+                        Block.createCuboidShape(2, 4, 2, 14, 5, 3),
+                        Block.createCuboidShape(2, 6, 2, 4, 8, 3),
+                        Block.createCuboidShape(4, 7, 2, 12, 8, 3),
+                        Block.createCuboidShape(12, 6, 2, 14, 8, 3),
+                        Block.createCuboidShape(1, 6, 4, 2, 8, 12)
+                ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get()
+        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
+
+        protected static final VoxelShape SHAPE_X = Stream.of(
+                Stream.of(
+                        Block.createCuboidShape(12, 0, 1, 14, 8, 2),
+                        Block.createCuboidShape(2, 0, 1, 4, 8, 2),
+                        Block.createCuboidShape(2, 0, 14, 4, 8, 15),
+                        Block.createCuboidShape(12, 0, 14, 14, 8, 15)
+                ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                Stream.of(
+                        Block.createCuboidShape(1, 8, 1, 15, 9, 15),
+                        Block.createCuboidShape(15, 8, 0, 16, 9.5, 16),
+                        Block.createCuboidShape(0, 8, 0, 1, 9.5, 16),
+                        Block.createCuboidShape(1, 8, 0, 15, 9.5, 1),
+                        Block.createCuboidShape(1, 8, 15, 15, 9.5, 16)
+                ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                Stream.of(
+                        Block.createCuboidShape(4, 0, 1, 12, 1, 2),
+                        Block.createCuboidShape(4, 4, 1, 12, 5, 2),
+                        Block.createCuboidShape(4, 6, 1, 12, 8, 2),
+                        Block.createCuboidShape(13, 4, 2, 14, 5, 14),
+                        Block.createCuboidShape(13, 7, 4, 14, 8, 12),
+                        Block.createCuboidShape(13, 6, 2, 14, 8, 4),
+                        Block.createCuboidShape(13, 6, 12, 14, 8, 14),
+                        Block.createCuboidShape(4, 0, 14, 12, 1, 15),
+                        Block.createCuboidShape(4, 4, 14, 12, 5, 15),
+                        Block.createCuboidShape(2, 4, 2, 3, 5, 14),
+                        Block.createCuboidShape(2, 6, 12, 3, 8, 14),
+                        Block.createCuboidShape(2, 7, 4, 3, 8, 12),
+                        Block.createCuboidShape(2, 6, 2, 3, 8, 4),
+                        Block.createCuboidShape(4, 6, 14, 12, 8, 15)
+                ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get()
+        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
+    }
+
+    static class HighSlopeTile {
+        protected static final Map<Direction, VoxelShape> DEFAULT = Map
+                .of(Direction.EAST, Stream.of(
+                                Block.createCuboidShape(9, 0, 0, 16, 16, 16),
+                                Block.createCuboidShape(4, 0, 0, 9, 10, 16),
+                                Block.createCuboidShape(0, 0, 0, 4, 5, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.SOUTH, Stream.of(
+                                Block.createCuboidShape(0, 0, 9, 16, 16, 16),
+                                Block.createCuboidShape(0, 0, 4, 16, 10, 9),
+                                Block.createCuboidShape(0, 0, 0, 16, 5, 4)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.WEST, Stream.of(
+                                Block.createCuboidShape(0, 0, 0, 7, 16, 16),
+                                Block.createCuboidShape(7, 0, 0, 12, 10, 16),
+                                Block.createCuboidShape(12, 0, 0, 16, 5, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.NORTH, Stream.of(
+                                Block.createCuboidShape(0, 0, 0, 16, 16, 7),
+                                Block.createCuboidShape(0, 0, 7, 16, 10, 12),
+                                Block.createCuboidShape(0, 0, 12, 16, 5, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get());
+
+        protected static final Map<Direction, VoxelShape> INNER = Map // 좀더 돌려
+                .of(Direction.EAST, Stream.of(
+                                Block.createCuboidShape(0, 0, 0, 16, 16, 7),
+                                Block.createCuboidShape(9, 0, 7, 16, 16, 16),
+                                Block.createCuboidShape(4, 0, 7, 9, 10, 16),
+                                Block.createCuboidShape(0, 0, 7, 4, 10, 12),
+                                Block.createCuboidShape(0, 0, 12, 4, 5, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.SOUTH, Stream.of(
+                                Block.createCuboidShape(9, 0, 0, 16, 16, 16),
+                                Block.createCuboidShape(0, 0, 9, 9, 16, 16),
+                                Block.createCuboidShape(0, 0, 4, 9, 10, 9),
+                                Block.createCuboidShape(4, 0, 0, 9, 10, 4),
+                                Block.createCuboidShape(0, 0, 0, 4, 5, 4)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.WEST, Stream.of(
+                                Block.createCuboidShape(0, 0, 9, 16, 16, 16),
+                                Block.createCuboidShape(0, 0, 0, 7, 16, 9),
+                                Block.createCuboidShape(7, 0, 0, 12, 10, 9),
+                                Block.createCuboidShape(12, 0, 4, 16, 10, 9),
+                                Block.createCuboidShape(12, 0, 0, 16, 5, 4)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.NORTH, Stream.of(
+                                Block.createCuboidShape(0, 0, 0, 7, 16, 16),
+                                Block.createCuboidShape(7, 0, 0, 16, 16, 7),
+                                Block.createCuboidShape(7, 0, 7, 16, 10, 12),
+                                Block.createCuboidShape(7, 0, 12, 12, 10, 16),
+                                Block.createCuboidShape(12, 0, 12, 16, 5, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get());
+
+        protected static final Map<Direction, VoxelShape> OUTER = Map
+                .of(Direction.EAST, Stream.of(
+                                Block.createCuboidShape(9, 0, 0, 16, 16, 7),
+                                Block.createCuboidShape(4, 0, 7, 16, 10, 12),
+                                Block.createCuboidShape(0, 0, 0, 4, 5, 12),
+                                Block.createCuboidShape(4, 0, 0, 9, 10, 7),
+                                Block.createCuboidShape(0, 0, 12, 16, 5, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.SOUTH, Stream.of(
+                                Block.createCuboidShape(9, 0, 9, 16, 16, 16),
+                                Block.createCuboidShape(4, 0, 4, 9, 10, 16),
+                                Block.createCuboidShape(4, 0, 0, 16, 5, 4),
+                                Block.createCuboidShape(9, 0, 4, 16, 10, 9),
+                                Block.createCuboidShape(0, 0, 0, 4, 5, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.WEST, Stream.of(
+                                Block.createCuboidShape(0, 0, 9, 7, 16, 16),
+                                Block.createCuboidShape(0, 0, 4, 12, 10, 9),
+                                Block.createCuboidShape(12, 0, 4, 16, 5, 16),
+                                Block.createCuboidShape(7, 0, 9, 12, 10, 16),
+                                Block.createCuboidShape(0, 0, 0, 16, 5, 4)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.NORTH, Stream.of(
+                                Block.createCuboidShape(0, 0, 0, 7, 16, 7),
+                                Block.createCuboidShape(7, 0, 0, 12, 10, 12),
+                                Block.createCuboidShape(0, 0, 12, 12, 5, 16),
+                                Block.createCuboidShape(0, 0, 7, 7, 10, 12),
+                                Block.createCuboidShape(12, 0, 0, 16, 5, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get());
+    }
+
+    static class LowSlopeTileBottom {
+        protected static final Map<Direction, VoxelShape> DEFAULT = Map
+                .of(Direction.EAST, VoxelShapes.combineAndSimplify(
+                                Block.createCuboidShape(8, 0, 0, 16, 9, 16),
+                                Block.createCuboidShape(0, 0, 0, 8, 5, 16),
+                                BooleanBiFunction.OR),
+                        Direction.SOUTH, VoxelShapes.combineAndSimplify(
+                                Block.createCuboidShape(0, 0, 8, 16, 9, 16),
+                                Block.createCuboidShape(0, 0, 0, 16, 5, 8),
+                                BooleanBiFunction.OR),
+                        Direction.WEST, VoxelShapes.combineAndSimplify(
+                                Block.createCuboidShape(0, 0, 0, 8, 9, 16),
+                                Block.createCuboidShape(8, 0, 0, 16, 5, 16),
+                                BooleanBiFunction.OR),
+                        Direction.NORTH, VoxelShapes.combineAndSimplify(
+                                Block.createCuboidShape(0, 0, 0, 16, 9, 8),
+                                Block.createCuboidShape(0, 0, 8, 16, 5, 16),
+                                BooleanBiFunction.OR));
+
+        protected static final Map<Direction, VoxelShape> INNER = Map // 좀더 돌려
+                .of(Direction.EAST, Stream.of(
+                                Block.createCuboidShape(0, 0, 0, 16, 9, 8),
+                                Block.createCuboidShape(0, 0, 8, 8, 5, 16),
+                                Block.createCuboidShape(8, 0, 8, 16, 9, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.SOUTH, Stream.of(
+                                Block.createCuboidShape(8, 0, 0, 16, 9, 16),
+                                Block.createCuboidShape(0, 0, 0, 8, 5, 8),
+                                Block.createCuboidShape(0, 0, 8, 8, 9, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.WEST, Stream.of(
+                                Block.createCuboidShape(0, 0, 8, 16, 9, 16),
+                                Block.createCuboidShape(8, 0, 0, 16, 5, 8),
+                                Block.createCuboidShape(0, 0, 0, 8, 9, 8)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.NORTH, Stream.of(
+                                Block.createCuboidShape(0, 0, 0, 8, 9, 16),
+                                Block.createCuboidShape(8, 0, 8, 16, 5, 16),
+                                Block.createCuboidShape(8, 0, 0, 16, 9, 8)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get());
+
+        protected static final Map<Direction, VoxelShape> OUTER = Map
+                .of(Direction.EAST, Stream.of(
+                                Block.createCuboidShape(8, 0, 0, 16, 9, 8),
+                                Block.createCuboidShape(0, 0, 0, 8, 5, 16),
+                                Block.createCuboidShape(8, 0, 8, 16, 5, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.SOUTH, Stream.of(
+                                Block.createCuboidShape(8, 0, 8, 16, 9, 16),
+                                Block.createCuboidShape(0, 0, 0, 16, 5, 8),
+                                Block.createCuboidShape(0, 0, 8, 8, 5, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.WEST, Stream.of(
+                                Block.createCuboidShape(0, 0, 8, 8, 9, 16),
+                                Block.createCuboidShape(8, 0, 0, 16, 5, 16),
+                                Block.createCuboidShape(0, 0, 0, 8, 5, 8)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.NORTH, Stream.of(
+                                Block.createCuboidShape(0, 0, 0, 8, 9, 8),
+                                Block.createCuboidShape(0, 0, 8, 16, 5, 16),
+                                Block.createCuboidShape(8, 0, 0, 16, 5, 8)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get());
+    }
+
+    static class LowSlopeTileTop {
+        protected static final Map<Direction, VoxelShape> DEFAULT = Map
+                .of(Direction.EAST, Stream.of(
+                                Block.createCuboidShape(8, 0, 0, 16, 16, 16),
+                                Block.createCuboidShape(5, 0, 0, 8, 14, 16),
+                                Block.createCuboidShape(0, 8, 0, 5, 12, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.SOUTH, Stream.of(
+                                Block.createCuboidShape(0, 0, 8, 16, 16, 16),
+                                Block.createCuboidShape(0, 0, 5, 16, 14, 8),
+                                Block.createCuboidShape(0, 8, 0, 16, 12, 5)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.WEST, Stream.of(
+                                Block.createCuboidShape(0, 0, 0, 8, 16, 16),
+                                Block.createCuboidShape(8, 0, 0, 11, 14, 16),
+                                Block.createCuboidShape(11, 8, 0, 16, 12, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.NORTH, Stream.of(
+                                Block.createCuboidShape(0, 0, 0, 16, 16, 8),
+                                Block.createCuboidShape(0, 0, 8, 16, 14, 11),
+                                Block.createCuboidShape(0, 8, 11, 16, 12, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get());
+
+        protected static final Map<Direction, VoxelShape> INNER = Map // 좀더 돌려
+                .of(Direction.EAST, Stream.of(
+                                Block.createCuboidShape(0, 0, 0, 16, 16, 8),
+                                Block.createCuboidShape(8, 0, 8, 16, 16, 16),
+                                Block.createCuboidShape(0, 0, 8, 8, 14, 11),
+                                Block.createCuboidShape(5, 0, 11, 8, 14, 16),
+                                Block.createCuboidShape(0, 8, 11, 5, 12, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.SOUTH, Stream.of(
+                                Block.createCuboidShape(8, 0, 0, 16, 16, 16),
+                                Block.createCuboidShape(0, 0, 8, 8, 16, 16),
+                                Block.createCuboidShape(5, 0, 0, 8, 14, 8),
+                                Block.createCuboidShape(0, 0, 5, 5, 14, 8),
+                                Block.createCuboidShape(0, 8, 0, 5, 12, 5)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.WEST, Stream.of(
+                                Block.createCuboidShape(0, 0, 8, 16, 16, 16),
+                                Block.createCuboidShape(0, 0, 0, 8, 16, 8),
+                                Block.createCuboidShape(8, 0, 5, 16, 14, 8),
+                                Block.createCuboidShape(8, 0, 0, 11, 14, 5),
+                                Block.createCuboidShape(11, 8, 0, 16, 12, 5)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.NORTH, Stream.of(
+                                Block.createCuboidShape(0, 0, 0, 8, 16, 16),
+                                Block.createCuboidShape(8, 0, 0, 16, 16, 8),
+                                Block.createCuboidShape(8, 0, 8, 11, 14, 16),
+                                Block.createCuboidShape(11, 0, 8, 16, 14, 11),
+                                Block.createCuboidShape(11, 8, 11, 16, 12, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get());
+
+        protected static final Map<Direction, VoxelShape> OUTER = Map
+                .of(Direction.EAST, Stream.of(
+                                Block.createCuboidShape(8, 0, 0, 16, 16, 8),
+                                Block.createCuboidShape(5, 0, 0, 8, 14, 8),
+                                Block.createCuboidShape(5, 0, 8, 16, 14, 11),
+                                Block.createCuboidShape(0, 8, 11, 16, 12, 16),
+                                Block.createCuboidShape(0, 8, 0, 5, 12, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.SOUTH, Stream.of(
+                                Block.createCuboidShape(8, 0, 8, 16, 16, 16),
+                                Block.createCuboidShape(8, 0, 5, 16, 14, 8),
+                                Block.createCuboidShape(5, 0, 5, 8, 14, 16),
+                                Block.createCuboidShape(0, 8, 0, 5, 12, 16),
+                                Block.createCuboidShape(0, 8, 0, 16, 12, 5)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.WEST, Stream.of(
+                                Block.createCuboidShape(0, 0, 8, 8, 16, 16),
+                                Block.createCuboidShape(8, 0, 8, 11, 14, 16),
+                                Block.createCuboidShape(0, 0, 5, 11, 14, 8),
+                                Block.createCuboidShape(0, 8, 0, 16, 12, 5),
+                                Block.createCuboidShape(11, 8, 0, 16, 12, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get(),
+                        Direction.NORTH, Stream.of(
+                                Block.createCuboidShape(0, 0, 0, 8, 16, 8),
+                                Block.createCuboidShape(0, 0, 8, 8, 14, 11),
+                                Block.createCuboidShape(8, 0, 0, 11, 14, 11),
+                                Block.createCuboidShape(11, 8, 0, 16, 12, 16),
+                                Block.createCuboidShape(0, 8, 11, 16, 12, 16)
+                        ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get());
+    }
+
+    static class LowSlopeTileEnd {
+        protected static final Map<Direction, VoxelShape> DEFAULT = Map
+                .of(Direction.EAST, Block.createCuboidShape(8, 12, 0, 16, 16, 16),
+                        Direction.SOUTH, Block.createCuboidShape(0, 12, 8, 16, 16, 16),
+                        Direction.WEST, Block.createCuboidShape(0, 12, 0, 8, 16, 16),
+                        Direction.NORTH, Block.createCuboidShape(0, 12, 0, 16, 16, 8));
+
+        protected static final Map<Direction, VoxelShape> INNER = Map // 좀더 돌려
+                .of(Direction.EAST, VoxelShapes.combineAndSimplify(
+                                Block.createCuboidShape(0, 12, 0, 16, 16, 8),
+                                Block.createCuboidShape(8, 12, 8, 16, 16, 16),
+                                BooleanBiFunction.OR),
+                        Direction.SOUTH, VoxelShapes.combineAndSimplify(
+                                Block.createCuboidShape(8, 12, 0, 16, 16, 16),
+                                Block.createCuboidShape(0, 12, 8, 8, 16, 16),
+                                BooleanBiFunction.OR),
+                        Direction.WEST, VoxelShapes.combineAndSimplify(
+                                Block.createCuboidShape(0, 12, 8, 16, 16, 16),
+                                Block.createCuboidShape(0, 12, 0, 8, 16, 8),
+                                BooleanBiFunction.OR),
+                        Direction.NORTH, VoxelShapes.combineAndSimplify(
+                                Block.createCuboidShape(0, 12, 0, 8, 16, 16),
+                                Block.createCuboidShape(8, 12, 0, 16, 16, 8),
+                                BooleanBiFunction.OR));
+
+        protected static final Map<Direction, VoxelShape> OUTER = Map
+                .of(Direction.EAST, Block.createCuboidShape(8, 12, 0, 16, 16, 8),
+                        Direction.SOUTH, Block.createCuboidShape(8, 12, 8, 16, 16, 16),
+                        Direction.WEST, Block.createCuboidShape(0, 12, 8, 8, 16, 16),
+                        Direction.NORTH, Block.createCuboidShape(0, 12, 0, 8, 16, 8));
     }
 }

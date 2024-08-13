@@ -36,7 +36,7 @@ public class MTWModPreload implements LanguageAdapter {
             );
             var mtwmod = FabricLoader.getInstance().getModContainer(MTWMod.ID).orElseThrow();
             var metadata = mtwmod.getMetadata();
-            setTitleFromMetadata.invokeExact(metadata.getId(), "Make The World", metadata.getVersion().getFriendlyString());
+            setTitleFromMetadata.invokeExact(metadata.getId(), "Cheonnyeon Story", metadata.getVersion().getFriendlyString());
         } catch (Throwable e) {
             LOGGER.info("[Mod Loading Screen] 제목 설정 실패", e);
         }

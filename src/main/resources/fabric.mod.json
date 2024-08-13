@@ -17,6 +17,9 @@
 		"client": [
 			"dev.magyul.MTWModClient"
 		],
+		"fabric-datagen": [
+			"dev.magyul.MTWModDataGenerator"
+		],
 		"preLaunch": [
 			{
 				"adapter": "mtwmod:preload",

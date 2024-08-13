@@ -10,6 +10,7 @@ import dev.magyul.network.NetworkCodecs;
 import dev.magyul.network.SNetwork;
 import dev.magyul.registers.*;
 import dev.magyul.util.ServerUtil;
+import dev.magyul.util.SitUtil;
 import dev.magyul.world.DevelopDimensions;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -17,19 +18,27 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.enums.BlockHalf;
+import net.minecraft.block.enums.SlabType;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -56,12 +65,14 @@ public class MTWMod implements ModInitializer {
 			}
 		}
 
+		MTWEntityType.init();
 		MTWBlocks.init();
+		MTWBlockEntityType.init();
 		MTWDataComponentTypes.init();
 		MTWItems.init();
 		MTWSounds.init();
 		MTWTags.init();
-		Other.init();
+		MTWOther.init();
 		NetworkCodecs.register();
 		SNetwork.register();
 		CommandRegistrationCallback.EVENT.register(MTWCommands::register);
@@ -77,7 +88,42 @@ public class MTWMod implements ModInitializer {
 		});
 		PlayerInteractEvents.ATTACK_AIR_EVENT.register(this::onAttack);
 		AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> onClickBlock(player, hand, null));
-		UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> onClickBlock(player, hand, hitResult));
+		PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
+			if (!world.isClient) {
+				var entity = SitUtil.getSitEntity(world, pos);
+				if (entity != null) {
+					SitUtil.removeSitEntity(world, pos);
+					entity.removeAllPassengers();
+				}
+			}
+		});
+		UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+			if (!world.isClient && world.canPlayerModifyAt(player, hitResult.getBlockPos()) && !player.isSneaking() && !SitUtil.isPlayerSitting(player) && hitResult.getSide() == Direction.UP) {
+				var hitPos = hitResult.getBlockPos();
+				var s = world.getBlockState(hitPos);
+				if (s.isIn(MTWTags.SITTINGS) && isPlayerInRange(player, hitPos) && !SitUtil.isOccupied(world, hitPos) && player.getStackInHand(hand).isEmpty()) {
+					if (s.getProperties().contains(Properties.SLAB_TYPE) && s.get(Properties.SLAB_TYPE) != SlabType.BOTTOM) {
+						return ActionResult.PASS;
+					}
+
+					if (s.getProperties().contains(Properties.BLOCK_HALF) && s.get(Properties.BLOCK_HALF) != BlockHalf.BOTTOM) {
+						return ActionResult.PASS;
+					}
+
+					var sit = MTWEntityType.SIT.create(world);
+					if (sit != null) {
+						sit.updatePosition((double) hitPos.getX() + 0.5, (double) hitPos.getY() + 0.5, (double) hitPos.getZ() + 0.5);
+						if (SitUtil.addSitEntity(world, hitPos, sit, player.getPos())) {
+							world.spawnEntity(sit);
+							player.startRiding(sit);
+							return ActionResult.SUCCESS;
+						}
+					}
+				}
+			}
+
+			return onClickBlock(player, hand, hitResult);
+		});
 		ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
 			if (entity instanceof ItemEntity itemEntity) {
 				var owner = itemEntity.getOwner();
@@ -170,5 +216,16 @@ public class MTWMod implements ModInitializer {
 			}
 		}
 		return ActionResult.PASS;
+	}
+
+	private static boolean isPlayerInRange(PlayerEntity player, BlockPos pos) {
+		var playerPos = player.getBlockPos();
+		var blockReach = player.getAttributes().getBaseValue(EntityAttributes.PLAYER_BLOCK_INTERACTION_RANGE);
+		if (blockReach == 0) {
+			return playerPos.getY() - pos.getY() <= 1 && playerPos.getX() - pos.getX() == 0 && playerPos.getZ() - pos.getZ() == 0;
+		} else {
+			Box range = new Box(pos.getX() + blockReach, pos.getY() + blockReach, pos.getZ() + blockReach, pos.getX() - blockReach, pos.getY() - blockReach, pos.getZ() - blockReach);
+			return range.minX <= (double)playerPos.getX() && range.minY <= (double)playerPos.getY() && range.minZ <= (double)playerPos.getZ() && range.maxX >= (double)playerPos.getX() && range.maxY >= (double)playerPos.getY() && range.maxZ >= (double)playerPos.getZ();
+		}
 	}
 }

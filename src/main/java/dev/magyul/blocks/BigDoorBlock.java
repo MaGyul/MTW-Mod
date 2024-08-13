@@ -49,7 +49,7 @@ public class BigDoorBlock extends Block {
     public static final EnumProperty<TripleBlockHalf> HALF = MTWProperties.TRIPLE_BLOCK_HALF;
     protected static final VoxelShape Z_AXIS_SHAPE = Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 16.0, 11.0);
     protected static final VoxelShape X_AXIS_SHAPE = Block.createCuboidShape(5.0, 0.0, 0.0, 11.0, 16.0, 16.0);
-    protected static final VoxelShape Z_AXIS_COLLISION_SHAPE = Block.createCuboidShape(0.0, 0.0, 5.0, 16.0, 16.0, 11.0);
+    protected static final VoxelShape Z_AXIS_COLLISION_SHAPE = Block.createCuboidShape(0.0, 0.0, 5.0, 20.0, 16.0, 11.0);
     protected static final VoxelShape X_AXIS_COLLISION_SHAPE = Block.createCuboidShape(5.0, 0.0, 0.0, 11.0, 16.0, 16.0);
     protected static final VoxelShape Z_AXIS_SIDES_SHAPE = Block.createCuboidShape(0.0, 5.0, 5.0, 16.0, 16.0, 11.0);
     protected static final VoxelShape X_AXIS_SIDES_SHAPE = Block.createCuboidShape(5.0, 5.0, 0.0, 11.0, 16.0, 16.0);

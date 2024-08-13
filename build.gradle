@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.6-SNAPSHOT'
+	id 'fabric-loom' version '1.7-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -37,6 +37,10 @@ repositories {
 	}
 }
 
+fabricApi {
+	configureDataGeneration()
+}
+
 loom {
     splitEnvironmentSourceSets()
 
@@ -59,21 +63,28 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	var modrinthList = List.of(
+	// Implementation
+	for (String mod : [
 			project.modmenu_version,
 			project.voicechat_version,
-			project.axiom_version,
-			project.command_macros_version,
-			project.pehkui_version
-	)
-
-	for (String mod : modrinthList) {
+			project.command_macros_version
+	]) {
 		modImplementation "maven.modrinth:$mod"
 	}
 
-	modImplementation "dev.mtwmod:mtwmod-resource:1.0.2"
-	include modImplementation("dev.mtwmod:mtwmod-skinpreset:1.0.1")
-	include modImplementation("dev.mtwmod:mtwmod-animation:1.0.0")
+	// Compile Only
+	for (String mod : [
+			project.axiom_version,
+			project.command_block_ide_version,
+			project.pehkui_version
+	]) {
+		modCompileOnly "maven.modrinth:$mod"
+	}
+
+	modRuntimeOnly "dev.mtwmod:mtwmod-resource:1.0.4"
+//	modRuntimeOnly project(":mtw-resource")
+//	include modImplementation("dev.mtwmod:mtwmod-skinpreset:1.0.1")
+//	include modImplementation("dev.mtwmod:mtwmod-animation:1.0.0")
 	include modImplementation("dev.mtwmod:better-third-person:1.0.0")
 	modApi "dev.mtwmod:kyrptconfig:1.6.0-1.20.6"
 //	modApi "maven.modrinth:rrls:Ip08v0S2"
@@ -95,6 +106,8 @@ dependencies {
 }
 
 processResources {
+	dependsOn ":mtw-resource:processResources"
+
 	inputs.property "version", project.version
 
 	filesMatching("fabric.mod.json") {

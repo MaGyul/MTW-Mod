@@ -1,6 +1,8 @@
 package dev.magyul.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.magyul.MTWMod;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ServerInfo;
@@ -25,16 +27,20 @@ public abstract class GameTitleMixin {
 
     @Shadow @Nullable private IntegratedServer server;
 
-    @Shadow @Final private Window window;
-
-    @Inject(method = "updateWindowTitle", at = @At("HEAD"), cancellable = true)
-    private void updateTitle(final CallbackInfo cb) {
-        cb.cancel();
-        this.window.setTitle(createTitle());
+    @ModifyReturnValue(method = "getWindowTitle", at = @At("RETURN"))
+    private String getWindowTitle(String original) {
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            return createTitle();
+        }
+        if (I18n.hasTranslation("game.title")) {
+            return I18n.translate("game.title");
+        }
+        return "Cheonnyeon Story";
     }
+
     @Unique
     private String createTitle() {
-        StringBuilder stringBuilder = new StringBuilder("Make The World");
+        StringBuilder stringBuilder = new StringBuilder(getTitle());
         stringBuilder.append(" ");
         stringBuilder.append(MTWMod.VERSION);
         ClientPlayNetworkHandler clientPlayNetworkHandler = this.getNetworkHandler();
@@ -53,5 +59,13 @@ public abstract class GameTitleMixin {
         }
 
         return stringBuilder.toString();
+    }
+
+    @Unique
+    private String getTitle() {
+        if (I18n.hasTranslation("game.title")) {
+            return I18n.translate("game.title");
+        }
+        return "Cheonnyeon Story";
     }
 }

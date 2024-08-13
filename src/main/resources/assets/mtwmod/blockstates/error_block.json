@@ -6,24 +6,6 @@
     "level=1": {
       "model": "mtwmod:block/error_block"
     },
-    "level=10": {
-      "model": "mtwmod:block/error_block"
-    },
-    "level=11": {
-      "model": "mtwmod:block/error_block"
-    },
-    "level=12": {
-      "model": "mtwmod:block/error_block"
-    },
-    "level=13": {
-      "model": "mtwmod:block/error_block"
-    },
-    "level=14": {
-      "model": "mtwmod:block/error_block"
-    },
-    "level=15": {
-      "model": "mtwmod:block/error_block"
-    },
     "level=2": {
       "model": "mtwmod:block/error_block"
     },
@@ -46,6 +28,24 @@
       "model": "mtwmod:block/error_block"
     },
     "level=9": {
+      "model": "mtwmod:block/error_block"
+    },
+    "level=10": {
+      "model": "mtwmod:block/error_block"
+    },
+    "level=11": {
+      "model": "mtwmod:block/error_block"
+    },
+    "level=12": {
+      "model": "mtwmod:block/error_block"
+    },
+    "level=13": {
+      "model": "mtwmod:block/error_block"
+    },
+    "level=14": {
+      "model": "mtwmod:block/error_block"
+    },
+    "level=15": {
       "model": "mtwmod:block/error_block"
     }
   }

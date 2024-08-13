@@ -1,12 +1,13 @@
 package dev.magyul;
 
-import com.moulberry.axiom.Axiom;
 import de.maxhenkel.voicechat.voice.client.ClientManager;
 import dev.magyul.blocks.ErrorBlock;
 import dev.magyul.data.WorldData;
 import dev.magyul.events.PlayerInteractEvents;
 import dev.magyul.network.*;
 import dev.magyul.cocoainput.CocoaInput;
+import dev.magyul.registers.MTWBlockEntityRenderer;
+import dev.magyul.registers.MTWEntityRenderer;
 import dev.magyul.registers.MTWItems;
 import dev.magyul.util.ClientUtil;
 import net.fabricmc.api.ClientModInitializer;
@@ -45,7 +46,8 @@ public class MTWModClient implements ClientModInitializer {
 		instance = this;
 		client = MinecraftClient.getInstance();
 
-//		MTWBlockEntityRenderer.register();
+		MTWEntityRenderer.register();
+		MTWBlockEntityRenderer.register();
 		// net/minecraft/client/gui/EditBox -> MultilineTextField
 
 		ScreenEvents.BEFORE_INIT.register(this::onScreenInit);
@@ -76,10 +78,10 @@ public class MTWModClient implements ClientModInitializer {
 
 		ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
 			try {
-				var axiom = Axiom.getInstance();
+				var axiom = com.moulberry.axiom.Axiom.getInstance();
 				if (ClientUtil.checkDev() && !axiom.hasCommercialLicense()) {
 					try {
-						var field = Axiom.class.getDeclaredField("hasCommercialLicense");
+						var field = com.moulberry.axiom.Axiom.class.getDeclaredField("hasCommercialLicense");
 						field.setAccessible(true);
 						field.set(axiom, true);
 						field.setAccessible(false);

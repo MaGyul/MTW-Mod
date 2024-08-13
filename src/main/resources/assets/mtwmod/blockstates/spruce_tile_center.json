@@ -1,0 +1,18 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "mtwmod:block/spruce_tile_center/spruce_tile_center",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "mtwmod:block/spruce_tile_center/spruce_tile_center"
+    },
+    "facing=south": {
+      "model": "mtwmod:block/spruce_tile_center/spruce_tile_center"
+    },
+    "facing=west": {
+      "model": "mtwmod:block/spruce_tile_center/spruce_tile_center",
+      "y": 90
+    }
+  }
+}

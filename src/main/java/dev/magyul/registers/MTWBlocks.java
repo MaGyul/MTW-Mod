@@ -14,11 +14,14 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.ToIntFunction;
 
 import static net.minecraft.block.Blocks.*;
 
 public class MTWBlocks {
+    public static final List<Block> MTW_BLOCKS = new ArrayList<>();
     private static final ToIntFunction<BlockState> LIGHT_15 = (state) -> 15;
 
     // Full Cube
@@ -46,6 +49,22 @@ public class MTWBlocks {
             .mapColor(MapColor.PALE_YELLOW).instrument(Instrument.BASEDRUM).requiresTool().strength(.8F).luminance(LIGHT_15)));
     public static final Block BLAST_FURNACE = register("blast_furnace", new BlastFurnace(AbstractBlock.Settings.create()
             .mapColor(MapColor.STONE_GRAY).instrument(Instrument.BASS).instrument(Instrument.BASEDRUM).requiresTool().strength(1.5F, 6.0F)));
+    public static final Block SPRUCE_PLANKS_CHAIR = register("spruce_planks_chair", new SprucePlanksChair(AbstractBlock.Settings.create()
+            .mapColor(MapColor.SPRUCE_BROWN).instrument(Instrument.BASS).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD).nonOpaque().burnable()));
+    public static final Block STANDARD = register("standard", new StandardBlock(AbstractBlock.Settings.create()
+            .mapColor(MapColor.PALE_YELLOW).instrument(Instrument.BASS).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD).noCollision().burnable().luminance(StandardBlock.LUMINANCE)));
+    public static final Block FOOD_TABLE = register("food_table", new FoodTableBlock(AbstractBlock.Settings.create()
+            .mapColor(MapColor.PALE_YELLOW).instrument(Instrument.BASS).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD).nonOpaque().burnable()));
+    public static final Block SPRUCE_TILE_CENTER = register("spruce_tile_center", new TileBlock(AbstractBlock.Settings.create()
+            .mapColor(MapColor.SPRUCE_BROWN).instrument(Instrument.BASS).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD).nonOpaque().burnable()));
+    public static final Block SPRUCE_HIGH_SLOPE_TILE = register("spruce_high_slope_tile", new TileStairBlock(AbstractBlock.Settings.create()
+            .mapColor(MapColor.STONE_GRAY).instrument(Instrument.BASEDRUM).strength(1.5F, 6.0F).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block SPRUCE_LOW_SLOPE_TILE_BOTTOM = register("spruce_low_slope_tile_bottom", new TileStairBlock(AbstractBlock.Settings.create()
+            .mapColor(MapColor.STONE_GRAY).instrument(Instrument.BASEDRUM).strength(1.5F, 6.0F).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block SPRUCE_LOW_SLOPE_TILE_TOP = register("spruce_low_slope_tile_top", new TileStairBlock(AbstractBlock.Settings.create()
+            .mapColor(MapColor.STONE_GRAY).instrument(Instrument.BASEDRUM).strength(1.5F, 6.0F).sounds(BlockSoundGroup.STONE).nonOpaque()));
+    public static final Block SPRUCE_LOW_SLOPE_TILE_END = register("spruce_low_slope_tile_end", new TileStairBlock(AbstractBlock.Settings.create()
+            .mapColor(MapColor.STONE_GRAY).instrument(Instrument.BASEDRUM).strength(1.5F, 6.0F).sounds(BlockSoundGroup.STONE).nonOpaque()));
 
     // 얇은
     public static final Block SPRUCE_LARGE_HALL = register("spruce_large_hall", new MoreSlabBlock(AbstractBlock.Settings.create()
@@ -54,7 +73,7 @@ public class MTWBlocks {
             .mapColor(MapColor.SPRUCE_BROWN).instrument(Instrument.BASS).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD).burnable()));
     public static final Block SPRUCE_LARGE_HALL_LINOLEUM = register("spruce_large_hall_linoleum", new MoreSlabStairBlock(AbstractBlock.Settings.create()
             .mapColor(MapColor.SPRUCE_BROWN).instrument(Instrument.BASS).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD).burnable()));
-    public static final Block SPRUCE_RAFTERS = register("spruce_rafters", new MoreSlabBlock(AbstractBlock.Settings.create()
+    public static final Block SPRUCE_RAFTERS = register("spruce_rafters", new MoreSlabStairBlock(AbstractBlock.Settings.create()
             .mapColor(MapColor.SPRUCE_BROWN).instrument(Instrument.BASS).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD).nonOpaque().burnable()));
 
     // 울타리 형식 벽
@@ -82,10 +101,13 @@ public class MTWBlocks {
             .mapColor(MapColor.OAK_TAN).instrument(Instrument.BASS).strength(3.0F).nonOpaque().allowsSpawning(Blocks::never).burnable()));
     public static final Block OAK_KOREAN_PAPER_DOOR = register("oak_korean_paper_door", new BigDoorBlock(BlockSetType.OAK, AbstractBlock.Settings.create()
             .mapColor(OAK_PLANKS.getDefaultMapColor()).instrument(Instrument.BASS).strength(3.0F).nonOpaque().burnable().pistonBehavior(PistonBehavior.DESTROY)));
+    public static final Block OAK_KOREAN_PAPER_SLIDING_DOOR = register("oak_korean_paper_sliding_door", new BigDoorBlock(BlockSetType.OAK, AbstractBlock.Settings.create()
+            .mapColor(OAK_PLANKS.getDefaultMapColor()).instrument(Instrument.BASS).strength(3.0F).nonOpaque().burnable().pistonBehavior(PistonBehavior.DESTROY)));
     public static final Block SPRUCE_PLATE_DOOR = register("spruce_plate_door", new BigDoorBlock(BlockSetType.SPRUCE, AbstractBlock.Settings.create()
             .mapColor(SPRUCE_PLANKS.getDefaultMapColor()).instrument(Instrument.BASS).strength(3.0F).nonOpaque().burnable().pistonBehavior(PistonBehavior.DESTROY)));
 
     private static Block register(String name, Block block) {
+        MTW_BLOCKS.add(block);
 //        OAK_STAIRS
 //        ChestBl
 //        Blocks.OAK_LOG
