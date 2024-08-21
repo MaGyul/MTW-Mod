@@ -64,7 +64,5 @@
   "mtwmod.command.move.single": "%s을(를) %s 차원으로 이동했습니다.",
   "mtwmod.enabled.allmic": "전체 마이크 켜짐",
   "mtwmod.received.allmic": "%s으로 부터 듣는중",
-  "reloading.resource": "리소스 리로드 중...",
-  "subtitle.mtwmod.garage": "차고 문 열림",
-  "subtitle.mtwmod.shoji": "쇼지 문 열림"
+  "reloading.resource": "리소스 리로드 중..."
 }

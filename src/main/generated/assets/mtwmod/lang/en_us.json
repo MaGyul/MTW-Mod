@@ -65,7 +65,5 @@
   "mtwmod.enabled.allmic": "Overall Mic on",
   "mtwmod.menu.game": "Make The World | Version %s",
   "mtwmod.received.allmic": "Listening to %s",
-  "reloading.resource": "Reloading resources...",
-  "subtitle.mtwmod.garage": "Open Garage Door",
-  "subtitle.mtwmod.shoji": "Open Shoji Door"
+  "reloading.resource": "Reloading resources..."
 }
