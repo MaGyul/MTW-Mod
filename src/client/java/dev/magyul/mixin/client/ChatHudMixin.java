@@ -69,7 +69,7 @@ public abstract class ChatHudMixin {
     @ModifyVariable(method = "render", ordinal = 3, at = @At("STORE"))
     private double modifyOpacity(double originalOpacity) {
         double opacity = originalOpacity;
-        // 페이드 인 효과를 얻기 위해 현재 렌더링된 선에 필요한 현재 불투명도를 계산합니다.
+        // fadeIn 효과를 얻기 위해 현재 렌더링된 선에 필요한 현재 불투명도를 계산
         try {
             long timestamp = messageTimestamps.get(chatLineIndex);
             long timeAlive = System.currentTimeMillis() - timestamp;
@@ -82,15 +82,15 @@ public abstract class ChatHudMixin {
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/ChatHudLine$Visible;indicator()Lnet/minecraft/client/gui/hud/MessageIndicator;"))
     private MessageIndicator removeMessageIndicator(ChatHudLine.Visible instance) {
-        // 채팅 표시줄이 렌더링되도록 허용하지 않기
+        // 채팅 표시줄 렌더링 막기
         return null;
     }
 
     @Inject(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At("TAIL"))
     private void addMessage(Text message, MessageSignatureData signatureData, MessageIndicator indicator, CallbackInfo ci) {
-        messageTimestamps.add(0, System.currentTimeMillis());
+        messageTimestamps.addFirst(System.currentTimeMillis());
         while (messageTimestamps.size() > visibleMessages.size()) {
-            messageTimestamps.remove(messageTimestamps.size() - 1);
+            messageTimestamps.removeLast();
         }
     }
 }

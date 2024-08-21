@@ -1,6 +1,5 @@
 package dev.magyul.network.packets.s2c.handshake;
 
-import dev.magyul.MTWMod;
 import dev.magyul.network.HandshakePacketType;
 import dev.magyul.network.IHandshakeMessage;
 import dev.magyul.network.packets.c2s.handshake.HelloResponseC2SPacket;
@@ -29,7 +28,6 @@ public class HelloRequestS2CPacket implements IHandshakeMessage {
 
     @Override
     public @Nullable IResponsePacket handle(ClientConnection connection, Consumer<PacketCallbacks> callbacks) {
-        MTWMod.LOGGER.info("Send MTW hello request to {}", connection.getAddress());
         return new HelloResponseC2SPacket();
     }
 }

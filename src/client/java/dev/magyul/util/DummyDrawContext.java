@@ -32,6 +32,7 @@ public class DummyDrawContext extends DrawContext {
     }
 
     /** @deprecated */
+    @SuppressWarnings("deprecation")
     @Deprecated
     public void draw(Runnable drawCallback) {
     }

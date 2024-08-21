@@ -52,6 +52,9 @@ public class MTWMod implements ModInitializer {
 	public static final String ID = "mtwmod";
 	public static String VERSION = "1.0.0";
 
+	@Nullable
+	public static MinecraftServer SERVER;
+
 	@Override
 	public void onInitialize() {
 		for (final var mod : FabricLoader.getInstance().getAllMods()) {
@@ -126,10 +129,6 @@ public class MTWMod implements ModInitializer {
 				var owner = itemEntity.getOwner();
 				var scale = 3f;
 				if (owner != null) {
-//					var ownerBase = ScaleTypes.BASE.getScaleData(owner);
-//					if (ownerBase.getScale() != 1f) {
-//						scale *= ownerBase.getScale();
-//					}
 					var ownerDrops = ScaleTypes.DROPS.getScaleData(owner);
 					if (ownerDrops.getScale() != 1f) {
 						scale *= ownerDrops.getScale();
@@ -142,14 +141,16 @@ public class MTWMod implements ModInitializer {
 			}
 		});
 		ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> newPlayer.setCustomName(oldPlayer.getCustomName()));
-		ServerLifecycleEvents.SERVER_STARTED.register(this::onServerStarted);
-		ServerLifecycleEvents.SERVER_STOPPING.register(this::onServerStopping);
+		ServerLifecycleEvents.SERVER_STARTING.register(this::onServerStarting);
+		ServerLifecycleEvents.SERVER_STOPPED.register(this::onServerStopped);
 	}
 
-	private void onServerStarted(MinecraftServer server) {
+	private void onServerStarting(MinecraftServer server) {
+		SERVER = server;
 	}
 
-	private void onServerStopping(MinecraftServer server) {
+	private void onServerStopped(MinecraftServer server) {
+		SERVER = null;
 	}
 
 	public static ActionResult onCarryUse(ServerPlayerEntity player) {
@@ -199,7 +200,6 @@ public class MTWMod implements ModInitializer {
 		var right = blockHit != null;
 
 		if (player instanceof ServerPlayerEntity serverPlayer) {
-			// FallingBlockEntity.spawnFromBlock(world, pos, carry)
 			if (right && serverPlayer.interactionManager.getGameMode() == GameMode.ADVENTURE) {
 				return onCarryUse(serverPlayer);
 			}

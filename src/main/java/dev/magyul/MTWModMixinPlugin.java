@@ -23,8 +23,6 @@ public class MTWModMixinPlugin implements IMixinConfigPlugin {
                     fabricLoader.isModLoaded("kyrptconfig");
             case "dev.magyul.mixin.client.cmdkeybind.MacroScreenFactoryMixin" ->
                     fabricLoader.isModLoaded("cmdkeybind");
-            case "dev.magyul.mixin.pehkui.ReflectionUtilsMixin" ->
-                    fabricLoader.isDevelopmentEnvironment();
             default -> true;
         };
     }
@@ -32,7 +30,6 @@ public class MTWModMixinPlugin implements IMixinConfigPlugin {
     @Override
     public void onLoad(String mixinPackage) {
         MixinExtrasBootstrap.init();
-//        MTWMod.LOGGER.info("Loading Mixin Plugin for " + Authorization.getUserAgent());
     }
 
     @Override

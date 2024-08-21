@@ -12,7 +12,7 @@ import net.minecraft.registry.RegistryWrapper;
 
 import java.util.concurrent.CompletableFuture;
 
-import static dev.magyul.registers.MTWBlocks.*;
+import static dev.magyul.registers.MTWBlocks.MTW_BLOCKS;
 
 public class English extends FabricLanguageProvider {
     public English(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
@@ -28,8 +28,6 @@ public class English extends FabricLanguageProvider {
         builder.add("game.title", "Cheonnyeon Story");
         builder.add("disconnect.versionNotMatched", "The MTW mod versions on the server and client don't match. (Server: %s / Client: %s)");
         builder.add("item.mtwmod.more_info", "§7Press %s §7to see the hidden content.");
-        builder.add("subtitle.mtwmod.shoji", "Open Shoji Door");
-        builder.add("subtitle.mtwmod.garage", "Open Garage Door");
         var key = "item.mtwmod.error_block_light";
         builder.add(key, "Light Level (%d)");
         builder.add(key + "+", "Light value +1: %s + %s");

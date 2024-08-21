@@ -1,9 +1,9 @@
-package dev.magyul.mixin.client.rrls;
+package dev.magyul.mixin.client.overlay;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.magyul.MTWMod;
 import dev.magyul.util.DummyDrawContext;
-import dev.magyul.util.OverlayHelper;
+import dev.magyul.util.OverlayStateHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Overlay;
@@ -21,20 +21,20 @@ public class GameRendererMixin {
     @Shadow @Final MinecraftClient client;
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;draw()V"))
-    public void miniRender(RenderTickCounter tickCounter, boolean tick, CallbackInfo ci, @Local(ordinal = 0) DrawContext context) {
+    public void render(RenderTickCounter tickCounter, boolean tick, CallbackInfo ci, @Local(ordinal = 0) DrawContext context) {
         try {
             Overlay overlay = this.client.overlay;
-            if (OverlayHelper.isRenderingState(overlay)) {
+            if (OverlayStateHelper.isRendering(overlay)) {
                 overlay.render(DummyDrawContext.INSTANCE, 0, 0, tickCounter.getLastFrameDuration());
                 this.client.getProfiler().push("overlay");
                 context.getMatrices().push();
                 context.getMatrices().translate(0, 0, 0);
-                overlay.mtwmod$miniRender(context);
+                overlay.mtwmod$render(context);
                 context.getMatrices().pop();
                 this.client.getProfiler().pop();
             }
         } catch (RuntimeException ex) {
-            MTWMod.LOGGER.error("render error", ex);
+            MTWMod.LOGGER.error("overlay render error", ex);
         }
 
     }

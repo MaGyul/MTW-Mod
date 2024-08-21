@@ -2,11 +2,9 @@ package dev.magyul.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.magyul.MTWMod;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.toast.*;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -63,45 +61,15 @@ public class ToastMixin {
     }
 
     @Mixin(ToastManager.Entry.class)
-    public static abstract class Entry<T extends Toast> {
-        @Shadow private long startTime;
-
-        @Shadow private Toast.Visibility visibility;
-
-        @Shadow private long showTime;
-
-        @Shadow @Final private T instance;
-
-        @Shadow protected abstract float getDisappearProgress(long time);
-
-        @Shadow @Final int topIndex;
-
-        @Inject(method = "draw", at = @At("HEAD"), cancellable = true)
-        private void draw(int x, DrawContext context, CallbackInfoReturnable<Boolean> cb) {
-            var client = MinecraftClient.getInstance();
-            long i = Util.getMeasuringTimeMs();
-            if (startTime == -1L) {
-                startTime = i;
-                this.visibility.playSound(client.getSoundManager());
-            }
-
-            if (this.visibility == Toast.Visibility.SHOW && i - startTime <= 600L) {
-                showTime = i;
-            }
-
-            context.getMatrices().push();
-            context.getMatrices().translate((float) x - (float) instance.getWidth() * getDisappearProgress(i), (float) (topIndex * 32), 800.0F);
+    public static abstract class Entry {
+        @Inject(method = "draw", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;translate(FFF)V", shift = At.Shift.AFTER))
+        private void draw$drawPre(int x, DrawContext context, CallbackInfoReturnable<Boolean> cir) {
             RenderSystem.enableBlend();
-            Toast.Visibility visibility = instance.draw(context, client.getToastManager(), i - showTime);
-            RenderSystem.disableBlend();
-            context.getMatrices().pop();
-            if (visibility != this.visibility) {
-                startTime = i - (long)((int)((1.0F - getDisappearProgress(i)) * 600.0F));
-                this.visibility = visibility;
-                this.visibility.playSound(client.getSoundManager());
-            }
+        }
 
-            cb.setReturnValue(this.visibility == Toast.Visibility.HIDE && i - startTime > 600L);
+        @Inject(method = "draw", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/toast/Toast;draw(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/client/toast/ToastManager;J)Lnet/minecraft/client/toast/Toast$Visibility;", shift = At.Shift.AFTER))
+        private void draw$drawPost(int x, DrawContext context, CallbackInfoReturnable<Boolean> cir) {
+            RenderSystem.disableBlend();
         }
     }
 }

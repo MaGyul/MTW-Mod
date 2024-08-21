@@ -2,6 +2,7 @@ package dev.magyul.network;
 
 import dev.magyul.MTWMod;
 import dev.magyul.mixin.accessors.ServerLoginNetworkHandlerAccessor;
+import dev.magyul.network.packets.s2c.handshake.HelloRequestS2CPacket;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
 import net.minecraft.network.ClientConnection;
@@ -24,6 +25,10 @@ public class HandshakeNetworking {
             for (HandshakePacketType<? extends IHandshakeMessage> packetType : HANDSHAKE_PACKETS) {
                 try {
                     IHandshakeMessage packet = packetType.create();
+                    if (packet instanceof HelloRequestS2CPacket) {
+                        var connection = ((ServerLoginNetworkHandlerAccessor) handler).getConnection();
+                        MTWMod.LOGGER.info("Send MTW hello request to {}", connection.getAddress());
+                    }
                     packet.sendPacket(sender);
                 } catch (Exception e) {
                     MTWMod.LOGGER.error("{} Handshake packet processing error", packetType.getId().toString(), e);

@@ -2,6 +2,7 @@ package dev.magyul.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import dev.magyul.MTWMod;
 import dev.magyul.MTWModClient;
 import dev.magyul.ServerPingPong;
@@ -9,7 +10,7 @@ import dev.magyul.events.PlayerInteractEvents;
 import dev.magyul.network.packets.c2s.PickupItemC2SPacket;
 import dev.magyul.util.ClientUtil;
 import dev.magyul.util.ItemUtil;
-import dev.magyul.util.OverlayHelper;
+import dev.magyul.util.OverlayStateHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Overlay;
@@ -36,7 +37,6 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -65,9 +65,9 @@ public abstract class MinecraftClientMixin {
     }
 
     @WrapOperation(method = {"tick", "handleInputEvents", "startIntegratedServer"}, at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;overlay:Lnet/minecraft/client/gui/screen/Overlay;"))
-    private Overlay miniRender(MinecraftClient instance, Operation<Overlay> original) {
+    private Overlay mtwmod$render(MinecraftClient instance, Operation<Overlay> original) {
         Overlay overlay = original.call(instance);
-        return OverlayHelper.isRenderingState(overlay) ? null : overlay;
+        return OverlayStateHelper.isRendering(overlay) ? null : overlay;
     }
 
     @Redirect(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/KeyBinding;wasPressed()Z", ordinal = 4))
@@ -90,8 +90,8 @@ public abstract class MinecraftClientMixin {
         }
     }
 
-    @Inject(method = "doItemUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z", shift = At.Shift.BEFORE, ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void doItemUse(CallbackInfo ci, Hand[] var1, int var2, int var3, Hand hand, ItemStack itemStack) {
+    @Inject(method = "doItemUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z", shift = At.Shift.BEFORE, ordinal = 1))
+    private void doItemUse(CallbackInfo ci, @Local Hand hand, @Local ItemStack itemStack) {
         if (player != null) {
             if (itemStack.isEmpty() && (crosshairTarget == null || crosshairTarget.getType() == HitResult.Type.MISS)) {
                 PlayerInteractEvents.RIGHT_CLICK_EMPTY.invoker().click(player, hand, player.getBlockPos());

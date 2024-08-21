@@ -26,8 +26,6 @@ public class Korean extends FabricLanguageProvider {
         builder.add("game.title", "천년의 이야기");
         builder.add("disconnect.versionNotMatched", "서버와 클라이언트의 MTW 모드 버전이 일치하지 않습니다. (서버: %s / 클라이언트: %s)");
         builder.add("item.mtwmod.more_info", "§7숨겨진 내용을 보려면 %s§7를 누르세요.");
-        builder.add("subtitle.mtwmod.shoji", "쇼지 문 열림");
-        builder.add("subtitle.mtwmod.garage", "차고 문 열림");
         var key = "item.mtwmod.error_block_light";
         builder.add(key, "빛 레벨 (%d)");
         builder.add(key + "+", "빛 레벨 +1: %s + %s");

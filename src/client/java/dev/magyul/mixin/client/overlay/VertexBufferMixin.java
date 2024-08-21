@@ -1,4 +1,4 @@
-package dev.magyul.mixin.client.rrls;
+package dev.magyul.mixin.client.overlay;
 
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gl.VertexBuffer;

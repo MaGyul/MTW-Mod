@@ -5,14 +5,9 @@ import net.minecraft.util.math.Direction;
 public class DirectionUtil {
 
     public static Direction getLeft(Direction facing) {
-        if (facing == Direction.NORTH)  {
-            return Direction.WEST;
-        } else if (facing == Direction.WEST) {
-            return Direction.SOUTH;
-        } else if (facing == Direction.SOUTH) {
-            return Direction.EAST;
-        } else if (facing == Direction.EAST) {
-            return Direction.NORTH;
+        var dir = getLeftNull(facing);
+        if (dir != null) {
+            return dir;
         }
 
         return facing;
@@ -33,14 +28,9 @@ public class DirectionUtil {
     }
 
     public static Direction getRight(Direction facing) {
-        if (facing == Direction.NORTH)  {
-            return Direction.EAST;
-        } else if (facing == Direction.WEST) {
-            return Direction.NORTH;
-        } else if (facing == Direction.SOUTH) {
-            return Direction.WEST;
-        } else if (facing == Direction.EAST) {
-            return Direction.SOUTH;
+        var dir = getRightNull(facing);
+        if (dir != null) {
+            return dir;
         }
 
         return facing;

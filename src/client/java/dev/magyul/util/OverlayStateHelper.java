@@ -2,21 +2,20 @@ package dev.magyul.util;
 
 import net.minecraft.client.gui.screen.Overlay;
 
-public class OverlayHelper {
+public class OverlayStateHelper {
 
-    public static OverlayHelper.State lookupState(boolean reloading) {
+    public static OverlayStateHelper.State getState(boolean reloading) {
         if (!reloading) return State.DEFAULT;
         return State.HIDE;
     }
 
-    public static boolean isRenderingState(Overlay overlay) {
+    public static boolean isRendering(Overlay overlay) {
         return overlay != null && overlay.mtwmod$getState().isRendering();
     }
 
     public enum State {
         DEFAULT(false),
-        HIDE(true),
-        WAIT(false);
+        HIDE(true);
 
         private final boolean render;
 

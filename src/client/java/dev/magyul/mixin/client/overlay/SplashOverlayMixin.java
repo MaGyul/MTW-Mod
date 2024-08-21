@@ -1,4 +1,4 @@
-package dev.magyul.mixin.client.rrls;
+package dev.magyul.mixin.client.overlay;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -7,7 +7,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.magyul.MTWMod;
 import dev.magyul.util.ClientUtil;
 import dev.magyul.util.DummyDrawContext;
-import dev.magyul.util.OverlayHelper;
+import dev.magyul.util.OverlayStateHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Overlay;
@@ -53,13 +53,13 @@ public abstract class SplashOverlayMixin extends Overlay {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(MinecraftClient client, ResourceReload monitor, Consumer<Optional<Throwable>> exceptionHandler, boolean reloading, CallbackInfo ci) {
-        mtwmod$setState(OverlayHelper.lookupState(reloading));
+        mtwmod$setState(OverlayStateHelper.getState(reloading));
     }
 
     @Override
-    public void mtwmod$miniRender(DrawContext context) {
+    public void mtwmod$render(DrawContext context) {
         int scaledWidth = context.getScaledWindowWidth();
-//        int scaledHeight = context.getScaledWindowHeight();
+
         long l = Util.getMeasuringTimeMs();
         if (this.reloading && this.reloadStartTime == -1L) {
             this.reloadStartTime = l;
@@ -91,25 +91,14 @@ public abstract class SplashOverlayMixin extends Overlay {
         RenderSystem.depthMask(true);
         RenderSystem.disableDepthTest();
 
-        /*
-        int s = (int)((double) scaledHeight * 0.8325);
-        int r = (int)(Math.min((double) scaledWidth * 0.75, scaledHeight) * 0.5);
-        this.renderProgressBar(context, scaledWidth / 2 - r, s - 5, scaledWidth / 2 + r, s + 5, 0.8F);
-
-
-
-
-        a
-         */
-
         if (this.reloadCompleteTime == -1L && this.reload.isComplete() && (!this.reloading || g >= 2.0F)) {
             this.reloadCompleteTime = Util.getMeasuringTimeMs();
         }
     }
 
     @Redirect(method = "renderProgressBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/ColorHelper$Argb;getArgb(IIII)I"))
-    private int progressBarColor(int alpha, int red, int green, int blue) {
-        if (OverlayHelper.isRenderingState(this)) {
+    private int renderProgressBar$Color(int alpha, int red, int green, int blue) {
+        if (OverlayStateHelper.isRendering(this)) {
             return Argb.getArgb(alpha, 0, 0, 0);
         } else {
             return Argb.getArgb(alpha, red, green, blue);
@@ -118,43 +107,37 @@ public abstract class SplashOverlayMixin extends Overlay {
 
     @Inject(method = "render", at = @At("HEAD"))
     private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (mtwmod$getState() != OverlayHelper.State.DEFAULT) {
-            mtwmod$setState(OverlayHelper.lookupState(mtwmod$getState() != OverlayHelper.State.WAIT));
+        if (mtwmod$getState() != OverlayStateHelper.State.DEFAULT) {
+            mtwmod$setState(OverlayStateHelper.getState(true));
         }
     }
 
     @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;render(Lnet/minecraft/client/gui/DrawContext;IIF)V"))
-    private boolean screenRender(Screen instance, DrawContext context, int mouseX, int mouseY, float delta) {
+    private boolean checkDummy(Screen instance, DrawContext context, int mouseX, int mouseY, float delta) {
         return !(context instanceof DummyDrawContext);
     }
 
     @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;setOverlay(Lnet/minecraft/client/gui/screen/Overlay;)V"))
-    private boolean infinityLoading(MinecraftClient instance, Overlay overlay) {
+    private boolean alwaysSetOverlayNull(MinecraftClient instance, Overlay overlay) {
         return true;
     }
 
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/GlStateManager;_clear(IZ)V", remap = false))
-    private void _clear(int mask, boolean getError, Operation<Void> original) {
+    private void render$clear(int mask, boolean getError, Operation<Void> original) {
         if (!mtwmod$getState().isRendering()) {
             original.call(mask, getError);
         }
     }
 
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/GlStateManager;_clearColor(FFFF)V", remap = false))
-    private void _clearColor(float red, float green, float blue, float alpha, Operation<Void> original) {
+    private void render$clearColor(float red, float green, float blue, float alpha, Operation<Void> original) {
         if (!mtwmod$getState().isRendering()) {
             original.call(red, green, blue, alpha);
         }
     }
 
-    @WrapOperation(method = "renderProgressBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/ColorHelper$Argb;getArgb(IIII)I"))
-    private int rainbowProgress(int alpha, int red, int green, int blue, Operation<Integer> original) {
-//        return false && mtwmod$getState() != OverlayHelper.State.DEFAULT ? withAlpha(ThreadLocalRandom.current().nextInt(0, 16777215), alpha) :
-        return original.call(alpha, red, green, blue);
-    }
-
     @ModifyConstant(method = "render", constant = @Constant(floatValue = 1000.0F, ordinal = 0), require = 0)
-    private float changeAnimationSpeed(float constant) {
+    private float modifyDelta(float constant) {
         return 1000.0F;
     }
 

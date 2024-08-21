@@ -1,13 +1,12 @@
 package dev.magyul.mixin.client;
 
-import net.minecraft.client.network.*;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.client.network.AllowedAddressResolver;
+import net.minecraft.client.network.RedirectResolver;
+import net.minecraft.client.network.ServerAddress;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.xbill.DNS.Lookup;
 import org.xbill.DNS.SRVRecord;
 import org.xbill.DNS.Type;
@@ -16,29 +15,14 @@ import java.util.Optional;
 
 @Mixin(AllowedAddressResolver.class)
 public class AllowedAddressResolverMixin {
-    @Shadow @Final private AddressResolver addressResolver;
 
-    @Shadow @Final private BlockListChecker blockListChecker;
-
-    @Shadow @Final private RedirectResolver redirectResolver;
-
-    @Inject(method = "resolve", at = @At("HEAD"), cancellable = true)
-    private void resolve(ServerAddress address, CallbackInfoReturnable<Optional<Address>> cb) {
-        Optional<Address> optional = this.addressResolver.resolve(address);
-        if ((optional.isEmpty() || this.blockListChecker.isAllowed(optional.get())) && this.blockListChecker.isAllowed(address)) {
-            Optional<ServerAddress> optional2 = this.redirectResolver.lookupRedirect(address);
-            if (optional2.isEmpty()) {
-                optional2 = lookupRedirect(address);
-            }
-            if (optional2.isPresent()) {
-                Optional<Address> var10000 = this.addressResolver.resolve(optional2.get());
-                optional = var10000.filter(this.blockListChecker::isAllowed);
-            }
-
-            cb.setReturnValue(optional);
-        } else {
-            cb.setReturnValue(Optional.empty());
+    @Redirect(method = "resolve", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/RedirectResolver;lookupRedirect(Lnet/minecraft/client/network/ServerAddress;)Ljava/util/Optional;"))
+    private Optional<ServerAddress> resolve$lookupRedirect(RedirectResolver redirectResolver, ServerAddress address) {
+        Optional<ServerAddress> optional = redirectResolver.lookupRedirect(address);
+        if (optional.isEmpty()) {
+            optional = lookupRedirect(address);
         }
+        return optional;
     }
 
     @Unique

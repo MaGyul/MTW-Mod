@@ -24,7 +24,7 @@ public class ChatScreenMixin {
     private float offsetY = 0;
 
     @Inject(method = "render", at = @At("HEAD"))
-    private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    private void renderPre(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         var client = MinecraftClient.getInstance();
         if (client.player != null) {
             if (!wasOpenedLastFrame && !client.player.isSleeping()) {
@@ -47,7 +47,7 @@ public class ChatScreenMixin {
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    private void renderEnd(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    private void renderPost(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         context.getMatrices().translate(0, -offsetY, 0);
     }
 }

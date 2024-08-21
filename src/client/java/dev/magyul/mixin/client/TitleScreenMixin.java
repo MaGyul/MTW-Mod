@@ -1,5 +1,6 @@
 package dev.magyul.mixin.client;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import dev.magyul.MTWMod;
 import dev.magyul.ServerPingPong;
 import dev.magyul.util.ConnectServer;
@@ -37,7 +38,6 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
 
@@ -184,8 +184,8 @@ public abstract class TitleScreenMixin extends Screen {
         return 1000.0F * 2.0F;
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)I", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, float f, int i, String string) {
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)I", shift = At.Shift.BEFORE))
+    private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, @Local(ordinal = 2) int i) {
         context.drawTextWithShadow(textRenderer, getGameTitle() + " " + MTWMod.VERSION, 2, height - 20, 16777215 | i);
 
         if (mtw_info.getStatus() == ServerInfo.Status.INITIAL) {

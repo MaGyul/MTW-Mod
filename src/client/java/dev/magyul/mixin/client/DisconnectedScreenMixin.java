@@ -19,17 +19,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(DisconnectedScreen.class)
-public class DisconnectedScreenMixin extends Screen {
+public class DisconnectedScreenMixin {
     @Shadow @Final private Screen parent;
 
     @Shadow @Final private DisconnectionInfo info;
 
-    private DisconnectedScreenMixin() {
-        super(Text.empty());
-    }
-
     @Unique
-    private void showToast(Text title, Text reason) {
+    private void showToast(MinecraftClient client, Text title, Text reason) {
         var toast = client.getToastManager();
         try {
             toast.add(SystemToast.create(client, ClientUtil.MTW_TOAST, title, reason));
@@ -40,10 +36,16 @@ public class DisconnectedScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("HEAD"), cancellable = true)
     private void init(CallbackInfo cb) {
+        var client = MinecraftClient.getInstance();
         cb.cancel();
         ClientUtil.cs = null;
         ServerPingPong.serverJoined = false;
         client.setScreen(parent instanceof TitleScreen ? parent : new TitleScreen());
-        ClientUtil.setTimeout(() -> showToast(title, info.reason()), 100);
+        ClientUtil.setTimeout(() -> showToast(client, This().getTitle(), info.reason()), 100);
+    }
+
+    @Unique
+    private DisconnectedScreen This() {
+        return (DisconnectedScreen) (Object) this;
     }
 }
