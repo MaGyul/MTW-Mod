@@ -23,15 +23,16 @@ public class WorldData {
     }
 
     @NotNull
-    public ChunkData getChunkData(int x, int z) {
-        var chunkLong = ChunkPos.toLong(x, z);
-        return chunkDataCache.computeIfAbsent(chunkLong, (l) -> new ChunkData(world, new ChunkPos(x, z)));
+    public ChunkData getChunkData(ChunkPos pos) {
+        var chunkLong = pos.toLong();
+        synchronized (chunkDataCache) {
+            return chunkDataCache.computeIfAbsent(chunkLong, (l) -> new ChunkData(world, pos));
+        }
     }
 
     @NotNull
-    public ChunkData getChunkData(ChunkPos pos) {
-        var chunkLong = pos.toLong();
-        return chunkDataCache.computeIfAbsent(chunkLong, (l) -> new ChunkData(world, pos));
+    public ChunkData getChunkData(int x, int z) {
+        return getChunkData(new ChunkPos(x, z));
     }
 
     @NotNull

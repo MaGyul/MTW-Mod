@@ -6,6 +6,10 @@ import dev.magyul.data.WorldData;
 import dev.magyul.events.PlayerInteractEvents;
 import dev.magyul.network.*;
 import dev.magyul.cocoainput.CocoaInput;
+import dev.magyul.network.packets.c2s.AttackAirC2SPacket;
+import dev.magyul.network.packets.c2s.ErrorBlockUpdateC2SPacket;
+import dev.magyul.network.packets.c2s.KeyInputC2SPacket;
+import dev.magyul.network.packets.c2s.UseAirC2SPacket;
 import dev.magyul.registers.MTWBlockEntityRenderer;
 import dev.magyul.registers.MTWEntityRenderer;
 import dev.magyul.registers.MTWItems;
@@ -46,6 +50,7 @@ public class MTWModClient implements ClientModInitializer {
 		instance = this;
 		client = MinecraftClient.getInstance();
 
+		NetworkClient.init();
 		MTWEntityRenderer.register();
 		MTWBlockEntityRenderer.register();
 		// net/minecraft/client/gui/EditBox -> MultilineTextField
@@ -73,8 +78,6 @@ public class MTWModClient implements ClientModInitializer {
 			}
 			return null;
 		};
-
-		CNetwork.register();
 
 		ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
 			try {

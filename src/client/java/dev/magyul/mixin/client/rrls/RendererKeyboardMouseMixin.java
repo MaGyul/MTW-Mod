@@ -13,13 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin({GameRenderer.class, Keyboard.class, Mouse.class})
 public class RendererKeyboardMouseMixin {
-    @WrapOperation(
-            method = {"*"},
-            at = {@At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/MinecraftClient;getOverlay()Lnet/minecraft/client/gui/screen/Overlay;"
-            )}
-    )
+    @WrapOperation(method = "*", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;getOverlay()Lnet/minecraft/client/gui/screen/Overlay;"))
     public Overlay rrls$miniRender(MinecraftClient instance, Operation<Overlay> original) {
         Overlay overlay = original.call(instance);
         return OverlayHelper.isRenderingState(overlay) ? null : overlay;

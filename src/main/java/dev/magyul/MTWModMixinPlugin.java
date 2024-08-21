@@ -14,9 +14,6 @@ public class MTWModMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         var fabricLoader = FabricLoader.getInstance();
-        if (mixinClassName.startsWith("dev.magyul.mixin.client.axiom")) {
-            return fabricLoader.isModLoaded("axiom");
-        }
         return switch (mixinClassName) {
             case "dev.magyul.mixin.client.cocoainput.MultilineTextFieldWidgetMixin" ->
                     fabricLoader.isModLoaded("command-block-ide");

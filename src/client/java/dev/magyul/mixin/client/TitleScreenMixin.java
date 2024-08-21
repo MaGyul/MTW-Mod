@@ -1,6 +1,5 @@
 package dev.magyul.mixin.client;
 
-import com.google.common.collect.Lists;
 import dev.magyul.MTWMod;
 import dev.magyul.ServerPingPong;
 import dev.magyul.util.ConnectServer;
@@ -48,29 +47,29 @@ import static dev.magyul.util.ClientUtil.*;
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin extends Screen {
     @Unique
-    private static final Identifier INCOMPATIBLE_TEXTURE = new Identifier("server_list/incompatible");
+    private static final Identifier INCOMPATIBLE_TEXTURE = Identifier.of("server_list/incompatible");
     @Unique
-    private static final Identifier UNREACHABLE_TEXTURE = new Identifier("server_list/unreachable");
+    private static final Identifier UNREACHABLE_TEXTURE = Identifier.of("server_list/unreachable");
     @Unique
-    private static final Identifier PING_1_TEXTURE = new Identifier("server_list/ping_1");
+    private static final Identifier PING_1_TEXTURE = Identifier.of("server_list/ping_1");
     @Unique
-    private static final Identifier PING_2_TEXTURE = new Identifier("server_list/ping_2");
+    private static final Identifier PING_2_TEXTURE = Identifier.of("server_list/ping_2");
     @Unique
-    private static final Identifier PING_3_TEXTURE = new Identifier("server_list/ping_3");
+    private static final Identifier PING_3_TEXTURE = Identifier.of("server_list/ping_3");
     @Unique
-    private static final Identifier PING_4_TEXTURE = new Identifier("server_list/ping_4");
+    private static final Identifier PING_4_TEXTURE = Identifier.of("server_list/ping_4");
     @Unique
-    private static final Identifier PING_5_TEXTURE = new Identifier("server_list/ping_5");
+    private static final Identifier PING_5_TEXTURE = Identifier.of("server_list/ping_5");
     @Unique
-    private static final Identifier PINGING_1_TEXTURE = new Identifier("server_list/pinging_1");
+    private static final Identifier PINGING_1_TEXTURE = Identifier.of("server_list/pinging_1");
     @Unique
-    private static final Identifier PINGING_2_TEXTURE = new Identifier("server_list/pinging_2");
+    private static final Identifier PINGING_2_TEXTURE = Identifier.of("server_list/pinging_2");
     @Unique
-    private static final Identifier PINGING_3_TEXTURE = new Identifier("server_list/pinging_3");
+    private static final Identifier PINGING_3_TEXTURE = Identifier.of("server_list/pinging_3");
     @Unique
-    private static final Identifier PINGING_4_TEXTURE = new Identifier("server_list/pinging_4");
+    private static final Identifier PINGING_4_TEXTURE = Identifier.of("server_list/pinging_4");
     @Unique
-    private static final Identifier PINGING_5_TEXTURE = new Identifier("server_list/pinging_5");
+    private static final Identifier PINGING_5_TEXTURE = Identifier.of("server_list/pinging_5");
     @Unique
     private static final Text INCOMPATIBLE_TEXT = Text.translatable("multiplayer.status.incompatible");
     @Unique

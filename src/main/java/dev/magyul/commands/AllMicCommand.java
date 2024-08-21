@@ -2,7 +2,6 @@ package dev.magyul.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import dev.magyul.MTWMod;
 import dev.magyul.data.PlayerData;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;

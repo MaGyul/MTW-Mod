@@ -16,11 +16,11 @@ public class MTWTags {
     public static final TagKey<Item> LANTERNS = registerItem("lanterns");
 
     private static TagKey<Block> registerBlock(String id) {
-        return TagKey.of(RegistryKeys.BLOCK, new Identifier(MTWMod.ID, id));
+        return TagKey.of(RegistryKeys.BLOCK, Identifier.of(MTWMod.ID, id));
     }
 
     private static TagKey<Item> registerItem(String id) {
-        return TagKey.of(RegistryKeys.ITEM, new Identifier(MTWMod.ID, id));
+        return TagKey.of(RegistryKeys.ITEM, Identifier.of(MTWMod.ID, id));
     }
 
     public static void init() {

@@ -4,10 +4,8 @@ import dev.magyul.blocks.ErrorBlock;
 import dev.magyul.data.PlayerData;
 import dev.magyul.data.RegionRoot;
 import dev.magyul.data.WorldData;
-import dev.magyul.events.LivingEntityEvents;
 import dev.magyul.events.PlayerInteractEvents;
-import dev.magyul.network.NetworkCodecs;
-import dev.magyul.network.SNetwork;
+import dev.magyul.network.NetworkHandler;
 import dev.magyul.registers.*;
 import dev.magyul.util.ServerUtil;
 import dev.magyul.util.SitUtil;
@@ -73,12 +71,11 @@ public class MTWMod implements ModInitializer {
 		MTWSounds.init();
 		MTWTags.init();
 		MTWOther.init();
-		NetworkCodecs.register();
-		SNetwork.register();
+		NetworkHandler.init();
 		CommandRegistrationCallback.EVENT.register(MTWCommands::register);
 		DevelopDimensions.register();
 
-		LivingEntityEvents.EQUIPMENT_CHANGE.register((entity, slot, from, to) -> {
+		ServerEntityEvents.EQUIPMENT_CHANGE.register((entity, slot, from, to) -> {
 			if (entity instanceof PlayerEntity player) {
 				if  (to.isOf(MTWItems.ERROR_BLOCK)) {
 					var level = ErrorBlock.getLightOnStack(to);

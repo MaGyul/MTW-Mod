@@ -99,7 +99,7 @@ public class BookEditScreenWrapper extends IMEReceiver {
                     lastLine[0] = asString;
                     return Optional.empty();
                 };
-                lines.get(lines.size() - 1).visit(acceptor);
+                lines.getLast().visit(acceptor);
             }
             return new Rect(
                     (((owner.width - 192f) / 2f) + 36f + font.getWidth(lastLine[0])),

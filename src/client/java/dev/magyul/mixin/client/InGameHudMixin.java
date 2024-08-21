@@ -4,6 +4,7 @@ import net.minecraft.client.font.MultilineText;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -30,12 +31,12 @@ public abstract class InGameHudMixin {
     }
 
     @Inject(method = "render", at = @At("HEAD"))
-    private void render(DrawContext context, float tickDelta, CallbackInfo ci) {
+    private void render(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
         scaledWidth = context.getScaledWindowWidth();
     }
 
-    @Redirect(method = "renderOverlayMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;III)I"))
-    private int renderRedirect(DrawContext instance, TextRenderer textRenderer, Text text, int x, int y, int color) {
+    @Redirect(method = "renderOverlayMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithBackground(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;IIII)I"))
+    private int renderRedirect(DrawContext instance, TextRenderer textRenderer, Text text, int x, int y, int width, int color) {
         int linesCount = overlayMessageText.count();
         if (linesCount > 1) {
             if (linesCount % 2 == 1) {

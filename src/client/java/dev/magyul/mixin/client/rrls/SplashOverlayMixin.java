@@ -33,7 +33,7 @@ import static net.minecraft.util.math.ColorHelper.Argb;
 @Mixin(SplashOverlay.class)
 public abstract class SplashOverlayMixin extends Overlay {
     @Unique
-    private static final Identifier BACKGROUND = new Identifier(MTWMod.ID, "background");
+    private static final Identifier BACKGROUND = Identifier.of(MTWMod.ID, "background");
 
     @Shadow @Final private MinecraftClient client;
 

@@ -1,8 +1,8 @@
 package dev.magyul.util;
 
-import dev.magyul.registers.MTWOther;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.TextContent;
@@ -10,9 +10,18 @@ import net.minecraft.text.TranslatableTextContent;
 
 public class LangUtil {
 
+    public static String item2lang(Item item) {
+        var id = Registries.ITEM.getId(item);
+        return upper(id.getPath().replace("_", " "));
+    }
+
     public static String block2lang(Block block) {
         var id = Registries.BLOCK.getId(block);
-        String[] div = id.getPath().replace("_", " ").split(" ");
+        return upper(id.getPath().replace("_", " "));
+    }
+
+    private static String upper(String in) {
+        String[] div = in.split(" ");
 
         StringBuilder sb = new StringBuilder();
         for(String divA : div){

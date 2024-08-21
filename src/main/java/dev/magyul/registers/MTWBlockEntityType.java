@@ -20,7 +20,7 @@ public class MTWBlockEntityType {
     );
 
     private static <T extends BlockEntity> BlockEntityType<T> register(String id, BlockEntityType.Builder<T> builder) {
-        return Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(MTWMod.ID, id), builder.build());
+        return Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(MTWMod.ID, id), builder.build());
     }
 
     public static void init() {

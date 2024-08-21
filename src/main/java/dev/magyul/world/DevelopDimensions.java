@@ -10,7 +10,7 @@ import net.minecraft.world.dimension.DimensionType;
 public class DevelopDimensions {
     public static final RegistryKey<World> DEVELOP_DIMENSION_KEY = RegistryKey.of(
             RegistryKeys.WORLD,
-            new Identifier(MTWMod.ID, "develop")
+            Identifier.of(MTWMod.ID, "develop")
     );
     public static final RegistryKey<DimensionType> DEVELOP_TYPE_KEY = RegistryKey.of(
             RegistryKeys.DIMENSION_TYPE,

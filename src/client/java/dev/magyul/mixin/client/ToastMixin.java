@@ -25,7 +25,7 @@ public class ToastMixin {
 
         @Inject(method = "<clinit>", at = @At("TAIL"))
         private static void injected(CallbackInfo cb) {
-            TEXTURE = new Identifier(MTWMod.ID, "toast/advancement");
+            TEXTURE = Identifier.of(MTWMod.ID, "toast/advancement");
         }
     }
 
@@ -36,7 +36,7 @@ public class ToastMixin {
 
         @Inject(method = "<clinit>", at = @At("TAIL"))
         private static void injected(CallbackInfo cb) {
-            TEXTURE = new Identifier(MTWMod.ID, "toast/recipe");
+            TEXTURE = Identifier.of(MTWMod.ID, "toast/recipe");
         }
     }
 
@@ -47,7 +47,7 @@ public class ToastMixin {
 
         @Inject(method = "<clinit>", at = @At("TAIL"))
         private static void injected(CallbackInfo cb) {
-            TEXTURE = new Identifier(MTWMod.ID, "toast/system");
+            TEXTURE = Identifier.of(MTWMod.ID, "toast/system");
         }
     }
 
@@ -58,7 +58,7 @@ public class ToastMixin {
 
         @Inject(method = "<clinit>", at = @At("TAIL"))
         private static void injected(CallbackInfo cb) {
-            TEXTURE = new Identifier(MTWMod.ID, "toast/tutorial");
+            TEXTURE = Identifier.of(MTWMod.ID, "toast/tutorial");
         }
     }
 

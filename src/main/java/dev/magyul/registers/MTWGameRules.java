@@ -1,6 +1,6 @@
 package dev.magyul.registers;
 
-import dev.magyul.network.PickupReachS2CPacket;
+import dev.magyul.network.packets.s2c.PickupReachS2CPacket;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.GameRules;

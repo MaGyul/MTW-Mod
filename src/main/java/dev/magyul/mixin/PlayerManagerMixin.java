@@ -1,8 +1,8 @@
 package dev.magyul.mixin;
 
-
 import com.mojang.authlib.GameProfile;
-import dev.magyul.network.PickupReachS2CPacket;
+import dev.magyul.mixin.accessors.TeleportTargetAccessor;
+import dev.magyul.network.packets.s2c.PickupReachS2CPacket;
 import dev.magyul.registers.MTWGameRules;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
@@ -13,10 +13,10 @@ import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ConnectedClientData;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameMode;
+import net.minecraft.world.PlayerSaveHandler;
+import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldSaveHandler;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,25 +26,23 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.Optional;
+import java.util.Objects;
 
 @Mixin(PlayerManager.class)
 public abstract class PlayerManagerMixin {
     @Shadow @Final private MinecraftServer server;
 
-    @Shadow @Final private WorldSaveHandler saveHandler;
-
     @Shadow public abstract boolean isOperator(GameProfile profile);
+
+    @Shadow @Final private PlayerSaveHandler saveHandler;
 
     public PlayerManagerMixin() {
     }
 
     @Inject(method = "onPlayerConnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;readGameModeNbt(Lnet/minecraft/nbt/NbtCompound;)V", shift = At.Shift.AFTER))
     private void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player, ConnectedClientData commonListenerCookie, CallbackInfo ci) {
-        if (!isOp(player) && player.interactionManager.getGameMode() == GameMode.ADVENTURE) {
+        if (isNotOp(player) && player.interactionManager.getGameMode() == GameMode.ADVENTURE) {
             var world = player.getServerWorld();
             player.setPosition(world.getSpawnPos().toCenterPos());
             player.setYaw(world.getSpawnAngle());
@@ -59,27 +57,23 @@ public abstract class PlayerManagerMixin {
         ServerPlayNetworking.send(player, new PickupReachS2CPacket(reach));
     }
 
-    @Inject(method = "respawnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;getServerWorld()Lnet/minecraft/server/world/ServerWorld;", ordinal = 1, shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    private void respawnPlayer(ServerPlayerEntity player, boolean alive, CallbackInfoReturnable<ServerPlayerEntity> cir, BlockPos blockPos, float f, boolean bl, ServerWorld serverWorld, Optional optional, ServerWorld serverWorld2, ServerPlayerEntity serverPlayerEntity, boolean bl2, byte b) {
-        if (!isOp(serverPlayerEntity) && serverPlayerEntity.interactionManager.getGameMode() == GameMode.ADVENTURE) {
-            var world = serverPlayerEntity.getServerWorld();
-            player.setPosition(world.getSpawnPos().toCenterPos());
-            serverPlayerEntity.setYaw(world.getSpawnAngle());
-            serverPlayerEntity.setPitch(0f);
+    @Redirect(method = "respawnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;getRespawnTarget(ZLnet/minecraft/world/TeleportTarget$PostDimensionTransition;)Lnet/minecraft/world/TeleportTarget;"))
+    private TeleportTarget respawnPlayerRespawnTarget(ServerPlayerEntity player, boolean alive, TeleportTarget.PostDimensionTransition postDimensionTransition) {
+        var teleportTarget = player.getRespawnTarget(alive, postDimensionTransition);
+        var setter = Objects.requireNonNull((TeleportTargetAccessor) (Object) teleportTarget);
+        if (isNotOp(player) && player.interactionManager.getGameMode() == GameMode.ADVENTURE) {
+            var world = server.getOverworld();
+            setter.setWorld(world);
+            setter.setPos(world.getSpawnPos().toCenterPos());
+            setter.setYaw(world.getSpawnAngle());
+            setter.setPitch(0f);
         }
+        return teleportTarget;
     }
-
-//    @Redirect(method = "respawnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;getOverworld()Lnet/minecraft/server/world/ServerWorld;"))
-//    private ServerWorld respawnPos(MinecraftServer server, ServerPlayerEntity player) {
-//        if (player.interactionManager.getGameMode() == GameMode.ADVENTURE) {
-//            return player.getServerWorld();
-//        }
-//        return server.getOverworld();
-//    }
 
     @Redirect(method = "onPlayerConnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;getWorld(Lnet/minecraft/registry/RegistryKey;)Lnet/minecraft/server/world/ServerWorld;"))
     private ServerWorld onJoinOverworld(MinecraftServer server, RegistryKey<World> key, ClientConnection connection, ServerPlayerEntity player) {
-        if (!isOp(player)) {
+        if (isNotOp(player)) {
             var nbt = mtw$loadPlayerData(player);
             var gameMode = getServerGameMode(gameModeFromNbt(nbt));
             if (gameMode == GameMode.ADVENTURE && key != World.OVERWORLD) {
@@ -87,14 +81,6 @@ public abstract class PlayerManagerMixin {
             }
         }
 
-        return server.getWorld(key);
-    }
-
-    @Redirect(method = "respawnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;getWorld(Lnet/minecraft/registry/RegistryKey;)Lnet/minecraft/server/world/ServerWorld;"))
-    private ServerWorld respawnOverworld(MinecraftServer server, RegistryKey<World> key, ServerPlayerEntity player) {
-        if (!isOp(player) && player.interactionManager.getGameMode() == GameMode.ADVENTURE) {
-            return server.getOverworld();
-        }
         return server.getWorld(key);
     }
 
@@ -130,8 +116,8 @@ public abstract class PlayerManagerMixin {
     }
 
     @Unique
-    private boolean isOp(ServerPlayerEntity player) {
-        return isOperator(player.getGameProfile());
+    private boolean isNotOp(ServerPlayerEntity player) {
+        return !isOperator(player.getGameProfile());
     }
 }
 

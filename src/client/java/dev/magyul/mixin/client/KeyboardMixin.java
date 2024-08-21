@@ -1,6 +1,6 @@
 package dev.magyul.mixin.client;
 
-import dev.magyul.network.KeyInputC2SPacket;
+import dev.magyul.network.packets.c2s.KeyInputC2SPacket;
 import dev.magyul.util.ClientUtil;
 import dev.magyul.util.ConnectServer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;

@@ -12,7 +12,6 @@ import org.xbill.DNS.Lookup;
 import org.xbill.DNS.SRVRecord;
 import org.xbill.DNS.Type;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @Mixin(AllowedAddressResolver.class)

@@ -48,14 +48,7 @@ public class ServerUtil {
     }
 
     public static Timer setInterval(Runnable run, long period) {
-        var timer = new Timer(true);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                run.run();
-            }
-        }, period, period);
-        return timer;
+        return setInterval(run, period, period);
     }
 
     public static Timer setInterval(Runnable run, long delay, long period) {

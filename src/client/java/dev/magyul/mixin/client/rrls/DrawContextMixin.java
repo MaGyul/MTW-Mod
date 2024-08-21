@@ -12,7 +12,10 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(DrawContext.class)
 public class DrawContextMixin {
-    @WrapOperation(method = "*", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/GuiAtlasManager;getSprite(Lnet/minecraft/util/Identifier;)Lnet/minecraft/client/texture/Sprite;"))
+    @WrapOperation(method = {
+            "drawGuiTexture(Lnet/minecraft/util/Identifier;IIIII)V",
+            "drawGuiTexture(Lnet/minecraft/util/Identifier;IIIIIIIII)V"
+    }, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/GuiAtlasManager;getSprite(Lnet/minecraft/util/Identifier;)Lnet/minecraft/client/texture/Sprite;"))
     private Sprite fixSpriteCrash(GuiAtlasManager instance, Identifier location, Operation<Sprite> original) {
         try {
             return original.call(instance, location);
@@ -21,7 +24,10 @@ public class DrawContextMixin {
         }
     }
 
-    @WrapOperation(method = "*", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/GuiAtlasManager;getScaling(Lnet/minecraft/client/texture/Sprite;)Lnet/minecraft/client/texture/Scaling;"))
+    @WrapOperation(method = {
+            "drawGuiTexture(Lnet/minecraft/util/Identifier;IIIII)V",
+            "drawGuiTexture(Lnet/minecraft/util/Identifier;IIIIIIIII)V"
+    }, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/GuiAtlasManager;getScaling(Lnet/minecraft/client/texture/Sprite;)Lnet/minecraft/client/texture/Scaling;"))
     public Scaling fixSpriteCrash(GuiAtlasManager instance, Sprite sprite, Operation<Scaling> original) {
         return sprite == null ? null : original.call(instance, sprite);
     }

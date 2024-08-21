@@ -42,6 +42,13 @@ fabricApi {
 }
 
 loom {
+
+	runs {
+		server {
+			runDir = "run-server"
+		}
+	}
+
     splitEnvironmentSourceSets()
 
 	mods {
@@ -81,18 +88,19 @@ dependencies {
 		modCompileOnly "maven.modrinth:$mod"
 	}
 
-	modRuntimeOnly "dev.mtwmod:mtwmod-resource:1.0.4"
+	modRuntimeOnly "dev.mtwmod:mtwmod-resource:1.0.5"
+//	modRuntimeOnly "libs:banner:1.21.1-7"
 //	modRuntimeOnly project(":mtw-resource")
 //	include modImplementation("dev.mtwmod:mtwmod-skinpreset:1.0.1")
 //	include modImplementation("dev.mtwmod:mtwmod-animation:1.0.0")
-	include modImplementation("dev.mtwmod:better-third-person:1.0.0")
-	modApi "dev.mtwmod:kyrptconfig:1.6.0-1.20.6"
+	include modImplementation("dev.mtwmod:better-third-person:1.1.0")
+	include "libs:${project.modernkeybinding_verson}"
+//	include "maven.modrinth:${project.better_fabric_console_version}"
+	modApi include("dev.mtwmod:kyrptconfig:1.6.1-1.21")
 //	modApi "maven.modrinth:rrls:Ip08v0S2"
 //	modImplementation "dev.mtwmod:improved-animations:1.0.2"
 
 	implementation "dnsjava:dnsjava:3.5.3"
-	implementation "dev.mtwmod:terminalconsoleappender:1.4.0"
-	implementation "org.jline:jline:3.25.1"
 
 //	var ultralight_version = '0.0.2-SNAPSHOT'
 //

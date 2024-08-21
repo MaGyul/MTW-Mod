@@ -1,6 +1,5 @@
 package dev.magyul.mixin.network;
 
-import dev.magyul.MTWMod;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.query.QueryResponseS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;

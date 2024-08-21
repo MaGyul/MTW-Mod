@@ -8,6 +8,7 @@ import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.toast.SystemToast;
+import net.minecraft.network.DisconnectionInfo;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class DisconnectedScreenMixin extends Screen {
     @Shadow @Final private Screen parent;
 
-    @Shadow @Final private Text reason;
+    @Shadow @Final private DisconnectionInfo info;
 
     private DisconnectedScreenMixin() {
         super(Text.empty());
@@ -43,6 +44,6 @@ public class DisconnectedScreenMixin extends Screen {
         ClientUtil.cs = null;
         ServerPingPong.serverJoined = false;
         client.setScreen(parent instanceof TitleScreen ? parent : new TitleScreen());
-        ClientUtil.setTimeout(() -> showToast(title, reason), 100);
+        ClientUtil.setTimeout(() -> showToast(title, info.reason()), 100);
     }
 }

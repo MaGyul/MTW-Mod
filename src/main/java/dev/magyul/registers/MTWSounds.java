@@ -11,7 +11,7 @@ public class MTWSounds {
     public static SoundEvent SHOJI = register("block.shoji");
 
     private static SoundEvent register(String name) {
-        var id = new Identifier(MTWMod.ID, name);
+        var id = Identifier.of(MTWMod.ID, name);
         return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
     }
 

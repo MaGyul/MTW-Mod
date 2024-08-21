@@ -1,7 +1,6 @@
 package dev.magyul.blocks;
 
 import com.mojang.serialization.MapCodec;
-import dev.magyul.MTWMod;
 import dev.magyul.blocks.entities.StandardBlockEntity;
 import dev.magyul.blocks.enums.StandardStatus;
 import dev.magyul.registers.MTWProperties;

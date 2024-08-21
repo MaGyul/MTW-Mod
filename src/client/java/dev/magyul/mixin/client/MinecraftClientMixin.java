@@ -6,7 +6,7 @@ import dev.magyul.MTWMod;
 import dev.magyul.MTWModClient;
 import dev.magyul.ServerPingPong;
 import dev.magyul.events.PlayerInteractEvents;
-import dev.magyul.network.PickupItemC2SPacket;
+import dev.magyul.network.packets.c2s.PickupItemC2SPacket;
 import dev.magyul.util.ClientUtil;
 import dev.magyul.util.ItemUtil;
 import dev.magyul.util.OverlayHelper;
@@ -55,8 +55,6 @@ public abstract class MinecraftClientMixin {
     @Shadow protected abstract void showResourceReloadFailureToast(@Nullable Text description);
 
     @Shadow protected abstract CompletableFuture<Void> reloadResources(boolean force, @Nullable MinecraftClient.LoadingContext loadingContext);
-
-    @Shadow protected abstract void onFinishedLoading(@Nullable MinecraftClient.LoadingContext loadingContext);
 
     @Inject(method = "onResourceReloadFailure", at = @At("HEAD"), cancellable = true)
     private void onResourceReloadFailure(Throwable exception, Text resourceName, MinecraftClient.LoadingContext loadingContext, CallbackInfo ci) {

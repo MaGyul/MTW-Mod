@@ -81,7 +81,7 @@ public class FoodTableBlock extends BlockWithEntity {
             var stack = ((FoodTableBlockEntity) blockEntity).getStack();
             var component = stack.get(DataComponentTypes.FOOD);
             if (component != null && player.canConsume(component.canAlwaysEat())) {
-                player.eatFood(world, stack.copy());
+                player.eatFood(world, stack.copy(), component);
                 var finishStack = stack.getItem().finishUsing(stack.copy(), world, player);
                 if (!ItemStack.areItemsEqual(finishStack, stack)) {
                     ((FoodTableBlockEntity) blockEntity).dropFood(finishStack);

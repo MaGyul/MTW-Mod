@@ -1,29 +1,19 @@
 package dev.magyul.registers;
 
 import dev.magyul.MTWMod;
-import dev.magyul.blocks.*;
+import dev.magyul.api.MTWToolMaterials;
 import dev.magyul.util.FoodBuilder;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockSetType;
-import net.minecraft.block.MapColor;
-import net.minecraft.block.enums.Instrument;
-import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroups;
+import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static net.minecraft.block.Blocks.OAK_PLANKS;
 
 public class MTWItems {
     public static final Map<Type, List<Item>> ITEMMAP = new HashMap<>() {
@@ -34,6 +24,8 @@ public class MTWItems {
     public static final List<Item> ITEMS = new ArrayList<>();
     public static final Item MTW_ICON = register("mtw_icon", getFood());
     public static final Item MTW_REGION_VIEWER = register("mtw_region_viewer", getFood());
+    public static final Item RING_SWORD = register("ring_sword", new SwordItem(MTWToolMaterials.RING, new Item.Settings().attributeModifiers(SwordItem.createAttributeModifiers(MTWToolMaterials.RING, 5, -2.4f))));
+    public static final Item INDEPENDENCE_DECLARATION = register("independence_declaration", new Item(new Item.Settings().maxCount(1)));
 
     // Full Cute
     public static final Item ERROR_BLOCK = register("error_block", MTWBlocks.ERROR_BLOCK, Type.NORMAL);
@@ -88,7 +80,7 @@ public class MTWItems {
 
     private static Item register(String name, Item item) {
         try {
-            return Registry.register(Registries.ITEM, new Identifier(MTWMod.ID, name), item);
+            return Registry.register(Registries.ITEM, Identifier.of(MTWMod.ID, name), item);
         } finally {
             ITEMS.add(item);
         }

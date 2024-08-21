@@ -1,6 +1,5 @@
 package dev.magyul.util;
 
-import dev.magyul.MTWMod;
 import dev.magyul.mixin.client.accessor.ToastManagerAccessor;
 import dev.magyul.registers.MTWItems;
 import net.minecraft.client.MinecraftClient;
@@ -92,14 +91,7 @@ public class ClientUtil {
     }
 
     public static Timer setInterval(Runnable run, long period) {
-        var timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                MinecraftClient.getInstance().execute(run);
-            }
-        }, period, period);
-        return timer;
+        return setInterval(run, period, period);
     }
 
     public static Timer setInterval(Runnable run, long delay, long period) {

@@ -9,6 +9,7 @@ import net.minecraft.client.network.AllowedAddressResolver;
 import net.minecraft.client.network.MultiplayerServerListPinger;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.network.ClientConnection;
+import net.minecraft.network.DisconnectionInfo;
 import net.minecraft.network.listener.ClientQueryPacketListener;
 import net.minecraft.network.packet.c2s.query.QueryPingC2SPacket;
 import net.minecraft.network.packet.c2s.query.QueryRequestC2SPacket;
@@ -202,10 +203,10 @@ public class ServerPingPong {
         }
 
         @Override
-        public void onDisconnected(Text reason) {
+        public void onDisconnected(DisconnectionInfo info) {
             isPinging = false;
             if (!sentQuery) {
-                MTWMod.LOGGER.error("Can't ping: {}", reason.getString());
+                MTWMod.LOGGER.error("Can't ping: {}", info.reason().getString());
                 mtw_info.label = Text.translatable("multiplayer.status.cannot_connect").withColor(-65536);
                 mtw_info.playerCountLabel = ScreenTexts.EMPTY;
             }

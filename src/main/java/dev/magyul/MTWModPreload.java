@@ -11,19 +11,11 @@ import org.slf4j.LoggerFactory;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 
-public class MTWModPreload implements LanguageAdapter {
+public class MTWModPreload implements PreLaunchEntrypoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MTWModPreload.class);
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> T create(ModContainer mod, String value, Class<T> type) throws LanguageAdapterException {
-        if (type != PreLaunchEntrypoint.class) {
-            throw new LanguageAdapterException("Fake entrypoint only supported on PreLaunchEntrypoint");
-        }
-        return (T)(PreLaunchEntrypoint)() -> {};
-    }
-
-    static {
+    public void onPreLaunch() {
         final var lookup = MethodHandles.lookup();
         try {
             final Class<?> alsClass = ClassLoader.getSystemClassLoader().loadClass(

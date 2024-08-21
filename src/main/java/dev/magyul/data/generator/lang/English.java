@@ -1,6 +1,5 @@
 package dev.magyul.data.generator.lang;
 
-import dev.magyul.registers.MTWBlocks;
 import dev.magyul.registers.MTWEntityType;
 import dev.magyul.registers.MTWItems;
 import dev.magyul.registers.MTWOther;
@@ -8,9 +7,8 @@ import dev.magyul.util.LangUtil;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.text.TextContent;
-import net.minecraft.text.TranslatableTextContent;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -23,7 +21,8 @@ public class English extends FabricLanguageProvider {
 
     @Override
     public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder builder) {
-        LangUtil.addItemGroup(builder, MTWOther.ITEM_GROUP, "Building materials");
+        LangUtil.addItemGroup(builder, MTWOther.ITEM_GROUP_BLOCKS, "Building materials");
+        LangUtil.addItemGroup(builder, MTWOther.ITEM_GROUP_ITEMS, "MTW Items");
 
         // Others
         builder.add("game.title", "Cheonnyeon Story");
@@ -66,6 +65,8 @@ public class English extends FabricLanguageProvider {
         // Items
         builder.add(MTWItems.MTW_ICON, "[MTW] Icon");
         builder.add(MTWItems.MTW_REGION_VIEWER, "[MTW] Region Viewer");
+        addItem(builder, MTWItems.RING_SWORD);
+        addItem(builder, MTWItems.INDEPENDENCE_DECLARATION);
 
         // Blocks
         for (Block block : MTW_BLOCKS) {
@@ -74,6 +75,10 @@ public class English extends FabricLanguageProvider {
 
         // Entities
         builder.add(MTWEntityType.SIT, "Sit Entity");
+    }
+
+    private void addItem(TranslationBuilder builder, Item item) {
+        builder.add(item, LangUtil.item2lang(item));
     }
 
     private void addBlock(TranslationBuilder builder, Block block) {

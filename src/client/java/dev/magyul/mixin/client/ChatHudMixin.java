@@ -12,10 +12,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
@@ -83,8 +80,8 @@ public abstract class ChatHudMixin {
         return opacity;
     }
 
-    @ModifyVariable(method = "render", at = @At("STORE"))
-    private MessageIndicator removeMessageIndicator(MessageIndicator messageIndicator) {
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/ChatHudLine$Visible;indicator()Lnet/minecraft/client/gui/hud/MessageIndicator;"))
+    private MessageIndicator removeMessageIndicator(ChatHudLine.Visible instance) {
         // 채팅 표시줄이 렌더링되도록 허용하지 않기
         return null;
     }

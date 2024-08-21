@@ -28,6 +28,7 @@
     "ToastMixin$Tutorial",
     "accessor.ChatInputSuggestorAccessor",
     "accessor.ChatInputSuggestorAccessor$SuggestionWindowAccessor",
+    "accessor.ClientLoginNetworkHandlerAccessor",
     "accessor.ToastManagerAccessor",
     "cmdkeybind.ConfigSectionMixin",
     "cocoainput.BookEditScreenMixin",
@@ -51,7 +52,6 @@
   "mixins": [
     "PlayerEntityMixin",
     "SlotMixin",
-    "axiom.EditorUIMixin",
     "cmdkeybind.MacroScreenFactoryMixin"
   ]
 }

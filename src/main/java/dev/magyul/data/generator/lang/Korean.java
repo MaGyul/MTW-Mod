@@ -7,8 +7,6 @@ import dev.magyul.util.LangUtil;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.text.TextContent;
-import net.minecraft.text.TranslatableTextContent;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -21,7 +19,8 @@ public class Korean extends FabricLanguageProvider {
 
     @Override
     public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder builder) {
-        LangUtil.addItemGroup(builder, MTWOther.ITEM_GROUP, "건축 자제");
+        LangUtil.addItemGroup(builder, MTWOther.ITEM_GROUP_BLOCKS, "건축 자제");
+        LangUtil.addItemGroup(builder, MTWOther.ITEM_GROUP_ITEMS, "MTW 아이템");
 
         // Others
         builder.add("game.title", "천년의 이야기");
@@ -63,6 +62,8 @@ public class Korean extends FabricLanguageProvider {
         // Items
         builder.add(MTWItems.MTW_ICON, "[MTW] 아이콘");
         builder.add(MTWItems.MTW_REGION_VIEWER, "[MTW] 지역 뷰어");
+        builder.add(MTWItems.RING_SWORD, "환도");
+        builder.add(MTWItems.INDEPENDENCE_DECLARATION, "독립선언서");
 
         // Blocks
         builder.add(ERROR_BLOCK, "오류 블록");

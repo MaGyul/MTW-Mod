@@ -8,6 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Overlay;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.RenderTickCounter;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,23 +20,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GameRendererMixin {
     @Shadow @Final MinecraftClient client;
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;push(Ljava/lang/String;)V", ordinal = 1))
-    private void dummyRender(float tickDelta, long startTime, boolean tick, CallbackInfo ci, @Local(ordinal = 0) DrawContext context) {
-//        if (OverlayHelper.isRenderingState(client.overlay)) {
-//            context.draw(() -> {
-//                var textRenderer = client.textRenderer;
-//                var width = textRenderer.getWidth("Hello World!");
-//                context.drawText(textRenderer, "Hello World!", context.getScaledWindowWidth() - width, 0, 4210752, false);
-//            });
-//        }
-    }
-
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;draw()V"))
-    public void miniRender(float partialTicks, long nanoTime, boolean renderLevel, CallbackInfo ci, @Local(ordinal = 0) DrawContext context) {
+    public void miniRender(RenderTickCounter tickCounter, boolean tick, CallbackInfo ci, @Local(ordinal = 0) DrawContext context) {
         try {
             Overlay overlay = this.client.overlay;
             if (OverlayHelper.isRenderingState(overlay)) {
-                overlay.render(DummyDrawContext.INSTANCE, 0, 0, this.client.getLastFrameDuration());
+                overlay.render(DummyDrawContext.INSTANCE, 0, 0, tickCounter.getLastFrameDuration());
                 this.client.getProfiler().push("overlay");
                 context.getMatrices().push();
                 context.getMatrices().translate(0, 0, 0);

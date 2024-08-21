@@ -1,6 +1,6 @@
 package dev.magyul.data;
 
-import dev.magyul.network.UpdateAllMicS2CPacket;
+import dev.magyul.network.packets.s2c.UpdateAllMicS2CPacket;
 import dev.magyul.util.Vec3dUtil;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
@@ -49,7 +49,7 @@ public class PlayerData {
             moveHere.clear();
             var compound = nbt.getCompound("moveHere");
             for (String key : compound.getKeys()) {
-                moveHere.put(new Identifier(key), Vec3dUtil.fromNbtList(nbt.getList(key, NbtElement.DOUBLE_TYPE)));
+                moveHere.put(Identifier.of(key), Vec3dUtil.fromNbtList(nbt.getList(key, NbtElement.DOUBLE_TYPE)));
             }
         }
 

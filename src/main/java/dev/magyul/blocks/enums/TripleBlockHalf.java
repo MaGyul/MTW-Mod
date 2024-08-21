@@ -1,7 +1,6 @@
 package dev.magyul.blocks.enums;
 
 import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.Direction;
 
 public enum TripleBlockHalf implements StringIdentifiable {
     TOP,
