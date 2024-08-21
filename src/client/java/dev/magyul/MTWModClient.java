@@ -79,13 +79,10 @@ public class MTWModClient implements ClientModInitializer {
 			try {
 				var axiom = com.moulberry.axiom.Axiom.getInstance();
 				if (ClientUtil.checkDev() && !axiom.hasCommercialLicense()) {
-					try {
-						var f = com.moulberry.axiom.Axiom.class.getDeclaredField("hasCommercialLicense");
-						f.setAccessible(true);
-						f.set(axiom, true);
-						f.setAccessible(false);
-					} catch (Exception ignored) {
-					}
+					var f = com.moulberry.axiom.Axiom.class.getDeclaredField("hasCommercialLicense");
+					f.setAccessible(true);
+					f.set(axiom, true);
+					f.setAccessible(false);
 				}
 			} catch (Exception ignored) {}
 		});
