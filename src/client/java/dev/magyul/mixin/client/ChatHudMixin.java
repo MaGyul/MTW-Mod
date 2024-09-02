@@ -69,7 +69,7 @@ public abstract class ChatHudMixin {
     @ModifyVariable(method = "render", ordinal = 3, at = @At("STORE"))
     private double modifyOpacity(double originalOpacity) {
         double opacity = originalOpacity;
-        // fadeIn 효과를 얻기 위해 현재 렌더링된 선에 필요한 현재 불투명도를 계산
+        // fadeIn 효과를 얻기 위해 현재 렌더링된 선에 필요한 현재 불투명도 계산
         try {
             long timestamp = messageTimestamps.get(chatLineIndex);
             long timeAlive = System.currentTimeMillis() - timestamp;

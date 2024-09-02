@@ -1,7 +1,8 @@
 package dev.magyul.mixin.client.cocoainput;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import dev.magyul.cocoainput.util.Util;
 import dev.magyul.cocoainput.wrapper.BookEditScreenWrapper;
 import net.minecraft.client.font.TextRenderer;
@@ -17,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(BookEditScreen.class)
 public abstract class BookEditScreenMixin {
@@ -25,6 +25,7 @@ public abstract class BookEditScreenMixin {
     protected abstract BookEditScreen.Position absolutePositionToScreenPosition(BookEditScreen.Position position);
     @Shadow
     public String title;
+    @Shadow private int tickCounter;
     @Unique
     private BookEditScreenWrapper wrapper;
 
@@ -33,39 +34,42 @@ public abstract class BookEditScreenMixin {
         wrapper = new BookEditScreenWrapper(This());
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;getWidth(Lnet/minecraft/text/OrderedText;)I", shift = At.Shift.BEFORE))
-    private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, @Local LocalRef<OrderedText> localRef) {
-        if (wrapper == null) return;
-        if (!wrapper.cursorVisible) {
-            var orderedText = OrderedText.concat(OrderedText.styledForwardsVisitedString(this.title, Style.EMPTY));
-            localRef.set(orderedText);
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/OrderedText;concat(Lnet/minecraft/text/OrderedText;Lnet/minecraft/text/OrderedText;)Lnet/minecraft/text/OrderedText;"))
+    private OrderedText render$concat(OrderedText first, OrderedText second, Operation<OrderedText> original) {
+        if (wrapper != null && !wrapper.cursorVisible) {
+            return OrderedText.styledForwardsVisitedString(this.title, Style.EMPTY);
         }
+        return original.call(first, second);
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawText(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/OrderedText;IIIZ)I"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, int i, int j, boolean bl, OrderedText orderedText, int k, int l) {
-        if (wrapper == null) return;
-        if (wrapper.preeditBegin) {
-            var x = i + 36 + (114 - l) / 2;
-            var y = 50;
-            var width = Util.getUnderLineWidth(textRenderer());
-            Util.renderCursor(context, x + (width * wrapper.markedPos), y, -16777216);
-            Util.renderUnderLine(context, textRenderer(), wrapper.length, x, y, 0, false);
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawText(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/OrderedText;IIIZ)I"))
+    private int render$drawText(DrawContext instance, TextRenderer textRenderer, OrderedText text, int x, int y, int color, boolean shadow, Operation<Integer> original) {
+        if (wrapper != null && wrapper.preeditBegin) {
+            var width = Util.getUnderLineWidth(textRenderer);
+            if (this.tickCounter / 6 % 2 == 0) {
+                Util.renderCursor(instance, x + (width * wrapper.markedPos), y, -16777216);
+            }
+            Util.renderUnderLine(instance, textRenderer, wrapper.length, x, y, 0, false);
         }
+        return original.call(instance, textRenderer, text, x, y, color, shadow);
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/BookEditScreen;drawCursor(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/client/gui/screen/ingame/BookEditScreen$Position;Z)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-    private void drawCursor(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, int i, int j, int n, BookEditScreen.PageContent pageContent) {
-        if (wrapper == null) return;
-        if (!wrapper.cursorVisible) {
-            ci.cancel();
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/BookEditScreen;drawCursor(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/client/gui/screen/ingame/BookEditScreen$Position;Z)V"))
+    private void render$drawCursor(BookEditScreen instance, DrawContext context, BookEditScreen.Position position, boolean atEnd, Operation<Void> original, @Local BookEditScreen.PageContent pageContent) {
+        if (wrapper != null) {
+            if (wrapper.preeditBegin) {
+                position = absolutePositionToScreenPosition(position);
+                if (this.tickCounter / 6 % 2 == 0) {
+                    Util.renderCursor(context, position.x + (Util.getUnderLineWidth(textRenderer()) * wrapper.markedPos), position.y, -16777216);
+                }
+                Util.renderUnderLine(context, textRenderer(), wrapper.length, position.x, position.y, 0, false);
+            }
+            if (!wrapper.cursorVisible) {
+                return;
+            }
         }
-        if (wrapper.preeditBegin) {
-            var position = absolutePositionToScreenPosition(pageContent.position);
-            var x = position.x;
-            Util.renderCursor(context, x + (Util.getUnderLineWidth(textRenderer()) * wrapper.markedPos), position.y, -16777216);
-            Util.renderUnderLine(context, textRenderer(), wrapper.length, x, position.y, 0, false);
-        }
+
+        original.call(instance, context, position, atEnd);
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"))

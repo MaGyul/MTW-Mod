@@ -14,10 +14,19 @@ public class MTWModMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         var fabricLoader = FabricLoader.getInstance();
+        var butterSuggestion = fabricLoader.isModLoaded("better-suggestions");
         return switch (mixinClassName) {
+            case "dev.magyul.mixin.client.sugesstions.ButterSuggestionMixin" ->
+                    butterSuggestion;
+            case "dev.magyul.mixin.client.sugesstions.ChatInputSuggestorMixin",
+                 "dev.magyul.mixin.client.sugesstions.SuggestionWindowMixin",
+                 "dev.magyul.mixin.client.sugesstions.SuggestionMixin" ->
+                    !butterSuggestion;
             case "dev.magyul.mixin.client.cocoainput.MultilineTextFieldWidgetMixin" ->
                     fabricLoader.isModLoaded("command-block-ide");
-            case "dev.magyul.mixin.client.voicechat.AudioChannelMixin", "dev.magyul.mixin.voicechat.NetworkMessageMixin", "dev.magyul.mixin.voicechat.ServerMixin" ->
+            case "dev.magyul.mixin.client.voicechat.AudioChannelMixin",
+                 "dev.magyul.mixin.voicechat.NetworkMessageMixin",
+                 "dev.magyul.mixin.voicechat.ServerMixin" ->
                     fabricLoader.isModLoaded("voicechat");
             case "dev.magyul.mixin.client.cmdkeybind.ConfigSectionMixin" ->
                     fabricLoader.isModLoaded("kyrptconfig");

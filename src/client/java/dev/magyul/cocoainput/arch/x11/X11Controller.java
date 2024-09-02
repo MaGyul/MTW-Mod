@@ -5,6 +5,7 @@ import dev.magyul.cocoainput.CocoaInput;
 import dev.magyul.cocoainput.plugin.CocoaInputController;
 import dev.magyul.cocoainput.plugin.IMEOperator;
 import dev.magyul.cocoainput.plugin.IMEReceiver;
+import dev.magyul.cocoainput.util.Logger;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import org.lwjgl.glfw.GLFW;

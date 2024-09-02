@@ -2,6 +2,7 @@ package dev.magyul.cocoainput.arch.x11;
 
 import dev.magyul.cocoainput.plugin.IMEOperator;
 import dev.magyul.cocoainput.plugin.IMEReceiver;
+import dev.magyul.cocoainput.util.Logger;
 
 public class X11IMEOperator implements IMEOperator {
     public IMEReceiver owner;

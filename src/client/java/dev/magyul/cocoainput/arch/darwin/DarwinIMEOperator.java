@@ -1,11 +1,10 @@
 package dev.magyul.cocoainput.arch.darwin;
 
 import com.sun.jna.Memory;
-import com.sun.jna.Pointer;
 import dev.magyul.cocoainput.CocoaInput;
 import dev.magyul.cocoainput.plugin.IMEOperator;
 import dev.magyul.cocoainput.plugin.IMEReceiver;
-import dev.magyul.util.Rect;
+import dev.magyul.cocoainput.util.Rect;
 
 import java.util.UUID;
 
@@ -29,21 +28,10 @@ public class DarwinIMEOperator implements IMEOperator {
         firstRectForCharacterRange = () -> {
             CocoaInput.LOGGER.debug("Called to determine where to draw.");
             Rect point = owner.getRect();
-            float[] buff;
             if (point == null) {
-                buff = new float[]{0, 0, 0, 0};
-            } else {
-                buff = new float[]{point.x(), point.y(), point.width(), point.height()};
+                point = Rect.ZERO;
             }
-            float factor = (float) CocoaInput.getScreenScaledFactor();
-            buff[0] *= factor;
-            buff[1] *= factor;
-            buff[2] *= factor;
-            buff[3] *= factor;
-
-            Pointer ret = new Memory(Float.BYTES * 4);
-            ret.write(0, buff, 0, 4);
-            return ret;
+            return point.writeMemory(new Memory(Float.BYTES * 4), true);
         };
         CocoaInput.LOGGER.info("IMEOperator addInstance: {}", uuid);
         Handle.INSTANCE.addInstance(uuid, insertText, setMarkedText, firstRectForCharacterRange);

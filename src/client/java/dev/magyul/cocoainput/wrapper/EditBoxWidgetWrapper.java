@@ -1,9 +1,9 @@
 package dev.magyul.cocoainput.wrapper;
 
+import dev.magyul.cocoainput.CocoaInput;
 import dev.magyul.cocoainput.plugin.IMEOperator;
 import dev.magyul.cocoainput.plugin.IMEReceiver;
-import dev.magyul.cocoainput.CocoaInput;
-import dev.magyul.util.Rect;
+import dev.magyul.cocoainput.util.Rect;
 import net.minecraft.client.gui.widget.EditBoxWidget;
 import net.minecraft.client.input.CursorMovement;
 

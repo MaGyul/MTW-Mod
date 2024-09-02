@@ -1,16 +1,16 @@
 package dev.magyul.cocoainput;
 
+import com.mojang.logging.LogUtils;
 import com.sun.jna.Platform;
-import dev.magyul.cocoainput.arch.win.WinController;
-import dev.magyul.cocoainput.plugin.CocoaInputController;
 import dev.magyul.cocoainput.arch.darwin.DarwinController;
 import dev.magyul.cocoainput.arch.dummy.DummyController;
+import dev.magyul.cocoainput.arch.win.WinController;
 import dev.magyul.cocoainput.arch.x11.X11Controller;
+import dev.magyul.cocoainput.plugin.CocoaInputController;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
@@ -19,7 +19,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class CocoaInput {
-    public static Logger LOGGER = LoggerFactory.getLogger("CocoaInput");
+    public static Logger LOGGER = LogUtils.getLogger();
     public static Marker OBJC = MarkerFactory.getMarker("ObjC");
     public static Marker JAVA = MarkerFactory.getMarker("Java");
     public static Marker CLANG = MarkerFactory.getMarker("Clang");
@@ -41,6 +41,7 @@ public class CocoaInput {
                 LOGGER.warn("CocoaInput cannot find appropriate Controller in running OS.");
                 CocoaInput.applyController(new DummyController());
             }
+            LOGGER.info("MTWMod is using {}.", "https://github.com/Axeryok/CocoaInput");
             LOGGER.info("CocoaInput has been initialized.");
             initialized = true;
         } catch (Exception ex) {

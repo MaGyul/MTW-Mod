@@ -1,6 +1,7 @@
 {
   "required": true,
   "package": "dev.magyul.mixin.client",
+  "plugin": "dev.magyul.MTWModMixinPlugin",
   "compatibilityLevel": "JAVA_21",
   "client": [
     "AllowedAddressResolverMixin",
@@ -44,6 +45,9 @@
     "overlay.OverlayMixin",
     "overlay.SplashOverlayMixin",
     "overlay.VertexBufferMixin",
+    "sugesstions.ChatInputSuggestorMixin",
+    "sugesstions.SuggestionMixin",
+    "sugesstions.SuggestionWindowMixin",
     "voicechat.AudioChannelMixin"
   ],
   "injectors": {
@@ -52,6 +56,7 @@
   "mixins": [
     "PlayerEntityMixin",
     "SlotMixin",
-    "cmdkeybind.MacroScreenFactoryMixin"
+    "cmdkeybind.MacroScreenFactoryMixin",
+    "sugesstions.ButterSuggestionMixin"
   ]
 }

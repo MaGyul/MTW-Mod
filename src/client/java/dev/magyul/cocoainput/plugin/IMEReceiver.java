@@ -1,7 +1,7 @@
 package dev.magyul.cocoainput.plugin;
 
 import dev.magyul.cocoainput.CocoaInput;
-import dev.magyul.util.Rect;
+import dev.magyul.cocoainput.util.Rect;
 import net.minecraft.client.MinecraftClient;
 
 public abstract class IMEReceiver {
@@ -51,8 +51,8 @@ public abstract class IMEReceiver {
     abstract protected void setSelectionPos(int pos);
 
     protected void insertTextNative(String text)  {
+        MinecraftClient client = MinecraftClient.getInstance();
         for (char c : text.trim().toCharArray()) {
-            MinecraftClient client = MinecraftClient.getInstance();
             client.keyboard.onChar(client.getWindow().getHandle(), c, 0);
         }
     }

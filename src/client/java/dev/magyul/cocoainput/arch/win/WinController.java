@@ -1,10 +1,11 @@
 package dev.magyul.cocoainput.arch.win;
 
+import dev.magyul.cocoainput.CocoaInput;
 import dev.magyul.cocoainput.plugin.CocoaInputController;
 import dev.magyul.cocoainput.plugin.IMEOperator;
 import dev.magyul.cocoainput.plugin.IMEReceiver;
-import dev.magyul.cocoainput.CocoaInput;
-import dev.magyul.util.Rect;
+import dev.magyul.cocoainput.util.Logger;
+import dev.magyul.cocoainput.util.Rect;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import org.lwjgl.glfw.GLFWNativeWin32;
@@ -34,19 +35,10 @@ public class WinController implements CocoaInputController {
         if (focusedOperator != null) {
             Logger.debug("Rect callback");
             Rect point = focusedOperator.owner.getRect();
-            float[] buff;
             if (point == null) {
-                buff = new float[]{0, 0, 0, 0};
-            } else {
-                buff = new float[]{point.x(), point.y(), point.width(), point.height()};
+                point = Rect.ZERO;
             }
-            float factor = (float) CocoaInput.getScreenScaledFactor();
-            buff[0] *= factor;
-            buff[1] *= factor;
-            buff[2] *= factor;
-            buff[3] *= factor;
-
-            ret.write(0, buff, 0, 4);
+            point.writeMemory(ret, true);
             return 0;
         }
         return 1;

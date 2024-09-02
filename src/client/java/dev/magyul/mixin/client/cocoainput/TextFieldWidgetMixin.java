@@ -1,5 +1,6 @@
 package dev.magyul.mixin.client.cocoainput;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import dev.magyul.cocoainput.util.Util;
 import dev.magyul.cocoainput.wrapper.TextFieldWidgetWrapper;
 import net.minecraft.client.font.TextRenderer;
@@ -15,11 +16,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(TextFieldWidget.class)
 public abstract class TextFieldWidgetMixin {
     @Shadow @Final public TextRenderer textRenderer;
+    @Shadow private long lastSwitchFocusTime;
     @Unique
     protected TextFieldWidgetWrapper wrapper;
 
@@ -33,11 +34,15 @@ public abstract class TextFieldWidgetMixin {
         wrapper.setFocusUnlocked(focusUnlocked);
     }
 
-    @Inject(method = "renderWidget", at = @At(value = "INVOKE", target = "Ljava/lang/String;isEmpty()Z", ordinal = 1, shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void renderWidget(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, int i, int j, String string, boolean bl, boolean bl2, int k, int l, int m, int n, boolean bl3, int o) {
+    @Inject(method = "renderWidget", at = @At(value = "INVOKE", target = "Ljava/lang/String;isEmpty()Z", ordinal = 1))
+    private void renderWidget(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci,
+                              @Local(ordinal = 2) int i, @Local(ordinal = 5) int l, @Local(ordinal = 8) int o,
+                              @Local(ordinal = 0) boolean bl) {
         wrapper.setFocused(This().isFocused());
         if (wrapper.preeditBegin) {
-            Util.renderCursor(context, o + (Util.getUnderLineWidth(textRenderer) * wrapper.markedPos), l, -3092272);
+            if (showCursor(bl)) {
+                Util.renderCursor(context, o + (Util.getUnderLineWidth(textRenderer) * wrapper.markedPos), l, -3092272);
+            }
             Util.renderUnderLine(context, textRenderer, wrapper.length, o, l, i);
         }
     }
@@ -62,6 +67,11 @@ public abstract class TextFieldWidgetMixin {
                 wrapper.insertText("");
             }
         }
+    }
+
+    @Unique
+    private boolean showCursor(boolean bl) {
+        return This().isFocused() && (net.minecraft.util.Util.getMeasuringTimeMs() - this.lastSwitchFocusTime) / 300L % 2L == 0L && bl;
     }
 
     @Unique

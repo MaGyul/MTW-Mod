@@ -88,6 +88,8 @@ dependencies {
 		modCompileOnly "maven.modrinth:$mod"
 	}
 
+	modCompileOnly "maven.modrinth:better-suggestions:1.2.7.1"
+
 	modRuntimeOnly "dev.mtwmod:mtwmod-resource:1.0.5"
 //	modRuntimeOnly "libs:banner:1.21.1-7"
 //	modRuntimeOnly project(":mtw-resource")

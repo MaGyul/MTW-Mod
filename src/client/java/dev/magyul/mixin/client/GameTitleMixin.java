@@ -28,10 +28,7 @@ public abstract class GameTitleMixin {
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
             return createTitle();
         }
-        if (I18n.hasTranslation("game.title")) {
-            return I18n.translate("game.title");
-        }
-        return "Cheonnyeon Story";
+        return getTitle();
     }
 
     @Unique

@@ -1,12 +1,12 @@
 package dev.magyul.mixin.client.cocoainput;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import dev.magyul.cocoainput.util.Util;
 import dev.magyul.cocoainput.wrapper.SignEditScreenWrapper;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
-import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -15,12 +15,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(AbstractSignEditScreen.class)
 public abstract class SignEditScreenMixin {
     @Shadow
     public int currentRow;
+    @Shadow public int ticksSinceOpened;
     @Unique
     private SignEditScreenWrapper wrapper;
 
@@ -29,13 +29,15 @@ public abstract class SignEditScreenMixin {
         wrapper = new SignEditScreenWrapper(This());
     }
 
-    @Inject(method = "renderSignText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawText(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;IIIZ)I", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void render(DrawContext context, CallbackInfo ci, Vector3f vector3f, int i, boolean bl, int j, int k, int l, int m, int n, String string, int o) {
+    @Inject(method = "renderSignText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawText(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;IIIZ)I", ordinal = 0))
+    private void render(DrawContext context, CallbackInfo ci, @Local(ordinal = 0) int i, @Local(ordinal = 1) int j, @Local(ordinal = 4) int m, @Local(ordinal = 5) int n, @Local String string) {
         if (wrapper == null) return;
         if (wrapper.preeditBegin && n == currentRow && j >= 0) {
             var p = textRenderer().getWidth(string.substring(0, Math.min(j, string.length())));
             var x = (p - textRenderer().getWidth(string) / 2);
-            Util.renderCursor(context, x + (Util.getUnderLineWidth(textRenderer()) * wrapper.markedPos), m, -16777216 | i);
+            if (this.ticksSinceOpened / 6 % 2 == 0) {
+                Util.renderCursor(context, x + (Util.getUnderLineWidth(textRenderer()) * wrapper.markedPos), m, -16777216 | i);
+            }
             Util.renderUnderLine(context, textRenderer(), wrapper.length, x, m, i, false);
         }
     }

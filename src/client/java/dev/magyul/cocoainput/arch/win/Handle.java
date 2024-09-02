@@ -2,6 +2,8 @@ package dev.magyul.cocoainput.arch.win;
 
 import com.sun.jna.*;
 
+import static dev.magyul.cocoainput.util.Logger.LogFunction;
+
 public interface Handle extends Library {
     Handle INSTANCE = Native.load("libwincocoainput", Handle.class);
 
@@ -12,9 +14,9 @@ public interface Handle extends Library {
             PreeditCallback paramDrawCallback,
             DoneCallback paramDoneCallback,
             RectCallback paramRectCallback,
-            Callback log,
-            Callback error,
-            Callback debug
+            LogFunction log,
+            LogFunction error,
+            LogFunction debug
     );
 
     interface PreeditCallback extends Callback {
@@ -28,5 +30,4 @@ public interface Handle extends Library {
     interface RectCallback extends Callback {
         int invoke(Pointer p);
     }
-
 }

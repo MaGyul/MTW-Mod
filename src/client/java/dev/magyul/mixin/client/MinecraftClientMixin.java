@@ -90,7 +90,7 @@ public abstract class MinecraftClientMixin {
         }
     }
 
-    @Inject(method = "doItemUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z", shift = At.Shift.BEFORE, ordinal = 1))
+    @Inject(method = "doItemUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z", ordinal = 1))
     private void doItemUse(CallbackInfo ci, @Local Hand hand, @Local ItemStack itemStack) {
         if (player != null) {
             if (itemStack.isEmpty() && (crosshairTarget == null || crosshairTarget.getType() == HitResult.Type.MISS)) {

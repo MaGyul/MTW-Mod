@@ -6,7 +6,6 @@ import net.kyrptonaught.cmdkeybind.config.ConfigOptions;
 import net.kyrptonaught.kyrptconfig.config.screen.ConfigSection;
 import net.kyrptonaught.kyrptconfig.config.screen.items.*;
 import net.kyrptonaught.kyrptconfig.config.screen.items.number.IntegerItem;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 

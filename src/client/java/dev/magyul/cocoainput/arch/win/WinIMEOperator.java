@@ -2,6 +2,7 @@ package dev.magyul.cocoainput.arch.win;
 
 import dev.magyul.cocoainput.plugin.IMEOperator;
 import dev.magyul.cocoainput.plugin.IMEReceiver;
+import dev.magyul.cocoainput.util.Logger;
 
 public class WinIMEOperator implements IMEOperator {
     public IMEReceiver owner;

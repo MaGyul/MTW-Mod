@@ -1,19 +1,20 @@
 package dev.magyul.mixin.client;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.magyul.registers.MTWDataComponentTypes;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.RotationAxis;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(HeldItemRenderer.class)
@@ -30,21 +31,20 @@ public abstract class HeldItemRendererMixin {
         }
     }
 
-    @Inject(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", ordinal = 1, shift = At.Shift.BEFORE))
-    private void renderFirstPersonItem(AbstractClientPlayerEntity player, float tickDelta, float pitch,
-                                       Hand hand, float swingProgress, ItemStack item, float equipProgress,
-                                       MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
-        if (item.getOrDefault(MTWDataComponentTypes.IS_CARRY, false)) {
+    @WrapOperation(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", ordinal = 1))
+    private void renderFirstPersonItem$renderItem(HeldItemRenderer instance, LivingEntity entity, ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, Operation<Void> original) {
+        if (stack.getOrDefault(MTWDataComponentTypes.IS_CARRY, false)) {
 //            matrices.translate(-.541864F, .25F, .0F);
             matrices.translate(-.56F, .25F, .0F);
 //            matrices.translate(.0f, .5f, -1f);
             matrices.scale(1.2f, 1.2f, 1.2f);
-            if (item.getItem() instanceof BlockItem) {
+            if (stack.getItem() instanceof BlockItem) {
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-45.0f));
             } else {
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90.0f));
                 matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-25.0f));
             }
         }
+        original.call(instance, entity, stack, renderMode, leftHanded, matrices, vertexConsumers, light);
     }
 }
