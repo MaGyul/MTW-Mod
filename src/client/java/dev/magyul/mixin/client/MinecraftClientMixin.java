@@ -54,12 +54,12 @@ public abstract class MinecraftClientMixin {
 
     @Shadow protected abstract void showResourceReloadFailureToast(@Nullable Text description);
 
-    @Shadow protected abstract CompletableFuture<Void> reloadResources(boolean force, @Nullable MinecraftClient.LoadingContext loadingContext);
+    @Shadow protected abstract CompletableFuture<Void> reloadResources(boolean force);
 
     @Inject(method = "onResourceReloadFailure", at = @At("HEAD"), cancellable = true)
-    private void onResourceReloadFailure(Throwable exception, Text resourceName, MinecraftClient.LoadingContext loadingContext, CallbackInfo ci) {
+    private void onResourceReloadFailure(Throwable exception, Text resourceName, CallbackInfo ci) {
         MTWMod.LOGGER.info("Caught error loading resourcepacks!", exception);
-        reloadResources(true, loadingContext).thenRun(() ->
+        reloadResources(true).thenRun(() ->
                 showResourceReloadFailureToast(resourceName));
         ci.cancel();
     }

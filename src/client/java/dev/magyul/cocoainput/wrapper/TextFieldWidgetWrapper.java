@@ -49,7 +49,7 @@ public class TextFieldWidgetWrapper extends IMEReceiver {
 
     @Override
     protected void setCursorPos(int pos) {
-        owner.setCursor(pos, Screen.hasShiftDown());
+        owner.setCursor(pos);
     }
 
     @Override

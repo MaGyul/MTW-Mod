@@ -17,26 +17,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin {
 
-    @Unique
-    private int scaledWidth;
-
     @Shadow public abstract TextRenderer getTextRenderer();
 
+    @Shadow private int scaledWidth;
     @Unique
     private MultilineText overlayMessageText;
 
     @Inject(method = "setOverlayMessage", at = @At("HEAD"))
     private void setOverlayMessage(Text message, boolean tinted, CallbackInfo cb) {
-        overlayMessageText = MultilineText.create(getTextRenderer(), message, scaledWidth - 50);
+        overlayMessageText = MultilineText.create(getTextRenderer(), message, this.scaledWidth - 50);
     }
 
-    @Inject(method = "render", at = @At("HEAD"))
-    private void render(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
-        scaledWidth = context.getScaledWindowWidth();
-    }
-
-    @Redirect(method = "renderOverlayMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithBackground(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;IIII)I"))
-    private int renderRedirect(DrawContext instance, TextRenderer textRenderer, Text text, int x, int y, int width, int color) {
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;III)I", ordinal = 0))
+    private int renderRedirect(DrawContext instance, TextRenderer textRenderer, Text text, int x, int y, int color) {
         int linesCount = overlayMessageText.count();
         if (linesCount > 1) {
             if (linesCount % 2 == 1) {

@@ -2,17 +2,16 @@ package dev.magyul.network;
 
 import dev.magyul.network.packets.c2s.*;
 import dev.magyul.network.packets.c2s.handshake.HelloResponseC2SPacket;
-import dev.magyul.network.packets.s2c.PickupReachS2CPacket;
-import dev.magyul.network.packets.s2c.UpdateAllMicS2CPacket;
 import dev.magyul.network.packets.s2c.handshake.HelloRequestS2CPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.listener.ClientCommonPacketListener;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
@@ -32,22 +31,13 @@ public class NetworkHandler {
         register(PickupItemC2SPacket.TYPE);
         register(UseAirC2SPacket.TYPE);
 
-        // s2c
-        registerCodec(PickupReachS2CPacket.TYPE);
-        registerCodec(UpdateAllMicS2CPacket.TYPE);
-
         HandshakeNetworking.register(HelloResponseC2SPacket.TYPE);
         HandshakeNetworking.register(HelloRequestS2CPacket.TYPE);
     }
 
     private static <T extends IPacket> void register(PacketType<T> type) {
-        PayloadTypeRegistry.playC2S().register(type.getId(), PacketCodec.of(IPacket::write, type::read));
-        ServerPlayNetworking.registerGlobalReceiver(type.getId(), (payload, context) ->
-                payload.handle(new IPacket.Context(context.server(), context.player(), context.responseSender())));
-    }
-
-    private static <T extends IPacket> void registerCodec(PacketType<T> type) {
-        PayloadTypeRegistry.playS2C().register(type.getId(), PacketCodec.of(IPacket::write, type::read));
+        ServerPlayNetworking.registerGlobalReceiver(type, (packet, player, responseSender) ->
+                packet.handle(new IPacket.Context(player, player, responseSender)));
     }
 
     @Environment(EnvType.CLIENT)
@@ -84,7 +74,9 @@ public class NetworkHandler {
         }
     }
 
-    public static Packet<ClientCommonPacketListener> toVanillaPacket(IPacket packet) {
-        return ServerPlayNetworking.createS2CPacket(packet);
+    public static Packet<ClientPlayPacketListener> toVanillaPacket(IPacket packet) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        packet.write(buf);
+        return ServerPlayNetworking.createS2CPacket(packet.getType().getId(), buf);
     }
 }

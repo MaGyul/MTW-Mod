@@ -23,6 +23,8 @@ public abstract class GameTitleMixin {
 
     @Shadow @Nullable private IntegratedServer server;
 
+    @Shadow public abstract boolean isConnectedToRealms();
+
     @ModifyReturnValue(method = "getWindowTitle", at = @At("RETURN"))
     private String getWindowTitle(String original) {
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
@@ -42,7 +44,7 @@ public abstract class GameTitleMixin {
             ServerInfo serverInfo = this.getCurrentServerEntry();
             if (this.server != null && !this.server.isRemote()) {
                 stringBuilder.append(I18n.translate("title.singleplayer"));
-            } else if (serverInfo != null && serverInfo.isRealm()) {
+            } else if (this.isConnectedToRealms()) {
                 stringBuilder.append(I18n.translate("title.multiplayer.realms"));
             } else if (this.server == null && (serverInfo == null || !serverInfo.isLocal())) {
                 stringBuilder.append(I18n.translate("title.multiplayer.other"));

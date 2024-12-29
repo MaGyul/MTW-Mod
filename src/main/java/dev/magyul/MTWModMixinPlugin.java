@@ -32,6 +32,8 @@ public class MTWModMixinPlugin implements IMixinConfigPlugin {
                     fabricLoader.isModLoaded("kyrptconfig");
             case "dev.magyul.mixin.client.cmdkeybind.MacroScreenFactoryMixin" ->
                     fabricLoader.isModLoaded("cmdkeybind");
+            case "dev.magyul.mixin.pehkui.ReflectionUtilsMixin" ->
+                    fabricLoader.isDevelopmentEnvironment();
             default -> true;
         };
     }

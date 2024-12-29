@@ -74,7 +74,9 @@ dependencies {
 	for (String mod : [
 			project.modmenu_version,
 			project.voicechat_version,
-			project.command_macros_version
+			project.command_macros_version,
+			project.better_third_person_version,
+			project.modernkeybinding_verson
 	]) {
 		modImplementation "maven.modrinth:$mod"
 	}
@@ -91,32 +93,13 @@ dependencies {
 	modCompileOnly "maven.modrinth:better-suggestions:1.2.7.1"
 
 	modRuntimeOnly "dev.mtwmod:mtwmod-resource:1.0.5"
-//	modRuntimeOnly "libs:banner:1.21.1-7"
-//	modRuntimeOnly project(":mtw-resource")
-//	include modImplementation("dev.mtwmod:mtwmod-skinpreset:1.0.1")
-//	include modImplementation("dev.mtwmod:mtwmod-animation:1.0.0")
-	include modImplementation("dev.mtwmod:better-third-person:1.1.0")
-	include "libs:${project.modernkeybinding_verson}"
-//	include "maven.modrinth:${project.better_fabric_console_version}"
-	modApi include("dev.mtwmod:kyrptconfig:1.6.1-1.21")
-//	modApi "maven.modrinth:rrls:Ip08v0S2"
-//	modImplementation "dev.mtwmod:improved-animations:1.0.2"
+	modCompileOnly "dev.mtwmod:kyrptconfig:1.5.6-1.20"
 
-	implementation "dnsjava:dnsjava:3.5.3"
-
-//	var ultralight_version = '0.0.2-SNAPSHOT'
-//
-//	include implementation("net.janrupf.ultralight:ultralight-java-reborn-core:$ultralight_version")
-//	var ultralight_jni = "net.janrupf.ultralight:ultralight-java-reborn-platform-jni:$ultralight_version"
-//	include implementation(ultralight_jni)
-
-//	for (String arch : ["linux-x64", "win-x64", "mac-x64"]) {
-//		implementation "$ultralight_jni:$arch"
-//	}
+	include implementation("dnsjava:dnsjava:3.5.3")
 }
 
 processResources {
-	dependsOn ":mtw-resource:processResources"
+	//dependsOn ":mtw-resource:processResources"
 
 	inputs.property "version", project.version
 
@@ -126,17 +109,14 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
+	it.options.release = 17
 }
 
 java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
 }
 
 jar {

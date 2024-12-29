@@ -1,6 +1,7 @@
 package dev.magyul.network;
 
-import net.fabricmc.fabric.api.networking.v1.LoginPacketSender;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.ClientConnection;
@@ -18,9 +19,9 @@ public interface IHandshakeMessage {
     HandshakePacketType<?> getType();
 
     @Nullable
-    IResponsePacket handle(ClientConnection connection, Consumer<PacketCallbacks> callbacks);
+    IResponsePacket handle(ClientConnection connection, Consumer<GenericFutureListener<? extends Future<? super Void>>> callbacks);
 
-    default void sendPacket(LoginPacketSender sender) {
+    default void sendPacket(PacketSender sender) {
         PacketByteBuf buf = PacketByteBufs.create();
         write(buf);
         sender.sendPacket(getType().getId(), buf);

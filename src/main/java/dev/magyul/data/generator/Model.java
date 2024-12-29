@@ -44,6 +44,6 @@ public class Model extends FabricModelProvider {
 
     private static net.minecraft.data.client.Model item(String parent) {
         Identifier identifier = Identifier.of(MTWMod.ID, "block/" + parent + "/inventory");
-        return new net.minecraft.data.client.Model(Optional.of(identifier), Optional.empty());
+        return new net.minecraft.data.client.Model(Optional.ofNullable(identifier), Optional.empty());
     }
 }

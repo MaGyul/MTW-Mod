@@ -20,10 +20,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Util;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -91,7 +88,7 @@ public class WallBlock extends Block implements Waterloggable {
     }
 
     @Override
-    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         return !world.isClient() ? LeadItem.attachHeldMobsToBlock(player, world, pos) : ActionResult.PASS;
     }
 
@@ -134,19 +131,19 @@ public class WallBlock extends Block implements Waterloggable {
         builder.add(NORTH, EAST, WEST, SOUTH, WATERLOGGED);
     }
 
-    protected boolean isTransparent(BlockState state, BlockView world, BlockPos pos) {
+    public boolean isTransparent(BlockState state, BlockView world, BlockPos pos) {
         return !state.get(WATERLOGGED);
     }
 
-    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return this.boundingShapes[this.getShapeIndex(state)];
     }
 
-    protected VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return this.collisionShapes[this.getShapeIndex(state)];
     }
 
-    protected FluidState getFluidState(BlockState state) {
+    public FluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
@@ -154,7 +151,7 @@ public class WallBlock extends Block implements Waterloggable {
         return false;
     }
 
-    protected BlockState rotate(BlockState state, BlockRotation rotation) {
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
         return switch (rotation) {
             case CLOCKWISE_180 ->
                     state.with(NORTH, state.get(SOUTH)).with(EAST, state.get(WEST)).with(SOUTH, state.get(NORTH)).with(WEST, state.get(EAST));
@@ -166,7 +163,7 @@ public class WallBlock extends Block implements Waterloggable {
         };
     }
 
-    protected BlockState mirror(BlockState state, BlockMirror mirror) {
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
         return switch (mirror) {
             case LEFT_RIGHT ->
                     state.with(NORTH, state.get(SOUTH)).with(SOUTH, state.get(NORTH));

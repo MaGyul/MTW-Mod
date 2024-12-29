@@ -3,6 +3,8 @@ package dev.magyul.network.packets.s2c.handshake;
 import dev.magyul.network.HandshakePacketType;
 import dev.magyul.network.IHandshakeMessage;
 import dev.magyul.network.packets.c2s.handshake.HelloResponseC2SPacket;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.PacketCallbacks;
@@ -27,7 +29,7 @@ public class HelloRequestS2CPacket implements IHandshakeMessage {
     }
 
     @Override
-    public @Nullable IResponsePacket handle(ClientConnection connection, Consumer<PacketCallbacks> callbacks) {
+    public @Nullable IResponsePacket handle(ClientConnection connection, Consumer<GenericFutureListener<? extends Future<? super Void>>> callbacks) {
         return new HelloResponseC2SPacket();
     }
 }

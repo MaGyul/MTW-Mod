@@ -11,6 +11,7 @@ accessible field net/minecraft/client/gui/screen/ingame/AbstractSignEditScreen t
 accessible field net/minecraft/client/gui/screen/Screen textRenderer Lnet/minecraft/client/font/TextRenderer;
 accessible field net/minecraft/client/gui/screen/Screen drawables Ljava/util/List;
 
+accessible method net/minecraft/client/gui/widget/TextFieldWidget drawsBackground ()Z
 accessible field net/minecraft/client/gui/widget/TextFieldWidget textRenderer Lnet/minecraft/client/font/TextRenderer;
 accessible field net/minecraft/client/gui/widget/TextFieldWidget text Ljava/lang/String;
 accessible field net/minecraft/client/gui/widget/TextFieldWidget selectionStart I
@@ -62,3 +63,5 @@ accessible method net/minecraft/world/GameRules$IntRule create (I)Lnet/minecraft
 accessible method net/minecraft/world/PersistentStateManager getFile (Ljava/lang/String;)Ljava/io/File;
 
 accessible class net/minecraft/item/ItemGroup$EntriesImpl
+
+accessible method net/minecraft/client/network/MultiplayerServerListPinger createPlayerCountText (II)Lnet/minecraft/text/Text;

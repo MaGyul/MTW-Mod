@@ -3,24 +3,24 @@ package dev.magyul;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import dev.magyul.util.ClientUtil;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;
+import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.network.Address;
 import net.minecraft.client.network.AllowedAddressResolver;
 import net.minecraft.client.network.MultiplayerServerListPinger;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.network.ClientConnection;
-import net.minecraft.network.DisconnectionInfo;
+import net.minecraft.network.NetworkState;
 import net.minecraft.network.listener.ClientQueryPacketListener;
+import net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket;
 import net.minecraft.network.packet.c2s.query.QueryPingC2SPacket;
 import net.minecraft.network.packet.c2s.query.QueryRequestC2SPacket;
-import net.minecraft.network.packet.s2c.query.PingResultS2CPacket;
+import net.minecraft.network.packet.s2c.query.QueryPongS2CPacket;
 import net.minecraft.network.packet.s2c.query.QueryResponseS2CPacket;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.logging.UncaughtExceptionLogger;
-import net.minecraft.util.profiler.MultiValueDebugSampleLogImpl;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -76,7 +76,7 @@ public class ServerPingPong {
                 }
             }
         }
-        mtw_info.setStatus(ServerInfo.Status.INITIAL);
+        mtw_info.online = false;
     }
 
     public static void startPinging(MinecraftClient client, Runnable pingCallback, Runnable update) {
@@ -88,14 +88,16 @@ public class ServerPingPong {
                 final var address = ClientUtil.mtw_address;
                 var optional = AllowedAddressResolver.DEFAULT.resolve(address).map(Address::getInetSocketAddress);
                 if (optional.isEmpty()) {
-                    MTWMod.LOGGER.error("Can't ping: {}", ConnectScreen.UNKNOWN_HOST_TEXT.getString());
-                    mtw_info.label = Text.translatable("multiplayer.status.cannot_connect").withColor(-65536);
+                    MTWMod.LOGGER.error("Can't ping: {}", ConnectScreen.BLOCKED_HOST_TEXT.getString());
+                    mtw_info.label = Text.translatable("multiplayer.status.cannot_connect").styled(style ->
+                            style.withColor(-65536));
                     mtw_info.playerCountLabel = ScreenTexts.EMPTY;
                 } else {
                     isPinging = true;
                     final var isa = optional.get();
-                    final var connection = ClientConnection.connect(isa, false, (MultiValueDebugSampleLogImpl) null);
+                    final var connection = ClientConnection.connect(isa, false);
                     mtw_info.label = Text.translatable("multiplayer.status.pinging");
+                    mtw_info.ping = -1;
                     mtw_info.playerListSummary = List.of();
                     joinStart = () -> {
                         if (connection.isOpen()) {
@@ -113,8 +115,9 @@ public class ServerPingPong {
                     };
                     var listener = new CQPListener(connection, pingCallback);
                     try {
-                        connection.connect(address.getAddress(), address.getPort(), listener);
-                        connection.send(QueryRequestC2SPacket.INSTANCE);
+                        connection.setPacketListener(listener);
+                        connection.send(new HandshakeC2SPacket(address.getAddress(), address.getPort(), NetworkState.STATUS));
+                        connection.send(new QueryRequestC2SPacket());
                     } catch (Throwable thr) {
                         MTWMod.LOGGER.error("Failed to ping mtw server", thr);
                     }
@@ -123,12 +126,14 @@ public class ServerPingPong {
                 isPinging = false;
                 //noinspection ConstantValue
                 if (ex instanceof UnknownHostException) {
-                    mtw_info.setStatus(ServerInfo.Status.UNREACHABLE);
-                    mtw_info.label = Text.translatable("multiplayer.status.cannot_resolve").withColor(-65536);
+                    mtw_info.ping = -1;
+                    mtw_info.label = Text.translatable("multiplayer.status.cannot_resolve").styled(style ->
+                            style.withColor(-65536));
                     client.execute(update);
                 } else {
-                    mtw_info.setStatus(ServerInfo.Status.UNREACHABLE);
-                    mtw_info.label = Text.translatable("multiplayer.status.cannot_connect").withColor(-65536);
+                    mtw_info.ping = -1;
+                    mtw_info.label = Text.translatable("multiplayer.status.cannot_connect").styled(style ->
+                            style.withColor(-65536));
                     client.execute(update);
                 }
             }
@@ -185,7 +190,7 @@ public class ServerPingPong {
                 }, () -> mtw_info.playerCountLabel = Text.translatable("multiplayer.status.unknown").formatted(Formatting.DARK_GRAY));
                 metadata.favicon().ifPresent((favicon) -> {
                     if (!Arrays.equals(favicon.iconBytes(), mtw_info.getFavicon())) {
-                        mtw_info.setFavicon(ServerInfo.validateFavicon(favicon.iconBytes()));
+                        mtw_info.setFavicon(favicon.iconBytes());
                     }
                 });
                 startTime = Util.getMeasuringTimeMs();
@@ -195,7 +200,7 @@ public class ServerPingPong {
         }
 
         @Override
-        public void onPingResult(PingResultS2CPacket packet) {
+        public void onPong(QueryPongS2CPacket packet) {
             mtw_info.ping = Util.getMeasuringTimeMs() - startTime;
             connection.disconnect(Text.translatable("multiplayer.status.finished"));
             pingCallback.run();
@@ -203,11 +208,12 @@ public class ServerPingPong {
         }
 
         @Override
-        public void onDisconnected(DisconnectionInfo info) {
+        public void onDisconnected(Text reason) {
             isPinging = false;
             if (!sentQuery) {
-                MTWMod.LOGGER.error("Can't ping: {}", info.reason().getString());
-                mtw_info.label = Text.translatable("multiplayer.status.cannot_connect").withColor(-65536);
+                MTWMod.LOGGER.error("Can't ping: {}", reason.getString());
+                mtw_info.label = Text.translatable("multiplayer.status.cannot_connect").styled(style ->
+                        style.withColor(-65536));
                 mtw_info.playerCountLabel = ScreenTexts.EMPTY;
             }
         }

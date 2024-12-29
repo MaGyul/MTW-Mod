@@ -1,6 +1,5 @@
 package dev.magyul.blocks;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
@@ -13,14 +12,8 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
 public class TransparentBlock extends HorizontalFacingBlock {
-    public static final MapCodec<TransparentBlock> CODEC = createCodec(TransparentBlock::new);
     public TransparentBlock(Settings settings) {
         super(settings);
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
-        return CODEC;
     }
 
     @Override
@@ -36,7 +29,5 @@ public class TransparentBlock extends HorizontalFacingBlock {
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return VoxelShapes.fullCube();
-//        Direction direction = state.get(FACING);
-//        return direction.getAxis() == Direction.Axis.X ? X_AXIS_SHAPE : Z_AXIS_SHAPE;
     }
 }

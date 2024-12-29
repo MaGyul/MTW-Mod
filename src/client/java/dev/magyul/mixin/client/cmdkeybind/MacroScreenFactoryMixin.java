@@ -46,7 +46,7 @@ public class MacroScreenFactoryMixin {
 
         mainSection.addConfigItem((new ButtonItem(Text.translatable("key.cmdkeybind.config.add"))).setClickEvent(() -> {
             CmdKeybindMod.addEmptyMacro();
-            mainSection.insertConfigItem(new ConfigMacroItem(mainSection, options.macros.getLast()), mainSection.configs.size() - 1);
+            mainSection.insertConfigItem(new ConfigMacroItem(mainSection, options.macros.get(options.macros.size() - 1)), mainSection.configs.size() - 1);
         }));
         cir.setReturnValue(configScreen);
     }

@@ -1,6 +1,6 @@
-// 1.21	2024-09-03T02:17:56.4833468	MTWMod/Tags for minecraft:block
-1adbe8f9920c4153aebced39c3769e8605a53a9a data\mtwmod\tags\block\earths.json
-ff108dd4dd0d7533d3d9c59e09a1573a37a0b24b data\mtwmod\tags\block\plates.json
-3b6e9eda0db707b496a2e72cd5c8dbe4e8f9bcf0 data\mtwmod\tags\block\walls.json
-5dc16bb30ba39d427e0aa91ef5bc4d22c8a80794 data\mtwmod\tags\block\connected_walls.json
-e93cd7b32564ba5d4fa607f5dc38702c8b8543f0 data\mtwmod\tags\block\sittings.json
+// 1.20.1	2024-12-29T17:16:12.7553936	MTWMod/Tags for minecraft:block
+875491d3219424d44454cd088e88b044fe29f395 data\mtwmod\tags\blocks\earths.json
+e742679e99292a7875f740390de39b0d9c51cfd3 data\mtwmod\tags\blocks\plates.json
+f057b4a11b78f062d41e16d898dae4601400c6c6 data\mtwmod\tags\blocks\connected_walls.json
+a009c986ab24267d1f7d54df946f019120cfac0d data\mtwmod\tags\blocks\sittings.json
+f49f8db544fd4a03ecf0665b3b4ee30ca3298610 data\mtwmod\tags\blocks\walls.json

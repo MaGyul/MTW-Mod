@@ -2,19 +2,20 @@ package dev.magyul.network.packets.c2s;
 
 import dev.magyul.MTWMod;
 import dev.magyul.network.IPacket;
-import dev.magyul.network.PacketType;
-import net.minecraft.network.RegistryByteBuf;
+import dev.magyul.util.NetworkUtil;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public record UseAirC2SPacket() implements IPacket {
-    public static final PacketType<UseAirC2SPacket> TYPE = PacketType.create("use_air", UseAirC2SPacket::new);
+    public static final PacketType<UseAirC2SPacket> TYPE = NetworkUtil.create("use_air", UseAirC2SPacket::new);
 
-    public UseAirC2SPacket(RegistryByteBuf buf) {
+    public UseAirC2SPacket(PacketByteBuf buf) {
         this();
     }
 
     @Override
-    public void write(RegistryByteBuf buf) {
+    public void write(PacketByteBuf buf) {
     }
 
     @Override

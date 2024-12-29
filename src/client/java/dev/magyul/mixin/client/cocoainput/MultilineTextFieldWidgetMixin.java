@@ -1,6 +1,7 @@
 package dev.magyul.mixin.client.cocoainput;
 
 import arm32x.minecraft.commandblockide.client.gui.MultilineTextFieldWidget;
+import arm32x.minecraft.commandblockide.mixin.client.TextFieldWidgetAccessor;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.magyul.cocoainput.util.Util;
 import net.minecraft.client.gui.DrawContext;
@@ -19,22 +20,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(MultilineTextFieldWidget.class)
 public class MultilineTextFieldWidgetMixin extends TextFieldWidgetMixin {
 
-    @Shadow(remap = false) @Final private static long CURSOR_BLINK_INTERVAL_MS;
+    @Shadow @Final private TextFieldWidgetAccessor self;
 
-    @Inject(method = "renderWidget", at = @At(value = "INVOKE", target = "Larm32x/minecraft/commandblockide/client/gui/MultilineTextFieldWidget;isFocused()Z", ordinal = 2))
+    @Inject(method = "renderButton", at = @At(value = "INVOKE", target = "Larm32x/minecraft/commandblockide/client/gui/MultilineTextFieldWidget;isFocused()Z", ordinal = 2))
     private void renderWidget(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci,
-                              @Local(ordinal = 2) int textColor, @Local(ordinal = 6) int cursorX, @Local(ordinal = 7) int cursorY,
-                              @Local long timeSinceLastSwitchFocusMs) {
+                              @Local(ordinal = 2) int textColor, @Local(ordinal = 6) int cursorX, @Local(ordinal = 7) int cursorY) {
         wrapper.setFocused(This().isFocused());
         if (wrapper.preeditBegin) {
-            if (showCursor(timeSinceLastSwitchFocusMs)) {
+            if (showCursor()) {
                 Util.renderCursor(context, cursorX + 1 + (Util.getUnderLineWidth(textRenderer) * wrapper.markedPos), cursorY, -3092272);
             }
             Util.renderUnderLine(context, textRenderer, wrapper.length, cursorX + 1, cursorY, textColor);
         }
     }
 
-    @Redirect(method = "renderWidget", at = @At(value = "INVOKE", target = "Larm32x/minecraft/commandblockide/client/gui/MultilineTextFieldWidget;isFocused()Z", ordinal = 1))
+    @Redirect(method = "renderButton", at = @At(value = "INVOKE", target = "Larm32x/minecraft/commandblockide/client/gui/MultilineTextFieldWidget;isFocused()Z", ordinal = 1))
     private boolean renderWidget(MultilineTextFieldWidget instance) {
         if (wrapper.cursorVisible) {
             return instance.isFocused();
@@ -57,8 +57,8 @@ public class MultilineTextFieldWidgetMixin extends TextFieldWidgetMixin {
     }
 
     @Unique
-    private boolean showCursor(long timeSinceLastSwitchFocusMs) {
-        return This().isFocused() && timeSinceLastSwitchFocusMs / CURSOR_BLINK_INTERVAL_MS % 2 == 0;
+    private boolean showCursor() {
+        return This().isFocused() && this.self.getFocusedTicks() / 6 % 2 == 0;
     }
 
     @Unique

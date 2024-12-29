@@ -5,9 +5,9 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
-import net.minecraft.network.QueryableServer;
-import net.minecraft.network.handler.LegacyQueries;
-import net.minecraft.network.handler.LegacyQueryHandler;
+import net.minecraft.network.LegacyQueryHandler;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.ServerNetworkIo;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,13 +18,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.net.SocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 @Mixin(LegacyQueryHandler.class)
 public abstract class LegacyQueryHandlerMixin {
     @Shadow @Final private static Logger LOGGER;
 
-    @Shadow @Final private QueryableServer server;
+    @Shadow @Final private ServerNetworkIo networkIo;
 
     @Inject(method = "channelRead", at = @At("HEAD"), cancellable = true)
     private void channelRead(ChannelHandlerContext ctx, Object msg, CallbackInfo cb) {
@@ -67,7 +68,7 @@ public abstract class LegacyQueryHandlerMixin {
                         LOGGER.debug("Ping: (1.4-1.5.x) from {}", socketAddress);
                     }
 
-                    string = getResponse(this.server, isMTW);
+                    string = getResponse(this.networkIo.getServer(), isMTW);
                     reply(ctx, createBuf(ctx.alloc(), string));
                 }
 
@@ -97,7 +98,7 @@ public abstract class LegacyQueryHandlerMixin {
         if (s != 250) {
             return false;
         } else {
-            String string = LegacyQueries.read(buf);
+            String string = new String(buf.readBytes(buf.readShort() * 2).array(), StandardCharsets.UTF_16BE);
             if (!"MC|PingHost".equals(string)) {
                 return false;
             } else {
@@ -109,7 +110,7 @@ public abstract class LegacyQueryHandlerMixin {
                     if (t < 73) {
                         return false;
                     } else {
-                        LegacyQueries.read(buf);
+                        buf.readBytes(buf.readShort() * 2).array();
                         int j = buf.readInt();
                         return j <= 65535;
                     }
@@ -126,7 +127,7 @@ public abstract class LegacyQueryHandlerMixin {
     }
 
     @Unique
-    private static String getResponse(QueryableServer server, boolean isMTW) {
+    private static String getResponse(MinecraftServer server, boolean isMTW) {
         var result = String.format(Locale.ROOT,
                 "§1\u0000%d\u0000%s\u0000%s\u0000%d\u0000%d",
                 127,
@@ -150,10 +151,16 @@ public abstract class LegacyQueryHandlerMixin {
     }
 
     @Unique
-    private static ByteBuf createBuf(ByteBufAllocator allocator, String string) {
+    private static ByteBuf createBuf(ByteBufAllocator allocator, String s) {
         ByteBuf byteBuf = allocator.buffer();
         byteBuf.writeByte(255);
-        LegacyQueries.write(byteBuf, string);
+        char[] cs = s.toCharArray();
+        byteBuf.writeShort(cs.length);
+
+        for(char c : cs) {
+            byteBuf.writeChar(c);
+        }
+
         return byteBuf;
     }
 }

@@ -1,6 +1,5 @@
 package dev.magyul.blocks;
 
-import com.mojang.serialization.MapCodec;
 import dev.magyul.blocks.enums.TripleBlockHalf;
 import dev.magyul.registers.MTWProperties;
 import dev.magyul.util.DirectionUtil;
@@ -19,15 +18,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
 public class AnvilBlock extends HorizontalFacingBlock {
-    public static final MapCodec<AnvilBlock> CODEC = createCodec(AnvilBlock::new);
     public static final EnumProperty<TripleBlockHalf> HALF = MTWProperties.TRIPLE_BLOCK_HALF;
     public AnvilBlock(Settings settings) {
         super(settings);
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
-        return CODEC;
     }
 
     @Override

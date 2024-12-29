@@ -4,6 +4,7 @@ import dev.magyul.registers.MTWBlockEntityType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SingleStackInventory;
 import net.minecraft.item.ItemStack;
@@ -12,13 +13,12 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Clearable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
-public class FoodTableBlockEntity extends BlockEntity implements Clearable, SingleStackInventory.SingleStackBlockEntityInventory {
+public class FoodTableBlockEntity extends BlockEntity implements Clearable, SingleStackInventory {
     private ItemStack foodStack;
     private float placeRotation;
     private final FoodTableAnimationController controller;
@@ -30,10 +30,10 @@ public class FoodTableBlockEntity extends BlockEntity implements Clearable, Sing
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
         if (nbt.contains("FoodItem", NbtElement.COMPOUND_TYPE)) {
-            foodStack = ItemStack.fromNbtOrEmpty(registryLookup, nbt.getCompound("FoodItem"));
+            foodStack = ItemStack.fromNbt(nbt.getCompound("FoodItem"));
         } else {
             foodStack = ItemStack.EMPTY;
         }
@@ -41,18 +41,18 @@ public class FoodTableBlockEntity extends BlockEntity implements Clearable, Sing
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
+    protected void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
         if (!getStack().isEmpty()) {
-            nbt.put("FoodItem", getStack().encode(registryLookup));
+            nbt.put("FoodItem", getStack().writeNbt(new NbtCompound()));
         }
         nbt.putFloat("PlaceRotation", placeRotation);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        var nbt = super.toInitialChunkDataNbt(registryLookup);
-        writeNbt(nbt, registryLookup);
+    public NbtCompound toInitialChunkDataNbt() {
+        var nbt = super.toInitialChunkDataNbt();
+        writeNbt(nbt);
         return nbt;
     }
 
@@ -79,18 +79,23 @@ public class FoodTableBlockEntity extends BlockEntity implements Clearable, Sing
     }
 
     @Override
-    public ItemStack getStack() {
+    public ItemStack getStack(int slot) {
         return foodStack;
     }
 
     @Override
-    public void setStack(ItemStack stack) {
+    public ItemStack removeStack(int slot, int amount) {
+        return foodStack.split(amount);
+    }
+
+    @Override
+    public void setStack(int slot, ItemStack stack) {
         foodStack = stack;
     }
 
     @Override
-    public BlockEntity asBlockEntity() {
-        return this;
+    public boolean canPlayerUse(PlayerEntity player) {
+        return Inventory.canPlayerUse(this, player);
     }
 
     @Override
@@ -105,7 +110,7 @@ public class FoodTableBlockEntity extends BlockEntity implements Clearable, Sing
 
     public void dropFood() {
         dropFood(getStack());
-        emptyStack();
+        foodStack = ItemStack.EMPTY;
     }
 
     public void dropFood(ItemStack stack) {

@@ -21,11 +21,11 @@ public class GameRendererMixin {
     @Shadow @Final MinecraftClient client;
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;draw()V"))
-    public void render(RenderTickCounter tickCounter, boolean tick, CallbackInfo ci, @Local(ordinal = 0) DrawContext context) {
+    public void render(float tickDelta, long startTime, boolean tick, CallbackInfo ci, @Local(ordinal = 0) DrawContext context) {
         try {
             Overlay overlay = this.client.overlay;
             if (OverlayStateHelper.isRendering(overlay)) {
-                overlay.render(DummyDrawContext.INSTANCE, 0, 0, tickCounter.getLastFrameDuration());
+                overlay.render(DummyDrawContext.INSTANCE, 0, 0, tickDelta);
                 this.client.getProfiler().push("overlay");
                 context.getMatrices().push();
                 context.getMatrices().translate(0, 0, 0);

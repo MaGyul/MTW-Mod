@@ -4,17 +4,17 @@ import dev.magyul.registers.MTWBlockEntityType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SingleStackInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Clearable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-public class StandardBlockEntity extends BlockEntity implements Clearable, SingleStackInventory.SingleStackBlockEntityInventory {
+public class StandardBlockEntity extends BlockEntity implements Clearable, SingleStackInventory {
     private ItemStack lanternStack;
 
     public StandardBlockEntity(BlockPos pos, BlockState state) {
@@ -23,36 +23,41 @@ public class StandardBlockEntity extends BlockEntity implements Clearable, Singl
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
         if (nbt.contains("LanternItem", NbtElement.COMPOUND_TYPE)) {
-            lanternStack = ItemStack.fromNbtOrEmpty(registryLookup, nbt.getCompound("LanternItem"));
+            lanternStack = ItemStack.fromNbt(nbt.getCompound("LanternItem"));
         } else {
             lanternStack = ItemStack.EMPTY;
         }
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
+    protected void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
         if (!getStack().isEmpty()) {
-            nbt.put("LanternItem", getStack().encode(registryLookup));
+            nbt.put("LanternItem", getStack().writeNbt(new NbtCompound()));
         }
     }
 
     @Override
-    public ItemStack getStack() {
+    public ItemStack getStack(int slot) {
         return lanternStack;
     }
 
     @Override
-    public void setStack(ItemStack stack) {
+    public ItemStack removeStack(int slot, int amount) {
+        return lanternStack.split(amount);
+    }
+
+    @Override
+    public void setStack(int slot, ItemStack stack) {
         this.lanternStack = stack;
     }
 
     @Override
-    public BlockEntity asBlockEntity() {
-        return this;
+    public boolean canPlayerUse(PlayerEntity player) {
+        return Inventory.canPlayerUse(this, player);
     }
 
     @Override
@@ -71,7 +76,7 @@ public class StandardBlockEntity extends BlockEntity implements Clearable, Singl
             var stack = getStack();
             if (!stack.isEmpty()) {
                 var clone = stack.copy();
-                emptyStack();
+                lanternStack = ItemStack.EMPTY;
                 var vec3d = Vec3d.add(pos, .5, 1.01, .5).addRandom(world.random, .7f);
                 var entity = new ItemEntity(world, vec3d.x, vec3d.y, vec3d.z, clone);
                 entity.setToDefaultPickupDelay();

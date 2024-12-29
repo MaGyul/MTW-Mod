@@ -18,8 +18,8 @@ public class ClientPlayNetworkHandlerMixin {
     @SuppressWarnings("RedundantCast")
     @Inject(method = "onChunkData", at = @At("TAIL"))
     private void onChunkData(ChunkDataS2CPacket packet, CallbackInfo ci) {
-        var x = packet.getChunkX();
-        var z = packet.getChunkZ();
+        var x = packet.getX();
+        var z = packet.getZ();
         var data = ((ChunkDataPacketAccessor) packet).mtwmod$chunkData();
         WorldData.get(world).getChunkData(x, z).readNbt(data);
     }

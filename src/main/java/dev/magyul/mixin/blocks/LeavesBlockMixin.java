@@ -21,12 +21,12 @@ public class LeavesBlockMixin extends Block {
     }
 
     @Override
-    protected VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return context.isDescending() ? state.getOutlineShape(world, pos) : VoxelShapes.empty();
     }
 
     @Override
-    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         var bs = world.getBlockState(entity.getBlockPos().down());
         if (bs.isAir() || bs.isIn(BlockTags.LEAVES)) {
             var a = 2D;

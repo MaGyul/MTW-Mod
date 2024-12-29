@@ -42,14 +42,13 @@ public class PlayerData {
             carryTile = nbt.getCompound("carryTile");
         }
         if (nbt.contains("carryItem", NbtElement.COMPOUND_TYPE)) {
-            carryItem = ItemStack.fromNbt(player.getWorld().getRegistryManager(), nbt.get("carryItem"))
-                    .orElse(ItemStack.EMPTY);
+            carryItem = ItemStack.fromNbt(nbt.getCompound("carryItem"));
         }
         if (nbt.contains("moveHere", NbtElement.COMPOUND_TYPE)) {
             moveHere.clear();
             var compound = nbt.getCompound("moveHere");
             for (String key : compound.getKeys()) {
-                moveHere.put(Identifier.of(key), Vec3dUtil.fromNbtList(nbt.getList(key, NbtElement.DOUBLE_TYPE)));
+                moveHere.put(Identifier.tryParse(key), Vec3dUtil.fromNbtList(nbt.getList(key, NbtElement.DOUBLE_TYPE)));
             }
         }
 
@@ -65,7 +64,7 @@ public class PlayerData {
             nbt.put("carryTile", carryTile);
         }
         if (carryItem != null) {
-            nbt.put("carryItem", carryItem.encodeAllowEmpty(player.getWorld().getRegistryManager()));
+            nbt.put("carryItem", carryItem.writeNbt(new NbtCompound()));
         }
         if (!moveHere.isEmpty()) {
             var compound = new NbtCompound();

@@ -24,13 +24,13 @@ public abstract class ConfigSectionMixin extends Screen {
     }
 
     @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
-    private void mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount, CallbackInfoReturnable<Boolean> cir) {
+    private void mouseScrolled(double mouseX, double mouseY, double amount, CallbackInfoReturnable<Boolean> cir) {
         for (ConfigItem<?> item : configs) {
             if (item instanceof ConfigMacroItem macroItem) {
                 var configs = macroItem.getConfigs();
                 for (ConfigItem<?> config : configs) {
                     if (config instanceof CommandTextItem cti) {
-                        if (cti.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount)) {
+                        if (cti.mouseScrolled(mouseX, mouseY, amount)) {
                             cir.setReturnValue(true);
                             return;
                         }

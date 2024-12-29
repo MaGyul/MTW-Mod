@@ -1,7 +1,10 @@
 package dev.magyul.blocks;
 
 import dev.magyul.registers.MTWBlocks;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalFacingBlock;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.enums.StairShape;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.item.ItemPlacementContext;
@@ -18,7 +21,8 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TileStairBlock extends Block {
     private static final Map<Direction, VoxelShape> DEFAULT = new HashMap<>();
@@ -191,7 +195,7 @@ public class TileStairBlock extends Block {
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, NavigationType type) {
+    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
     }
 }

@@ -1,14 +1,15 @@
 package dev.magyul.mixin.client;
 
+import dev.magyul.MTWMod;
 import dev.magyul.network.packets.c2s.KeyInputC2SPacket;
 import dev.magyul.util.ClientUtil;
 import dev.magyul.util.ConnectServer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Keyboard;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.DirectConnectScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.client.gui.screen.multiplayer.DirectConnectScreen;
 import net.minecraft.client.gui.screen.world.SelectWorldScreen;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
@@ -71,13 +72,10 @@ public class KeyboardMixin {
 
     @Unique
     private void otherServer() {
-        ServerInfo info = new ServerInfo("Minecraft Server", "", ServerInfo.ServerType.OTHER);
+        ServerInfo info = new ServerInfo("Minecraft Server", "", false);
         client.setScreen(new DirectConnectScreen(new TitleScreen(), b -> {
-            if (b) {
-                ClientUtil.cs = ConnectServer.startConnecting(client, ServerAddress.parse(info.address), info);
-            } else {
-                client.setScreen(new TitleScreen());
-            }
+            ClientUtil.cs = ConnectServer.startConnecting(client, new TitleScreen(), ServerAddress.parse(info.address), info);
+            client.setScreen(new TitleScreen());
         }, info));
     }
 }

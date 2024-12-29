@@ -22,11 +22,7 @@
     "QuickPlayMixin",
     "SafetyScreenMixin",
     "TitleScreenMixin",
-    "ToastMixin$Advancement",
     "ToastMixin$Entry",
-    "ToastMixin$Recipe",
-    "ToastMixin$System",
-    "ToastMixin$Tutorial",
     "accessor.ChatInputSuggestorAccessor",
     "accessor.ChatInputSuggestorAccessor$SuggestionWindowAccessor",
     "accessor.ClientLoginNetworkHandlerAccessor",
@@ -38,7 +34,6 @@
     "cocoainput.SignEditScreenMixin",
     "cocoainput.TextFieldWidgetMixin",
     "network.ClientPlayNetworkHandlerMixin",
-    "network.LegacyServerPingerMixin",
     "overlay.DrawContextMixin",
     "overlay.GameRendererKeyboardMouseMixin",
     "overlay.GameRendererMixin",
@@ -56,6 +51,7 @@
   "mixins": [
     "PlayerEntityMixin",
     "SlotMixin",
+    "accessor.IdentifierAccessor",
     "cmdkeybind.MacroScreenFactoryMixin",
     "sugesstions.ButterSuggestionMixin"
   ]

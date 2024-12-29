@@ -6,19 +6,16 @@ import dev.magyul.registers.MTWOther;
 import dev.magyul.util.LangUtil;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
-import net.minecraft.registry.RegistryWrapper;
-
-import java.util.concurrent.CompletableFuture;
 
 import static dev.magyul.registers.MTWBlocks.*;
 
 public class Korean extends FabricLanguageProvider {
-    public Korean(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
-        super(dataOutput, "ko_kr", registryLookup);
+    public Korean(FabricDataOutput dataOutput) {
+        super(dataOutput, "ko_kr");
     }
 
     @Override
-    public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder builder) {
+    public void generateTranslations(TranslationBuilder builder) {
         LangUtil.addItemGroup(builder, MTWOther.ITEM_GROUP_BLOCKS, "건축 자제");
         LangUtil.addItemGroup(builder, MTWOther.ITEM_GROUP_ITEMS, "MTW 아이템");
 

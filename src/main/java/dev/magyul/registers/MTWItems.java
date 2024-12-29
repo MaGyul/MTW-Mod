@@ -2,7 +2,6 @@ package dev.magyul.registers;
 
 import dev.magyul.MTWMod;
 import dev.magyul.api.MTWToolMaterials;
-import dev.magyul.util.FoodBuilder;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.Block;
 import net.minecraft.item.*;
@@ -24,7 +23,7 @@ public class MTWItems {
     public static final List<Item> ITEMS = new ArrayList<>();
     public static final Item MTW_ICON = register("mtw_icon", getFood());
     public static final Item MTW_REGION_VIEWER = register("mtw_region_viewer", getFood());
-    public static final Item RING_SWORD = register("ring_sword", new SwordItem(MTWToolMaterials.RING, new Item.Settings().attributeModifiers(SwordItem.createAttributeModifiers(MTWToolMaterials.RING, 5, -2.4f))));
+    public static final Item RING_SWORD = register("ring_sword", new SwordItem(MTWToolMaterials.RING, 5, -2.4F, new Item.Settings()));
     public static final Item INDEPENDENCE_DECLARATION = register("independence_declaration", new Item(new Item.Settings().maxCount(1)));
 
     // Full Cute
@@ -103,11 +102,11 @@ public class MTWItems {
 
     private static Item getFood() {
         return new Item(new Item.Settings()
-                .food(new FoodBuilder()
+                .food(new FoodComponent.Builder()
                     .alwaysEdible()
-                    .nutrition(2000000000)
+                    .hunger(2000000000)
                     .saturationModifier(Float.MAX_VALUE)
-                    .eatSeconds(.1f)
+                    .snack()
                     .build()
                 )
                 .maxCount(99));

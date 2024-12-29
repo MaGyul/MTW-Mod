@@ -12,7 +12,7 @@
     "PlayerManagerMixin",
     "ServerPlayerEntityMixin",
     "ServerWorldMixin",
-    "StringHelperMixin",
+    "SharedConstantsMixin",
     "accessors.ServerLoginNetworkHandlerAccessor",
     "accessors.TeleportTargetAccessor",
     "blocks.LeavesBlockMixin",
@@ -20,6 +20,7 @@
     "network.ChunkDataS2CPacketMixin",
     "network.LegacyQueryHandlerMixin",
     "network.QueryResponseS2CPacketMixin",
+    "pehkui.ReflectionUtilsMixin",
     "voicechat.NetworkMessageMixin",
     "voicechat.ServerMixin"
   ],

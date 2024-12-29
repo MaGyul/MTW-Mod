@@ -1,5 +1,7 @@
 package dev.magyul.util;
 
+import dev.magyul.MTWMod;
+import dev.magyul.MTWModClient;
 import dev.magyul.mixin.client.accessor.ToastManagerAccessor;
 import dev.magyul.registers.MTWItems;
 import net.minecraft.client.MinecraftClient;
@@ -23,18 +25,18 @@ public class ClientUtil {
     private static final UUID[] devs = new UUID[]{
             UUID.fromString("98604430-65db-499b-be91-a9d6a2602304"),    // Boo
             UUID.fromString("feb58aa8-56f6-4728-8546-82071e39dd24"),    // Main
-//            UUID.fromString("7a0f0c5a-6cb7-4c31-9cd7-1ff6ecf637e1"),    // Suhok
+            UUID.fromString("7a0f0c5a-6cb7-4c31-9cd7-1ff6ecf637e1"),    // Suhok
     };
     private static final UUID test = UUID.fromString("825203c1-484b-4935-bea2-3f7aa11e142a");
     private static final String serverDevURL = "https://mathwor.com/client/developer.list";
     private static final boolean local = false;
-    public static final ServerInfo mtw_info = new ServerInfo("MTW Server", local ? "localhost" : "play.mathwor.com", ServerInfo.ServerType.OTHER) {
+    public static final ServerInfo mtw_info = new ServerInfo("MTW Server", local ? "localhost" : "play.mathwor.com", false) {
         {
             setResourcePackPolicy(ResourcePackPolicy.ENABLED);
         }
     };
     public static final ServerAddress mtw_address = new ServerAddress(mtw_info.address, 25565);
-    public static final SystemToast.Type MTW_TOAST = new SystemToast.Type();
+    public static final SystemToast.Type MTW_TOAST = SystemToast.Type.TUTORIAL_HINT;
     public static final Map<UUID, String> receivedAllMic = new HashMap<>();
     public static int pickupReach = 45;
     public static ConnectServer cs;

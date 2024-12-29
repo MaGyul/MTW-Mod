@@ -5,6 +5,8 @@ import dev.magyul.cocoainput.wrapper.EditBoxWidgetWrapper;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.EditBoxWidget;
+import net.minecraft.client.gui.widget.ScrollableWidget;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,19 +18,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EditBoxWidget.class)
-public class EditBoxWidgetMixin {
-
-    @Shadow @Final private TextRenderer textRenderer;
+public abstract class EditBoxWidgetMixin extends ScrollableWidget {
     @Unique
     protected EditBoxWidgetWrapper wrapper;
+
+    public EditBoxWidgetMixin(int i, int j, int k, int l, Text text) {
+        super(i, j, k, l, text);
+    }
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(CallbackInfo cb) {
         wrapper = new EditBoxWidgetWrapper(This());
     }
 
-    @Inject(method = "setFocused", at = @At("HEAD"))
-    private void setFocused(boolean focused, CallbackInfo ci) {
+    @Override
+    public void setFocused(boolean focused) {
+        super.setFocused(focused);
         wrapper.setFocused(focused);
     }
 

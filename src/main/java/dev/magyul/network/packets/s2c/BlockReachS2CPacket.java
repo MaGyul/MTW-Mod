@@ -6,16 +6,16 @@ import dev.magyul.util.NetworkUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
 
-public record UpdateAllMicS2CPacket(boolean value) implements IPacket {
-    public static final PacketType<UpdateAllMicS2CPacket> TYPE = NetworkUtil.create("update_all_mic", UpdateAllMicS2CPacket::new);
+public record BlockReachS2CPacket(int reach) implements IPacket {
+    public static final PacketType<BlockReachS2CPacket> TYPE = NetworkUtil.create("block_reach", BlockReachS2CPacket::new);
 
-    public UpdateAllMicS2CPacket(PacketByteBuf buf) {
-        this(buf.readBoolean());
+    public BlockReachS2CPacket(PacketByteBuf buf) {
+        this(buf.readInt());
     }
 
     @Override
     public void write(PacketByteBuf buf) {
-        buf.writeBoolean(value);
+        buf.writeInt(reach);
     }
 
     @Override

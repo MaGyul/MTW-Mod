@@ -8,19 +8,16 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.registry.RegistryWrapper;
-
-import java.util.concurrent.CompletableFuture;
 
 import static dev.magyul.registers.MTWBlocks.MTW_BLOCKS;
 
 public class English extends FabricLanguageProvider {
-    public English(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
-        super(dataOutput, "en_us", registryLookup);
+    public English(FabricDataOutput dataOutput) {
+        super(dataOutput, "en_us");
     }
 
     @Override
-    public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder builder) {
+    public void generateTranslations(TranslationBuilder builder) {
         LangUtil.addItemGroup(builder, MTWOther.ITEM_GROUP_BLOCKS, "Building materials");
         LangUtil.addItemGroup(builder, MTWOther.ITEM_GROUP_ITEMS, "MTW Items");
 

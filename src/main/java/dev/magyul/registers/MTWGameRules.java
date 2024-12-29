@@ -1,5 +1,6 @@
 package dev.magyul.registers;
 
+import dev.magyul.network.packets.s2c.BlockReachS2CPacket;
 import dev.magyul.network.packets.s2c.PickupReachS2CPacket;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -8,12 +9,18 @@ import net.minecraft.world.GameRules;
 public class MTWGameRules {
     public static GameRules.Key<GameRules.BooleanRule> DO_PICKUP_MODE;
     public static GameRules.Key<GameRules.IntRule> PICKUP_REACH;
+    public static GameRules.Key<GameRules.IntRule> BLOCK_REACH;
 
     public static void register(RegisterMethod rm) {
         DO_PICKUP_MODE = rm.register("doPickupMode", GameRules.Category.PLAYER, GameRules.BooleanRule.create(false));
         PICKUP_REACH = rm.register("pickupReach", GameRules.Category.PLAYER, GameRules.IntRule.create(45, (server, rule) -> {
             for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
                 ServerPlayNetworking.send(player, new PickupReachS2CPacket(rule.get()));
+            }
+        }));
+        BLOCK_REACH = rm.register("blockReach", GameRules.Category.PLAYER, GameRules.IntRule.create(4, (server, rule) -> {
+            for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+                ServerPlayNetworking.send(player, new BlockReachS2CPacket(rule.get()));
             }
         }));
     }

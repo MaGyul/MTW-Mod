@@ -32,7 +32,7 @@ public class SprucePlanksChair extends Block {
     }
 
     @Override
-    protected boolean hasSidedTransparency(BlockState state) {
+    public boolean hasSidedTransparency(BlockState state) {
         return true;
     }
 
@@ -46,11 +46,11 @@ public class SprucePlanksChair extends Block {
         return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }
 
-    protected BlockState rotate(BlockState state, BlockRotation rotation) {
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
 
-    protected BlockState mirror(BlockState state, BlockMirror mirror) {
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));
     }
 }

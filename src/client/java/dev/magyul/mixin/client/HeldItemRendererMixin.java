@@ -2,7 +2,6 @@ package dev.magyul.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import dev.magyul.registers.MTWDataComponentTypes;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
@@ -25,7 +24,7 @@ public abstract class HeldItemRendererMixin {
         AbstractClientPlayerEntity player = args.get(0);
         var inventory = player.getInventory();
         var head = inventory.getArmorStack(3);
-        if (!head.isEmpty() && head.getOrDefault(MTWDataComponentTypes.IS_CARRY, false)) {
+        if (!head.isEmpty() && head.getOrCreateNbt().getBoolean("mtw:carry")) {
             args.set(5, head.copy());
             args.set(6, 0f);
         }
@@ -33,7 +32,7 @@ public abstract class HeldItemRendererMixin {
 
     @WrapOperation(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", ordinal = 1))
     private void renderFirstPersonItem$renderItem(HeldItemRenderer instance, LivingEntity entity, ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, Operation<Void> original) {
-        if (stack.getOrDefault(MTWDataComponentTypes.IS_CARRY, false)) {
+        if (stack.getOrCreateNbt().getBoolean("mtw:carry")) {
 //            matrices.translate(-.541864F, .25F, .0F);
             matrices.translate(-.56F, .25F, .0F);
 //            matrices.translate(.0f, .5f, -1f);

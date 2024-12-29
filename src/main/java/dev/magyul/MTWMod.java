@@ -23,6 +23,7 @@ import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -66,10 +67,11 @@ public class MTWMod implements ModInitializer {
 			}
 		}
 
+
+
 		MTWEntityType.init();
 		MTWBlocks.init();
 		MTWBlockEntityType.init();
-		MTWDataComponentTypes.init();
 		MTWItems.init();
 		MTWSounds.init();
 		MTWTags.init();
@@ -217,7 +219,7 @@ public class MTWMod implements ModInitializer {
 
 	private static boolean isPlayerInRange(PlayerEntity player, BlockPos pos) {
 		var playerPos = player.getBlockPos();
-		var blockReach = player.getAttributes().getBaseValue(EntityAttributes.PLAYER_BLOCK_INTERACTION_RANGE);
+		var blockReach = player.getWorld().getGameRules().getInt(MTWGameRules.BLOCK_REACH);
 		if (blockReach == 0) {
 			return playerPos.getY() - pos.getY() <= 1 && playerPos.getX() - pos.getX() == 0 && playerPos.getZ() - pos.getZ() == 0;
 		} else {

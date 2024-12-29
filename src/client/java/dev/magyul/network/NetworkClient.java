@@ -7,6 +7,7 @@ import dev.magyul.util.ClientUtil;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
 
@@ -16,8 +17,8 @@ public class NetworkClient {
 
     public static void init() {
         NetworkClientInitializer.initRegisterConsumer(type -> {
-            ClientPlayNetworking.registerGlobalReceiver(type.getId(), (payload, context) ->
-                    payload.handle(new IPacket.Context(context.client(), context.player(), context.responseSender())));
+            ClientPlayNetworking.registerGlobalReceiver(type, (packet, player, responseSender) ->
+                    packet.handle(new IPacket.Context(MinecraftClient.getInstance(), player, responseSender)));
         });
         NetworkClientInitializer.initRegisterHandshakeConsumer(type ->
                 ClientLoginNetworking.registerGlobalReceiver(type.getId(), (client, handler, buf, callbacks) -> {

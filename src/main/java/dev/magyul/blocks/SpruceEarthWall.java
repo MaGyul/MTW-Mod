@@ -1,6 +1,5 @@
 package dev.magyul.blocks;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.item.ItemPlacementContext;
@@ -14,7 +13,6 @@ import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
 
 public class SpruceEarthWall extends HorizontalFacingBlock {
-    public static final MapCodec<SpruceEarthWall> CODEC = createCodec(SpruceEarthWall::new);
     public static final EnumProperty<SlabType> TYPE = Properties.SLAB_TYPE;
     private static final VoxelShape SHAPE_X = Block.createCuboidShape(5, 0, 0, 11, 16, 16);
     private static final VoxelShape SHAPE_Z = Block.createCuboidShape(0, 0, 5, 16, 16, 11);
@@ -25,12 +23,7 @@ public class SpruceEarthWall extends HorizontalFacingBlock {
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
-        return CODEC;
-    }
-
-    @Override
-    protected boolean hasSidedTransparency(BlockState state) {
+    public boolean hasSidedTransparency(BlockState state) {
         return true;
     }
 
@@ -40,7 +33,7 @@ public class SpruceEarthWall extends HorizontalFacingBlock {
     }
 
     @Override
-    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return state.get(FACING).getAxis() == Direction.Axis.X ? SHAPE_X : SHAPE_Z;
     }
 

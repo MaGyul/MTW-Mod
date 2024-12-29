@@ -3,37 +3,26 @@ package dev.magyul.network;
 import dev.magyul.api.LogicalSide;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public interface IPacket extends CustomPayload {
+public interface IPacket extends FabricPacket {
     NbtCompound EMPTY = new NbtCompound();
-
-    void write(RegistryByteBuf buf);
 
     void handle(Context context);
 
-    PacketType<?> getType();
-
-    default Id<? extends CustomPayload> getId() {
+    default Identifier getId() {
         return getType().getId();
-    }
-
-    static ItemStack readItemStack(RegistryByteBuf buf) {
-        return ItemStack.fromNbtOrEmpty(buf.getRegistryManager(), Objects.requireNonNullElse(buf.readNbt(), EMPTY));
-    }
-
-    default void writeItemStack(RegistryByteBuf buf, ItemStack stack) {
-        buf.writeNbt(stack.encode(buf.getRegistryManager()));
     }
 
     class Context {

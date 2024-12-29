@@ -1,6 +1,5 @@
 package dev.magyul.mixin.client;
 
-import dev.magyul.registers.MTWDataComponentTypes;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.input.KeyboardInput;
 import net.minecraft.client.option.KeyBinding;
@@ -17,7 +16,7 @@ public class KeyboardInputMixin {
         if (client.player != null) {
             var inventory = client.player.getInventory();
             var stack = inventory.getArmorStack(3);
-            if (!stack.isEmpty() && stack.getOrDefault(MTWDataComponentTypes.IS_CARRY, false)) {
+            if (!stack.isEmpty() && stack.getOrCreateNbt().getBoolean("mtw:carry")) {
                 return true;
             }
         }

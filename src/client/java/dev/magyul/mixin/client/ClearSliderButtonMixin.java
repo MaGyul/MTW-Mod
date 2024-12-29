@@ -8,6 +8,7 @@ import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -18,15 +19,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(SliderWidget.class)
 public abstract class ClearSliderButtonMixin extends ClickableWidget {
 
-    @Shadow protected abstract Identifier getHandleTexture();
-
     @Shadow protected double value;
+
+    @Shadow protected abstract int getTextureV();
+
+    @Shadow @Final private static Identifier TEXTURE;
 
     private ClearSliderButtonMixin() {
         super(0, 0, 0, 0, Text.empty());
     }
 
-    @Inject(method = "renderWidget", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "renderButton", at = @At("HEAD"), cancellable = true)
     private void renderWidget(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo cb) {
         cb.cancel();
         MinecraftClient minecraft = MinecraftClient.getInstance();
@@ -36,7 +39,7 @@ public abstract class ClearSliderButtonMixin extends ClickableWidget {
         RenderSystem.enableDepthTest();
         int color = getBackColor();
         context.fill(getX(), getY(), getX() + getWidth(), getY() + getHeight(), color);
-        context.drawGuiTexture(getHandleTexture(), getX() + (int)(value * (double)(width - 8)), getY(), 8, getHeight());
+        context.drawNineSlicedTexture(TEXTURE, this.getX() + (int)(this.value * (double)(this.width - 8)), this.getY(), 8, 20, 20, 4, 200, 20, 0, this.getTextureV());
         context.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         color = getTextColor();
         drawScrollableText(context, minecraft.textRenderer, 2, color | MathHelper.ceil(alpha * 255.0F) << 24);

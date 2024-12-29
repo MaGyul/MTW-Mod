@@ -1,6 +1,5 @@
 package dev.magyul.blocks;
 
-import com.mojang.serialization.MapCodec;
 import dev.magyul.registers.MTWTags;
 import net.minecraft.block.*;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -11,6 +10,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.LeadItem;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -22,13 +22,7 @@ import net.minecraft.world.WorldAccess;
 import java.util.Objects;
 
 public class SideWallBlock extends HorizontalConnectingBlock {
-    public static final MapCodec<SideWallBlock> CODEC = createCodec(SideWallBlock::new);
     private final VoxelShape[] cullingShapes;
-
-    @Override
-    public MapCodec<SideWallBlock> getCodec() {
-        return CODEC;
-    }
 
     public SideWallBlock(AbstractBlock.Settings settings) {
         super(3.0F, 3.0F, 16.0F, 16.0F, 16.0F, settings);
@@ -47,7 +41,7 @@ public class SideWallBlock extends HorizontalConnectingBlock {
     }
 
     @Override
-    protected boolean canPathfindThrough(BlockState state, NavigationType type) {
+    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
     }
 
@@ -76,7 +70,7 @@ public class SideWallBlock extends HorizontalConnectingBlock {
     }
 
     @Override
-    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         return !world.isClient() ? LeadItem.attachHeldMobsToBlock(player, world, pos) : ActionResult.PASS;
     }
 

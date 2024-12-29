@@ -5,6 +5,7 @@ import dev.magyul.network.packets.s2c.PickupReachS2CPacket;
 import dev.magyul.network.packets.s2c.UpdateAllMicS2CPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
 
 import java.util.function.Consumer;
 

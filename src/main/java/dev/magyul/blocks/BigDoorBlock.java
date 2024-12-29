@@ -1,7 +1,5 @@
 package dev.magyul.blocks;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.magyul.blocks.enums.TripleBlockHalf;
 import dev.magyul.registers.MTWProperties;
 import dev.magyul.util.MathHelper;
@@ -23,6 +21,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -34,14 +33,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
-import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.BiConsumer;
-
 public class BigDoorBlock extends Block {
-    public static final MapCodec<BigDoorBlock> CODEC = RecordCodecBuilder.mapCodec((instance) ->
-            instance.group(BlockSetType.CODEC.fieldOf("block_set_type").forGetter(BigDoorBlock::getBlockSetType), createSettingsCodec()).apply(instance, BigDoorBlock::new));
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     public static final BooleanProperty OPEN = Properties.OPEN;
     public static final EnumProperty<DoorHinge> HINGE = Properties.DOOR_HINGE;
@@ -56,11 +50,6 @@ public class BigDoorBlock extends Block {
     protected static final VoxelShape Z_AXIS_CULL_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 5.0, 6.0, 2.0, 16.0, 10.0), Block.createCuboidShape(14.0, 5.0, 6.0, 16.0, 16.0, 10.0));
     protected static final VoxelShape X_AXIS_CULL_SHAPE = VoxelShapes.union(Block.createCuboidShape(6.0, 5.0, 0.0, 10.0, 16.0, 2.0), Block.createCuboidShape(6.0, 5.0, 14.0, 10.0, 16.0, 16.0));
     private final BlockSetType blockSetType;
-
-    @Override
-    public MapCodec<? extends BigDoorBlock> getCodec() {
-        return CODEC;
-    }
 
     public BigDoorBlock(BlockSetType type, AbstractBlock.Settings settings) {
         super(settings.sounds(type.soundType()));
@@ -118,16 +107,7 @@ public class BigDoorBlock extends Block {
     }
 
     @Override
-    public void onExploded(BlockState state, World world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> stackMerger) {
-        if (explosion.getDestructionType() == Explosion.DestructionType.TRIGGER_BLOCK && state.get(HALF) == TripleBlockHalf.LOWER && !world.isClient() && this.blockSetType.canOpenByWindCharge() && !(Boolean)state.get(POWERED)) {
-            this.setOpen(null, world, state, pos, !this.isOpen(state));
-        }
-
-        super.onExploded(state, world, pos, explosion, stackMerger);
-    }
-
-    @Override
-    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient && (player.isCreative() || !player.canHarvest(state))) {
             TripleBlockHalf doubleBlockHalf = state.get(HALF);
             if (doubleBlockHalf == TripleBlockHalf.TOP) {
@@ -150,15 +130,18 @@ public class BigDoorBlock extends Block {
             }
         }
 
-        return super.onBreak(world, pos, state, player);
+        super.onBreak(world, pos, state, player);
     }
 
-    @Override
-    public boolean canPathfindThrough(BlockState state, NavigationType type) {
-        return switch (type) {
-            case LAND, AIR -> state.get(OPEN);
-            case WATER -> false;
-        };
+    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+        switch (type) {
+            case LAND, AIR -> {
+                return state.get(OPEN);
+            }
+            default -> {
+                return false;
+            }
+        }
     }
 
     @Override
@@ -223,7 +206,7 @@ public class BigDoorBlock extends Block {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!this.blockSetType.canOpenByHand()) {
             return ActionResult.PASS;
         } else {

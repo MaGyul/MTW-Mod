@@ -16,6 +16,6 @@ public class MTWCommands {
         AllMicCommand.register(dispatcher);
         MoveCommand.register(dispatcher);
         RegionCommand.register(dispatcher);
-        CustomNameCommand.register(dispatcher, registryAccess);
+        CustomNameCommand.register(dispatcher);
     }
 }

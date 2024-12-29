@@ -6,14 +6,15 @@ import io.netty.channel.ChannelFuture;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.QuickPlayLogger;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.network.*;
-import net.minecraft.client.resource.server.ServerResourcePackManager;
-import net.minecraft.client.session.report.ReporterEnvironment;
+import net.minecraft.client.report.ReporterEnvironment;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.NetworkSide;
+import net.minecraft.network.NetworkState;
+import net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket;
 import net.minecraft.network.packet.c2s.login.LoginHelloC2SPacket;
-import net.minecraft.network.state.LoginStates;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
@@ -47,11 +48,11 @@ public class ConnectServer {
         this.connectFailedTitle = text;
     }
 
-    public static ConnectServer startConnecting(MinecraftClient mc, ServerAddress address, ServerInfo info) {
+    public static ConnectServer startConnecting(MinecraftClient mc, Screen screen, ServerAddress address, ServerInfo info) {
         ServerPingPong.joinStart();
         ServerPingPong.serverJoined = true;
         ConnectServer cs = new ConnectServer(mc, ScreenTexts.CONNECT_FAILED);
-        mc.disconnect(new TitleScreen());
+        mc.disconnect(screen);
         mc.loadBlockList();
         mc.ensureAbuseReportContext(ReporterEnvironment.ofThirdPartyServer(info.address));
         mc.getQuickPlayLogger().setWorld(QuickPlayLogger.WorldType.MULTIPLAYER, info.address, info.name);
@@ -86,7 +87,6 @@ public class ConnectServer {
                         if (cancel) return;
 
                         connection = new ClientConnection(NetworkSide.CLIENTBOUND);
-                        connection.resetPacketSizeLog(client.getDebugHud().getPacketSizeLog());
                         channelFuture = ClientConnection.connect(isa, client.options.shouldUseNativeTransport(), connection);
                     }
 
@@ -98,11 +98,11 @@ public class ConnectServer {
                         }
 
                         ConnectServer.this.connection = connection;
-                        client.getServerResourcePackProvider().init(connection, convertPackStatus(info.getResourcePackPolicy()));
                     }
 
-                    connection.connect(isa.getHostName(), isa.getPort(), LoginStates.C2S, LoginStates.S2C, new ClientLoginNetworkHandler(connection, client, info, new TitleScreen(), false, null, ConnectServer.this::updateStatus, null), false);
-                    connection.send(new LoginHelloC2SPacket(client.getSession().getUsername(), client.getSession().getUuidOrNull()));
+                    connection.setPacketListener(new ClientLoginNetworkHandler(connection, client, info, new TitleScreen(), false, null, ConnectServer.this::updateStatus));
+                    connection.send(new HandshakeC2SPacket(isa.getHostName(), isa.getPort(), NetworkState.LOGIN));
+                    connection.send(new LoginHelloC2SPacket(client.getSession().getUsername(), Optional.ofNullable(client.getSession().getUuidOrNull())));
                 } catch (Exception ex) {
                     if (cancel) return;
 
@@ -119,14 +119,6 @@ public class ConnectServer {
                     client.execute(() ->
                             client.setScreen(new DisconnectedScreen(new TitleScreen(), connectFailedTitle, Text.translatable("disconnect.genericReason", str))));
                 }
-            }
-
-            private static ServerResourcePackManager.AcceptanceStatus convertPackStatus(ServerInfo.ResourcePackPolicy policy) {
-                return switch (policy) {
-                    case ENABLED -> ServerResourcePackManager.AcceptanceStatus.ALLOWED;
-                    case DISABLED -> ServerResourcePackManager.AcceptanceStatus.DECLINED;
-                    case PROMPT -> ServerResourcePackManager.AcceptanceStatus.PENDING;
-                };
             }
         };
         thread.setUncaughtExceptionHandler(new UncaughtExceptionLogger(LOGGER));

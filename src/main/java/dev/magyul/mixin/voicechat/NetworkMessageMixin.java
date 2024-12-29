@@ -2,7 +2,6 @@ package dev.magyul.mixin.voicechat;
 
 import de.maxhenkel.voicechat.voice.common.NetworkMessage;
 import de.maxhenkel.voicechat.voice.common.Packet;
-import dev.magyul.MTWMod;
 import dev.magyul.voicechat.AllSoundPacket;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +18,7 @@ public class NetworkMessageMixin {
 
     @Inject(method = "<clinit>", at = @At("TAIL"), remap = false)
     private static void injected(CallbackInfo cb) {
-        var size = packetRegistry.keySet().size();
+        var size = packetRegistry.size();
         packetRegistry.put((byte)(size + 1), AllSoundPacket.class);
     }
 }

@@ -19,6 +19,7 @@ public class QuickPlayMixin {
         client.setScreen(new TitleScreen());
         if (ClientUtil.checkTest()) return;
 
-        ClientUtil.cs = ConnectServer.startConnecting(client, ClientUtil.mtw_address, ClientUtil.mtw_info);
+        ClientUtil.cs = ConnectServer.startConnecting(client, new TitleScreen(), ClientUtil.mtw_address, ClientUtil.mtw_info);
+        client.setScreen(new TitleScreen());
     }
 }

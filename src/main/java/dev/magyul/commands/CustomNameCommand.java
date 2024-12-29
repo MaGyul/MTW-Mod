@@ -2,7 +2,6 @@ package dev.magyul.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.TextArgumentType;
 import net.minecraft.entity.Entity;
@@ -16,17 +15,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class CustomNameCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess) {
+    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         var command = CommandManager.literal("customname");
         command.requires(source -> source.hasPermissionLevel(2));
         command.executes(context -> execute(context.getSource(), null, null));
-        command.then(CommandManager.argument("name", TextArgumentType.text(registryAccess))
+        command.then(CommandManager.argument("name", TextArgumentType.text())
                 .executes(context -> execute(context.getSource(), null, TextArgumentType.getTextArgument(context, "name"))));
         command.then(CommandManager.literal("remove")
                 .executes(context -> execute(context.getSource(), null)));
         command.then(CommandManager.argument("target", EntityArgumentType.entity())
                 .executes(context -> execute(context.getSource(), EntityArgumentType.getEntity(context, "target"), null))
-                .then(CommandManager.argument("name", TextArgumentType.text(registryAccess))
+                .then(CommandManager.argument("name", TextArgumentType.text())
                         .executes(context -> execute(context.getSource(), EntityArgumentType.getEntity(context, "target"), TextArgumentType.getTextArgument(context, "name"))))
                 .then(CommandManager.literal("remove")
                         .executes(context -> execute(context.getSource(), EntityArgumentType.getEntity(context, "target")))));

@@ -1,6 +1,5 @@
 package dev.magyul.blocks;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
@@ -13,7 +12,6 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
 public class ShelfBlock extends HorizontalFacingBlock {
-    public static final MapCodec<ShelfBlock> CODEC = createCodec(ShelfBlock::new);
     protected static final VoxelShape EAST = Block.createCuboidShape(
             12, 0, 0, 20, 16, 16);
     protected static final VoxelShape WEST = Block.createCuboidShape(
@@ -24,11 +22,6 @@ public class ShelfBlock extends HorizontalFacingBlock {
             0, 0, -4, 16, 16, 4);
     public ShelfBlock(Settings settings) {
         super(settings);
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
-        return CODEC;
     }
 
     @Override

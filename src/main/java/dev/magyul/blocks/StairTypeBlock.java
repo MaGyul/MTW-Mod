@@ -131,7 +131,7 @@ public class StairTypeBlock extends Block {
     }
 
     @Override
-    protected boolean canPathfindThrough(BlockState state, NavigationType type) {
+    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
     }
 }

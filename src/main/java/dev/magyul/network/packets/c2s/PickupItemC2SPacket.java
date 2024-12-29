@@ -2,14 +2,14 @@ package dev.magyul.network.packets.c2s;
 
 import dev.magyul.data.PlayerData;
 import dev.magyul.network.IPacket;
-import dev.magyul.network.PacketType;
-import dev.magyul.registers.MTWDataComponentTypes;
 import dev.magyul.registers.MTWGameRules;
+import dev.magyul.util.NetworkUtil;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stats;
 import net.minecraft.world.GameMode;
@@ -17,14 +17,14 @@ import net.minecraft.world.GameMode;
 import java.util.UUID;
 
 public record PickupItemC2SPacket(UUID uuid) implements IPacket {
-    public static final PacketType<PickupItemC2SPacket> TYPE = PacketType.create("pickup_item", PickupItemC2SPacket::new);
+    public static final PacketType<PickupItemC2SPacket> TYPE = NetworkUtil.create("pickup_item", PickupItemC2SPacket::new);
 
-    public PickupItemC2SPacket(RegistryByteBuf buf) {
+    public PickupItemC2SPacket(PacketByteBuf buf) {
         this(buf.readUuid());
     }
 
     @Override
-    public void write(RegistryByteBuf buf) {
+    public void write(PacketByteBuf buf) {
         buf.writeUuid(uuid);
     }
 
@@ -76,7 +76,9 @@ public record PickupItemC2SPacket(UUID uuid) implements IPacket {
     }
 
     private ItemStack addFakeItem(ItemStack stack) {
-        stack.set(MTWDataComponentTypes.IS_CARRY, true);
+        var nbt = stack.getOrCreateNbt();
+        nbt.putBoolean("mtw:carry", true);
+        stack.setNbt(nbt);
         return stack;
     }
 }

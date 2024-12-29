@@ -81,7 +81,7 @@ public abstract class SplashOverlayMixin extends Overlay {
         RenderSystem.depthMask(false);
         RenderSystem.enableDepthTest();
         context.setShaderColor(1.0F, 1.0F, 1.0F, fadeAlpha);
-        context.drawGuiTexture(BACKGROUND, x, y, width, height);
+        context.drawTexture(BACKGROUND, x, y, 0, 0, width, height);
         context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         context.drawText(client.textRenderer, Text.translatable("reloading.resource"), x + 10, y + 10, withAlpha(4210752, fadeAlpha), false);
         int barX = (x + (width / 2));

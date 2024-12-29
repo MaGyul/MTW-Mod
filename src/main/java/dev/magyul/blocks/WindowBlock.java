@@ -1,7 +1,5 @@
 package dev.magyul.blocks;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.DoorHinge;
 import net.minecraft.block.enums.DoubleBlockHalf;
@@ -18,6 +16,7 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
+import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -29,15 +28,10 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.event.GameEvent;
-import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.BiConsumer;
 
 @SuppressWarnings("deprecation")
 public class WindowBlock extends HorizontalFacingBlock {
-    public static final MapCodec<WindowBlock> CODEC = RecordCodecBuilder.mapCodec((instance) ->
-            instance.group(WoodType.CODEC.fieldOf("wood_type").forGetter((block) -> block.type), createSettingsCodec()).apply(instance, WindowBlock::new));
     public static final BooleanProperty OPEN = Properties.OPEN;
     public static final BooleanProperty POWERED = Properties.POWERED;
     public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
@@ -51,11 +45,6 @@ public class WindowBlock extends HorizontalFacingBlock {
     protected static final VoxelShape Z_AXIS_CULL_SHAPE = VoxelShapes.union(Block.createCuboidShape(0.0, 5.0, 6.0, 2.0, 16.0, 10.0), Block.createCuboidShape(14.0, 5.0, 6.0, 16.0, 16.0, 10.0));
     protected static final VoxelShape X_AXIS_CULL_SHAPE = VoxelShapes.union(Block.createCuboidShape(6.0, 5.0, 0.0, 10.0, 16.0, 2.0), Block.createCuboidShape(6.0, 5.0, 14.0, 10.0, 16.0, 16.0));
     private final WoodType type;
-
-    @Override
-    public MapCodec<WindowBlock> getCodec() {
-        return CODEC;
-    }
 
     public WindowBlock(WoodType type, AbstractBlock.Settings settings) {
         super(settings.sounds(type.soundType()));
@@ -102,7 +91,7 @@ public class WindowBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    protected boolean canPathfindThrough(BlockState state, NavigationType type) {
+    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return switch (type) {
             case LAND, AIR -> state.get(OPEN);
             default -> false;
@@ -123,7 +112,7 @@ public class WindowBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (state.get(OPEN)) {
             state = state.with(OPEN, false);
             world.setBlockState(pos, state, 10);
@@ -148,14 +137,14 @@ public class WindowBlock extends HorizontalFacingBlock {
         world.setBlockState(pos.up(), state.with(HALF, DoubleBlockHalf.UPPER), 3);
     }
 
-    @Override
-    public void onExploded(BlockState state, World world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> stackMerger) {
-        if (explosion.getDestructionType() == Explosion.DestructionType.TRIGGER_BLOCK && state.get(HALF) == DoubleBlockHalf.LOWER && !world.isClient() && !(Boolean)state.get(POWERED)) {
-            this.setOpen(null, world, state, pos, !this.isOpen(state));
-        }
-
-        super.onExploded(state, world, pos, explosion, stackMerger);
-    }
+//    @Override
+//    public void onExploded(BlockState state, World world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> stackMerger) {
+//        if (explosion.getDestructionType() == Explosion.DestructionType.TRIGGER_BLOCK && state.get(HALF) == DoubleBlockHalf.LOWER && !world.isClient() && !(Boolean)state.get(POWERED)) {
+//            this.setOpen(null, world, state, pos, !this.isOpen(state));
+//        }
+//
+//        super.onExploded(state, world, pos, explosion, stackMerger);
+//    }
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {

@@ -1,12 +1,9 @@
 package dev.magyul.blocks;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.*;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -21,14 +18,8 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.event.GameEvent;
-import net.minecraft.world.explosion.Explosion;
-
-import java.util.function.BiConsumer;
 
 public class SlabWindowBlock extends HorizontalFacingBlock {
-    public static final MapCodec<SlabWindowBlock> CODEC = RecordCodecBuilder.mapCodec((instance) ->
-            instance.group(WoodType.CODEC.fieldOf("wood_type").forGetter((block) ->
-                    block.type), createSettingsCodec()).apply(instance, SlabWindowBlock::new));
     public static final BooleanProperty OPEN = Properties.OPEN;
     public static final BooleanProperty POWERED = Properties.POWERED;
     protected static final VoxelShape Z_AXIS_SHAPE = Block.createCuboidShape(-4.0, 0.0, 5.0, 20.0, 16.0, 11.0);
@@ -41,25 +32,21 @@ public class SlabWindowBlock extends HorizontalFacingBlock {
     protected static final VoxelShape X_AXIS_CULL_SHAPE = VoxelShapes.union(Block.createCuboidShape(6.0, 5.0, 0.0, 10.0, 16.0, 2.0), Block.createCuboidShape(6.0, 5.0, 14.0, 10.0, 16.0, 16.0));
     private final WoodType type;
 
-    public MapCodec<SlabWindowBlock> getCodec() {
-        return CODEC;
-    }
-
     public SlabWindowBlock(WoodType type, AbstractBlock.Settings settings) {
         super(settings.sounds(type.soundType()));
         this.type = type;
         this.setDefaultState(this.stateManager.getDefaultState().with(OPEN, false).with(POWERED, false));
     }
 
-    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return state.get(FACING).getAxis() == Direction.Axis.X ? X_AXIS_SHAPE : Z_AXIS_SHAPE;
     }
 
-    protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
-    protected VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos) {
+    public VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos) {
         if (state.get(OPEN)) {
             return VoxelShapes.empty();
         } else {
@@ -67,7 +54,7 @@ public class SlabWindowBlock extends HorizontalFacingBlock {
         }
     }
 
-    protected VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         if (state.get(OPEN)) {
             return VoxelShapes.empty();
         } else {
@@ -75,7 +62,7 @@ public class SlabWindowBlock extends HorizontalFacingBlock {
         }
     }
 
-    protected VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
+    public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
         return state.get(FACING).getAxis() == Direction.Axis.X ? X_AXIS_CULL_SHAPE : Z_AXIS_CULL_SHAPE;
     }
 
@@ -114,18 +101,18 @@ public class SlabWindowBlock extends HorizontalFacingBlock {
         return ActionResult.success(world.isClient);
     }
 
-    protected void onExploded(BlockState state, World world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> stackMerger) {
-        if (explosion.getDestructionType() == Explosion.DestructionType.TRIGGER_BLOCK && !world.isClient() && !(Boolean)state.get(POWERED)) {
-            boolean bl = state.get(OPEN);
-            world.setBlockState(pos, state.with(OPEN, !bl));
-            world.playSound(null, pos, bl ? this.type.fenceGateClose() : this.type.fenceGateOpen(), SoundCategory.BLOCKS, 1.0F, world.getRandom().nextFloat() * 0.1F + 0.9F);
-            world.emitGameEvent(bl ? GameEvent.BLOCK_CLOSE : GameEvent.BLOCK_OPEN, pos, GameEvent.Emitter.of(state));
-        }
+//    protected void onExploded(BlockState state, World world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> stackMerger) {
+//        if (explosion.getDestructionType() == Explosion.DestructionType.TRIGGER_BLOCK && !world.isClient() && !(Boolean)state.get(POWERED)) {
+//            boolean bl = state.get(OPEN);
+//            world.setBlockState(pos, state.with(OPEN, !bl));
+//            world.playSound(null, pos, bl ? this.type.fenceGateClose() : this.type.fenceGateOpen(), SoundCategory.BLOCKS, 1.0F, world.getRandom().nextFloat() * 0.1F + 0.9F);
+//            world.emitGameEvent(bl ? GameEvent.BLOCK_CLOSE : GameEvent.BLOCK_OPEN, pos, GameEvent.Emitter.of(state));
+//        }
+//
+//        super.onExploded(state, world, pos, explosion, stackMerger);
+//    }
 
-        super.onExploded(state, world, pos, explosion, stackMerger);
-    }
-
-    protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         if (!world.isClient) {
             boolean bl = world.isReceivingRedstonePower(pos);
             if (state.get(POWERED) != bl) {

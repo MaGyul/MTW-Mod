@@ -1,11 +1,12 @@
 package dev.magyul.blocks;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.magyul.blocks.enums.BlockLR;
 import dev.magyul.registers.MTWProperties;
 import dev.magyul.util.DirectionUtil;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
+import net.minecraft.block.WoodType;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
@@ -19,8 +20,6 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 public class SignBoard extends Block {
-    public static final MapCodec<SignBoard> CODEC = RecordCodecBuilder.mapCodec((instance) ->
-            instance.group(WoodType.CODEC.fieldOf("wood_type").forGetter(SignBoard::getWoodType), createSettingsCodec()).apply(instance, SignBoard::new));
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final EnumProperty<BlockLR> BLOCK_LR = MTWProperties.BLOCK_LR;
 
@@ -31,11 +30,6 @@ public class SignBoard extends Block {
         super(settings);
         this.type = type;
         setDefaultState(stateManager.getDefaultState().with(FACING, Direction.NORTH).with(BLOCK_LR, BlockLR.Single));
-    }
-
-    @Override
-    protected MapCodec<? extends SignBoard> getCodec() {
-        return CODEC;
     }
 
     @Override

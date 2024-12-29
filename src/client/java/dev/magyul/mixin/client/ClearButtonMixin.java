@@ -24,7 +24,7 @@ public abstract class ClearButtonMixin extends ClickableWidget {
         super(0, 0, 0, 0, Text.empty());
     }
 
-    @Inject(method = "renderWidget", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "renderButton", at = @At("HEAD"), cancellable = true)
     private void renderWidget(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo cb) {
         cb.cancel();
         MinecraftClient minecraft = MinecraftClient.getInstance();

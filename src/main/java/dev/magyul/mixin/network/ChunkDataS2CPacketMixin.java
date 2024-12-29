@@ -1,10 +1,9 @@
 package dev.magyul.mixin.network;
 
 import dev.magyul.api.ChunkDataPacketAccessor;
-import dev.magyul.data.ChunkData;
 import dev.magyul.data.WorldData;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
 import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.world.chunk.light.LightingProvider;
@@ -27,13 +26,13 @@ public class ChunkDataS2CPacketMixin implements ChunkDataPacketAccessor {
         chunkData = WorldData.get(world).getChunkData(chunk.getPos()).toNbt();
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/network/RegistryByteBuf;)V", at = @At("RETURN"))
-    private void init(RegistryByteBuf buf, CallbackInfo ci) {
+    @Inject(method = "<init>(Lnet/minecraft/network/PacketByteBuf;)V", at = @At("RETURN"))
+    private void init(PacketByteBuf buf, CallbackInfo ci) {
         chunkData = buf.readNbt();
     }
 
     @Inject(method = "write", at = @At("RETURN"))
-    private void write(RegistryByteBuf buf, CallbackInfo ci) {
+    private void write(PacketByteBuf buf, CallbackInfo ci) {
         buf.writeNbt(chunkData);
     }
 

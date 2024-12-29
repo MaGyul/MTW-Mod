@@ -3,6 +3,7 @@ package dev.magyul.network.packets.c2s.handshake;
 import dev.magyul.MTWMod;
 import dev.magyul.network.HandshakePacketType;
 import dev.magyul.network.IHandshakeMessage;
+import dev.magyul.util.EnvironmentUtil;
 import dev.magyul.util.ServerUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.ClientConnection;
@@ -32,6 +33,7 @@ public class HelloResponseC2SPacket implements IHandshakeMessage.IResponsePacket
 
     @Override
     public void handle(ClientConnection connection, PacketSender sender) {
+        if (EnvironmentUtil.isClient()) return;
         if (!ServerUtil.allowLogins.get()) {
             var text = Text.literal("Server is still starting! Please wait before reconnecting.");
             MTWMod.LOGGER.info("Disconnecting Player (server is still starting): {}", text.getString());

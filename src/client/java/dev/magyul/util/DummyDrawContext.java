@@ -8,11 +8,9 @@ import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.gui.tooltip.TooltipPositioner;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.texture.Scaling;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipData;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Style;
@@ -22,7 +20,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 
 public class DummyDrawContext extends DrawContext {
     public static final DummyDrawContext INSTANCE = new DummyDrawContext();
@@ -189,9 +186,6 @@ public class DummyDrawContext extends DrawContext {
     public void drawTexturedQuad(Identifier texture, int x1, int x2, int y1, int y2, int z, float u1, float u2, float v1, float v2, float red, float green, float blue, float alpha) {
     }
 
-    public void drawSprite(Sprite sprite, Scaling.NineSlice nineSlice, int x, int y, int z, int width, int height) {
-    }
-
     public void drawSpriteTiled(Sprite sprite, int x, int y, int z, int width, int height, int i, int j, int tileWidth, int tileHeight, int k, int l) {
     }
 
@@ -226,9 +220,6 @@ public class DummyDrawContext extends DrawContext {
     }
 
     public void drawItemTooltip(TextRenderer textRenderer, ItemStack stack, int x, int y) {
-    }
-
-    public void drawTooltip(TextRenderer textRenderer, List<Text> text, Optional<TooltipData> data, int x, int y) {
     }
 
     public void drawTooltip(TextRenderer textRenderer, Text text, int x, int y) {

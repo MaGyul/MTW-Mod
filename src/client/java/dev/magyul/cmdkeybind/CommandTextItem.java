@@ -68,8 +68,8 @@ public class CommandTextItem extends ConfigItem<String> {
         return this.valueEntry.charTyped(chr, modifiers);
     }
 
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        return this.commandSuggestor.mouseScrolled(verticalAmount);
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        return this.commandSuggestor.mouseScrolled(amount);
     }
 
     public void mouseClicked(double mouseX, double mouseY, int button) {

@@ -1,5 +1,6 @@
 package dev.magyul;
 
+import dev.magyul.util.EnvironmentUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.LanguageAdapter;
 import net.fabricmc.loader.api.LanguageAdapterException;
@@ -7,15 +8,24 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spongepowered.tools.obfuscation.mirror.FieldHandle;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 
 public class MTWModPreload implements PreLaunchEntrypoint {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MTWModPreload.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(MTWModPreload.class);
 
     @Override
     public void onPreLaunch() {
+        if (EnvironmentUtil.isClient()) {
+            try {
+                Class<?> clientPreload = Class.forName("dev.magyul.MTWModClientPreLoad");
+                clientPreload.getDeclaredMethod("onPreLaunch").invoke(null);
+            } catch (Throwable e) {
+                LOGGER.error("error", e);
+            }
+        }
         final var lookup = MethodHandles.lookup();
         try {
             final Class<?> alsClass = ClassLoader.getSystemClassLoader().loadClass(

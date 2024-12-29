@@ -3,13 +3,14 @@ package dev.magyul.registers;
 import dev.magyul.MTWMod;
 import dev.magyul.blocks.entities.FoodTableBlockEntity;
 import dev.magyul.blocks.entities.StandardBlockEntity;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
-import static net.minecraft.block.entity.BlockEntityType.Builder.create;
+import static net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder.create;
 
 public class MTWBlockEntityType {
     public static final BlockEntityType<StandardBlockEntity> STANDARD_BLOCK_ENTITY = register(
@@ -19,7 +20,7 @@ public class MTWBlockEntityType {
             "food_table_block_entity", create(FoodTableBlockEntity::new, MTWBlocks.FOOD_TABLE)
     );
 
-    private static <T extends BlockEntity> BlockEntityType<T> register(String id, BlockEntityType.Builder<T> builder) {
+    private static <T extends BlockEntity> BlockEntityType<T> register(String id, FabricBlockEntityTypeBuilder<T> builder) {
         return Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(MTWMod.ID, id), builder.build());
     }
 

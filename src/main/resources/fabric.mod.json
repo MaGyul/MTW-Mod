@@ -33,10 +33,11 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.16.0",
-		"minecraft": "~1.21",
+		"minecraft": "~1.20.1",
 		"java": ">=17",
 		"fabric-api": "*",
-		"voicechat": ">=1.20.4-2.5.7",
+		"pehkui": "*",
+		"voicechat": ">=1.20.1-2.5.26",
 		"mtwmod-resource": ">=1.0.0"
 	},
 	"custom": {
