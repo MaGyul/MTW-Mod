@@ -35,6 +35,9 @@ public class CocoaInput {
                 CocoaInput.applyController(new DarwinController());
             } else if (Platform.isWindows()) {
                 CocoaInput.applyController(new WinController());
+            } else if (Platform.isAndroid()) {
+                LOGGER.warn("It is replaced by Dummy because there is no need to support Android.");
+                CocoaInput.applyController(new DummyController());
             } else if (Platform.isX11()) {
                 CocoaInput.applyController(new X11Controller());
             } else {

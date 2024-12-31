@@ -23,7 +23,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerManager.class)
@@ -71,8 +70,8 @@ public abstract class PlayerManagerMixin {
         return original.call(instance, key);
     }
 
-    @Redirect(method = "onPlayerConnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;getWorld(Lnet/minecraft/registry/RegistryKey;)Lnet/minecraft/server/world/ServerWorld;"))
-    private ServerWorld onJoinOverworld(MinecraftServer server, RegistryKey<World> key, ClientConnection connection, ServerPlayerEntity player) {
+    @WrapOperation(method = "onPlayerConnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;getWorld(Lnet/minecraft/registry/RegistryKey;)Lnet/minecraft/server/world/ServerWorld;"))
+    private ServerWorld onJoinOverworld(MinecraftServer instance, RegistryKey<World> key, Operation<ServerWorld> original, ClientConnection connection, ServerPlayerEntity player) {
         if (isNotOp(player)) {
             var nbt = loadPlayerData(player);
             var gameMode = getServerGameMode(gameModeFromNbt(nbt));
@@ -81,7 +80,7 @@ public abstract class PlayerManagerMixin {
             }
         }
 
-        return server.getWorld(key);
+        return original.call(instance, key);
     }
 
     @Unique

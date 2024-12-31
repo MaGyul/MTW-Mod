@@ -38,7 +38,7 @@
 		"fabric-api": "*",
 		"pehkui": "*",
 		"voicechat": ">=1.20.1-2.5.26",
-		"mtwmod-resource": ">=1.0.0"
+		"mtwmod-resource": ">=1.0.5"
 	},
 	"custom": {
 		"loom:injected_interfaces": {

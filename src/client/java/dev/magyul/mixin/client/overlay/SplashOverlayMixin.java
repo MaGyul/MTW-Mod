@@ -33,7 +33,7 @@ import static net.minecraft.util.math.ColorHelper.Argb;
 @Mixin(SplashOverlay.class)
 public abstract class SplashOverlayMixin extends Overlay {
     @Unique
-    private static final Identifier BACKGROUND = Identifier.of(MTWMod.ID, "background");
+    private static final Identifier BACKGROUND = Identifier.of(MTWMod.ID, "textures/gui/sprites/background.png");
 
     @Shadow @Final private MinecraftClient client;
 
@@ -81,7 +81,7 @@ public abstract class SplashOverlayMixin extends Overlay {
         RenderSystem.depthMask(false);
         RenderSystem.enableDepthTest();
         context.setShaderColor(1.0F, 1.0F, 1.0F, fadeAlpha);
-        context.drawTexture(BACKGROUND, x, y, 0, 0, width, height);
+        context.drawTexture(BACKGROUND, x, y, 0, 0, width, height, 32, 32);
         context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         context.drawText(client.textRenderer, Text.translatable("reloading.resource"), x + 10, y + 10, withAlpha(4210752, fadeAlpha), false);
         int barX = (x + (width / 2));
