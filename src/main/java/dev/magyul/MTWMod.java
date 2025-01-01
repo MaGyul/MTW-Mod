@@ -22,8 +22,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -66,8 +64,6 @@ public class MTWMod implements ModInitializer {
 				VERSION = version.getFriendlyString();
 			}
 		}
-
-
 
 		MTWEntityType.init();
 		MTWBlocks.init();

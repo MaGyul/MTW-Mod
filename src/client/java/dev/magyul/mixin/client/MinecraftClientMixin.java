@@ -8,6 +8,7 @@ import dev.magyul.MTWModClient;
 import dev.magyul.ServerPingPong;
 import dev.magyul.events.PlayerInteractEvents;
 import dev.magyul.network.packets.c2s.PickupItemC2SPacket;
+import dev.magyul.screen.CMultiplayerScreen;
 import dev.magyul.util.ClientUtil;
 import dev.magyul.util.ItemUtil;
 import dev.magyul.util.OverlayStateHelper;
@@ -116,7 +117,9 @@ public abstract class MinecraftClientMixin {
         if (screen instanceof TitleScreen) {
             ServerPingPong.serverJoined = false;
         } else if (screen instanceof MultiplayerScreen) {
-            screen = new TitleScreen();
+            if (!(screen instanceof CMultiplayerScreen)) {
+                screen = new TitleScreen();
+            }
         } else if (screen instanceof ProgressScreen) {
             ClientUtil.cs = null;
         }

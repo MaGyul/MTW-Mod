@@ -6,7 +6,6 @@ import dev.magyul.ServerPingPong;
 import dev.magyul.util.ConnectServer;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.AccessibilityOnboardingButtons;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.SplashTextRenderer;
 import net.minecraft.client.gui.screen.TitleScreen;
@@ -19,7 +18,6 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.MinecraftServer;
@@ -30,7 +28,6 @@ import net.minecraft.util.Util;
 import net.minecraft.world.gen.GeneratorOptions;
 import net.minecraft.world.gen.WorldPresets;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -75,21 +72,10 @@ public abstract class TitleScreenMixin extends Screen {
     @Shadow @Nullable protected abstract Text getMultiplayerDisabledText();
 
     @Shadow protected abstract boolean canReadDemoWorldData();
-
-    @Shadow @Final private static Logger LOGGER;
     @Unique
     private ButtonWidget play;
     @Unique
     private ButtonWidget cancel;
-    @Unique
-    @Nullable
-    private List<Text> playerListSummary;
-    @Unique
-    @Nullable
-    private Identifier statusIconTexture;
-    @Unique
-    @Nullable
-    private Text statusTooltipText;
 
     private TitleScreenMixin() {
         super(Text.translatable("narrator.screen.title"));

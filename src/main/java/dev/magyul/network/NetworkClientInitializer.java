@@ -21,6 +21,7 @@ public class NetworkClientInitializer {
         register(UpdateAllMicS2CPacket.TYPE);
 
         for (HandshakePacketType<? extends IHandshakeMessage> type : HandshakeNetworking.HANDSHAKE_PACKETS) {
+            MTWMod.LOGGER.info("Registering client handshake packet type {}", type.getId());
             registerHandshake(type);
         }
     }

@@ -1,7 +1,7 @@
 package dev.magyul.mixin.client;
 
-import dev.magyul.MTWMod;
 import dev.magyul.network.packets.c2s.KeyInputC2SPacket;
+import dev.magyul.screen.CMultiplayerScreen;
 import dev.magyul.util.ClientUtil;
 import dev.magyul.util.ConnectServer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -54,6 +54,8 @@ public class KeyboardMixin {
                 if (single && ClientUtil.checkDev()) {
                     if (ClientUtil.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
                         ClientUtil.setTimeout(this::otherServer, 100);
+                    } else if (ClientUtil.isKeyDown(GLFW.GLFW_KEY_LEFT_ALT)) {
+                        ClientUtil.setTimeout(() -> client.setScreen(new CMultiplayerScreen(screen)), 100);
                     } else {
                         ClientUtil.setTimeout(() -> client.setScreen(new SelectWorldScreen(screen)), 100);
                     }

@@ -35,7 +35,7 @@ public class ConnectServer {
     public static final Text ABORT_CONNECTION = Text.translatable("connect.aborted");
     public static final Text UNKNOWN_HOST_MESSAGE = Text.translatable("disconnect.genericReason", Text.translatable("disconnect.unknownHost"));
     @Nullable
-    volatile ClientConnection connection;
+    public volatile ClientConnection connection;
     @Nullable
     ChannelFuture channelFuture;
     public volatile boolean cancel;
