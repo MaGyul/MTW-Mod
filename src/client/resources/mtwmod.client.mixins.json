@@ -51,7 +51,6 @@
   },
   "mixins": [
     "PlayerEntityMixin",
-    "SlotMixin",
     "accessor.IdentifierAccessor",
     "cmdkeybind.MacroScreenFactoryMixin",
     "sugesstions.ButterSuggestionMixin"

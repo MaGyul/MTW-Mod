@@ -1,11 +1,9 @@
 package dev.magyul;
 
-import de.maxhenkel.voicechat.voice.client.ClientManager;
 import dev.magyul.blocks.ErrorBlock;
 import dev.magyul.cocoainput.CocoaInput;
 import dev.magyul.data.WorldData;
 import dev.magyul.events.PlayerInteractEvents;
-import dev.magyul.mixin.client.accessor.IdentifierAccessor;
 import dev.magyul.network.NetworkClient;
 import dev.magyul.network.packets.c2s.AttackAirC2SPacket;
 import dev.magyul.network.packets.c2s.ErrorBlockUpdateC2SPacket;
@@ -15,6 +13,7 @@ import dev.magyul.registers.MTWBlockEntityRenderer;
 import dev.magyul.registers.MTWEntityRenderer;
 import dev.magyul.registers.MTWItems;
 import dev.magyul.util.ClientUtil;
+import dev.magyul.voicechat.VoiceChatCompat;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -22,24 +21,20 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.toast.Toast;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashSet;
 
-import static dev.magyul.MTWMod.LOGGER;
 import static dev.magyul.util.ClientUtil.cs;
 import static java.lang.String.format;
 import static net.minecraft.text.Text.literal;
@@ -148,34 +143,31 @@ public class MTWModClient implements ClientModInitializer {
 				}
 			}
 		}
-		var clientVoicechat = ClientManager.getClient();
-		if (clientVoicechat != null) {
-			if (ClientUtil.isAllMic()) {
-				component.append(Text.translatable("mtwmod.enabled.allmic"));
-				if (!ClientUtil.receivedAllMic.isEmpty()) {
-					component.append(" | ");
-				} else {
-					client.inGameHud.setOverlayMessage(component, false);
-					return;
-				}
-			}
-			if (ClientUtil.receivedAllMic.isEmpty()) return;
-			for (var key : new HashSet<>(ClientUtil.receivedAllMic.keySet())) {
-				if (!clientVoicechat.getTalkCache().isTalking(key)) {
-					ClientUtil.receivedAllMic.remove(key);
-				}
-			}
+		if (ClientUtil.isAllMic()) {
+			component.append(Text.translatable("mtwmod.enabled.allmic"));
 			if (!ClientUtil.receivedAllMic.isEmpty()) {
-				var sb = new StringBuilder();
-				for (var value : ClientUtil.receivedAllMic.values()) {
-					if (!sb.isEmpty()) sb.append(", ");
-					sb.append(value);
-				}
-				component.append(Text.translatable("mtwmod.received.allmic", sb.toString()));
-				client.inGameHud.setOverlayMessage(component, false);
+				component.append(" | ");
 			} else {
-				client.inGameHud.setOverlayMessage(Text.literal(""), false);
+				client.inGameHud.setOverlayMessage(component, false);
+				return;
 			}
+		}
+		if (ClientUtil.receivedAllMic.isEmpty()) return;
+		for (var key : new HashSet<>(ClientUtil.receivedAllMic.keySet())) {
+			if (!VoiceChatCompat.isTalking(key)) {
+				ClientUtil.receivedAllMic.remove(key);
+			}
+		}
+		if (!ClientUtil.receivedAllMic.isEmpty()) {
+			var sb = new StringBuilder();
+			for (var value : ClientUtil.receivedAllMic.values()) {
+				if (!sb.isEmpty()) sb.append(", ");
+				sb.append(value);
+			}
+			component.append(Text.translatable("mtwmod.received.allmic", sb.toString()));
+			client.inGameHud.setOverlayMessage(component, false);
+		} else {
+			client.inGameHud.setOverlayMessage(Text.literal(""), false);
 		}
 	}
 

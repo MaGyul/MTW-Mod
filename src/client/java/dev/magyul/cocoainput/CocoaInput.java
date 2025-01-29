@@ -44,12 +44,14 @@ public class CocoaInput {
                 LOGGER.warn("CocoaInput cannot find appropriate Controller in running OS.");
                 CocoaInput.applyController(new DummyController());
             }
-            LOGGER.info("MTWMod is using {}.", "https://github.com/Axeryok/CocoaInput");
-            LOGGER.info("CocoaInput has been initialized.");
-            initialized = true;
-        } catch (Exception ex) {
-            LOGGER.error("CocoaInput init error: ", ex);
+        } catch (Throwable ex) {
+            LOGGER.error("CocoaInput controller error: ", ex);
+            LOGGER.info("CocoaInput is using DummyController.");
+            CocoaInput.applyController(new DummyController());
         }
+        LOGGER.info("MTWMod is using {}.", "https://github.com/Axeryok/CocoaInput");
+        LOGGER.info("CocoaInput has been initialized.");
+        initialized = true;
     }
 
     public static double getScreenScaledFactor() {
