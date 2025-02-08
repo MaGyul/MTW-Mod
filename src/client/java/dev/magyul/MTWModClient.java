@@ -12,6 +12,7 @@ import dev.magyul.network.packets.c2s.UseAirC2SPacket;
 import dev.magyul.registers.MTWBlockEntityRenderer;
 import dev.magyul.registers.MTWEntityRenderer;
 import dev.magyul.registers.MTWItems;
+import dev.magyul.util.AUtil;
 import dev.magyul.util.ClientUtil;
 import dev.magyul.voicechat.VoiceChatCompat;
 import net.fabricmc.api.ClientModInitializer;
@@ -77,13 +78,7 @@ public class MTWModClient implements ClientModInitializer {
 
 		ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
 			try {
-				var axiom = com.moulberry.axiom.Axiom.getInstance();
-				if (ClientUtil.checkDev() && !axiom.hasCommercialLicense()) {
-					var f = com.moulberry.axiom.Axiom.class.getDeclaredField("hasCommercialLicense");
-					f.setAccessible(true);
-					f.set(axiom, true);
-					f.setAccessible(false);
-				}
+				AUtil.apply(true);
 			} catch (Throwable ignored) {}
 		});
 	}
