@@ -1,0 +1,20 @@
+
+{
+  "variants": {
+    "facing=east": {
+      "model": "mtwmod:block/grass_block_side_r/grass_block_side_r",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "mtwmod:block/grass_block_side_r/grass_block_side_r",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "mtwmod:block/grass_block_side_r/grass_block_side_r"
+    },
+    "facing=west": {
+      "model": "mtwmod:block/grass_block_side_r/grass_block_side_r",
+      "y": 90
+    }
+  }
+}

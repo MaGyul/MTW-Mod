@@ -2,11 +2,9 @@ package dev.magyul.registers;
 
 import dev.magyul.MTWMod;
 import dev.magyul.blocks.AnvilBlock;
-import dev.magyul.blocks.SideWallBlock;
-import dev.magyul.blocks.*;
 import dev.magyul.blocks.WallBlock;
+import dev.magyul.blocks.*;
 import net.minecraft.block.*;
-import net.minecraft.block.enums.Instrument;
 import net.minecraft.block.enums.Instrument;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.registry.Registries;
@@ -35,6 +33,7 @@ public class MTWBlocks {
             .allowsSpawning((a, b, c, d) -> false)));
     public static final Block LINOLEUM_BRICKS = register("linoleum_bricks", new StairTypeBlock(AbstractBlock.Settings.create()
             .mapColor(MapColor.STONE_GRAY).instrument(Instrument.BASEDRUM).requiresTool().strength(1.5F, 6.0F)));
+    public static final Block GRASS_BLOCK_SIDE_R = register("grass_block_side_r", new SideGrassBlock(AbstractBlock.Settings.create().mapColor(MapColor.PALE_GREEN).ticksRandomly().strength(0.6F).sounds(BlockSoundGroup.GRASS)));
     // Transparent Full Cube
     public static final Block ANVIL = register("anvil", new AnvilBlock(AbstractBlock.Settings.create()
             .mapColor(MapColor.IRON_GRAY).requiresTool().strength(5.0F, 1200.0F).sounds(BlockSoundGroup.ANVIL).pistonBehavior(PistonBehavior.BLOCK).nonOpaque()));
@@ -109,9 +108,6 @@ public class MTWBlocks {
 
     private static Block register(String name, Block block) {
         MTW_BLOCKS.add(block);
-//        OAK_STAIRS
-//        ChestBl
-//        Blocks.OAK_LOG
         return Registry.register(Registries.BLOCK, Identifier.of(MTWMod.ID, name), block);
     }
 

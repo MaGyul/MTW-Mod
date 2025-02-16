@@ -29,6 +29,7 @@ public class MTWItems {
     // Full Cute
     public static final Item ERROR_BLOCK = register("error_block", MTWBlocks.ERROR_BLOCK, Type.NORMAL);
     public static final Item LINOLEUM_BRICKS = register("linoleum_bricks", MTWBlocks.LINOLEUM_BRICKS, Type.NORMAL);
+    public static final Item GRASS_BLOCK_SIDE_R = register("grass_block_side_r", MTWBlocks.GRASS_BLOCK_SIDE_R, Type.NORMAL);
 
     // 다양한 모양인 블록
     public static final Item SPRUCE_JUCHO_STONE = register("spruce_jucho_stone", MTWBlocks.SPRUCE_JUCHO_STONE, Type.DIFFERENT_SHAPE);

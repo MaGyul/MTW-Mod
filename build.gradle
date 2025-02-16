@@ -92,7 +92,7 @@ dependencies {
 
 	modCompileOnly "maven.modrinth:better-suggestions:1.2.7.1"
 
-	modRuntimeOnly "dev.mtwmod:mtwmod-resource:1.0.5"
+	modRuntimeOnly "dev.mtwmod:mtwmod-resource:1.0.6"
 	modCompileOnly "dev.mtwmod:kyrptconfig:1.5.6-1.20"
 
 	include implementation("dnsjava:dnsjava:3.5.3")

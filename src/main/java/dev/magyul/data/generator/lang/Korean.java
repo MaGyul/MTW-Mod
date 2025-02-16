@@ -92,6 +92,7 @@ public class Korean extends FabricLanguageProvider {
         builder.add(SPRUCE_LOW_SLOPE_TILE_BOTTOM, "경낮하 기와 §7| 강송");
         builder.add(SPRUCE_LOW_SLOPE_TILE_TOP, "경낮상 기와 §7| 강송");
         builder.add(SPRUCE_LOW_SLOPE_TILE_END, "경낮끝단 기와 §7| 강송");
+        builder.add(GRASS_BLOCK_SIDE_R, "잔디 블록");
 
         // Entities
         builder.add(MTWEntityType.SIT, "앉기");
