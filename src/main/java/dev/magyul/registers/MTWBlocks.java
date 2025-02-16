@@ -33,7 +33,6 @@ public class MTWBlocks {
             .allowsSpawning((a, b, c, d) -> false)));
     public static final Block LINOLEUM_BRICKS = register("linoleum_bricks", new StairTypeBlock(AbstractBlock.Settings.create()
             .mapColor(MapColor.STONE_GRAY).instrument(Instrument.BASEDRUM).requiresTool().strength(1.5F, 6.0F)));
-    public static final Block GRASS_BLOCK_SIDE_R = register("grass_block_side_r", new SideGrassBlock(AbstractBlock.Settings.create().mapColor(MapColor.PALE_GREEN).ticksRandomly().strength(0.6F).sounds(BlockSoundGroup.GRASS)));
     // Transparent Full Cube
     public static final Block ANVIL = register("anvil", new AnvilBlock(AbstractBlock.Settings.create()
             .mapColor(MapColor.IRON_GRAY).requiresTool().strength(5.0F, 1200.0F).sounds(BlockSoundGroup.ANVIL).pistonBehavior(PistonBehavior.BLOCK).nonOpaque()));
@@ -75,6 +74,8 @@ public class MTWBlocks {
             .mapColor(MapColor.SPRUCE_BROWN).instrument(Instrument.BASS).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD).burnable()));
     public static final Block SPRUCE_RAFTERS = register("spruce_rafters", new MoreSlabStairBlock(AbstractBlock.Settings.create()
             .mapColor(MapColor.SPRUCE_BROWN).instrument(Instrument.BASS).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD).nonOpaque().burnable()));
+    public static final Block GRASS_BLOCK_SIDE_R = register("grass_block_side_r", new SideGrassBlock(AbstractBlock.Settings.create()
+            .mapColor(MapColor.PALE_GREEN).ticksRandomly().strength(0.6F).nonOpaque().noCollision().sounds(BlockSoundGroup.GRASS)));
 
     // 울타리 형식 벽
     public static final Block SPRUCE_WALL_PILLAR = register("spruce_wall_pillar", new WallBlock(AbstractBlock.Settings.create()

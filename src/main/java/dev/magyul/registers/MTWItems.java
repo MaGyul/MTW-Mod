@@ -29,7 +29,6 @@ public class MTWItems {
     // Full Cute
     public static final Item ERROR_BLOCK = register("error_block", MTWBlocks.ERROR_BLOCK, Type.NORMAL);
     public static final Item LINOLEUM_BRICKS = register("linoleum_bricks", MTWBlocks.LINOLEUM_BRICKS, Type.NORMAL);
-    public static final Item GRASS_BLOCK_SIDE_R = register("grass_block_side_r", MTWBlocks.GRASS_BLOCK_SIDE_R, Type.NORMAL);
 
     // 다양한 모양인 블록
     public static final Item SPRUCE_JUCHO_STONE = register("spruce_jucho_stone", MTWBlocks.SPRUCE_JUCHO_STONE, Type.DIFFERENT_SHAPE);
@@ -52,6 +51,7 @@ public class MTWItems {
     public static final Item SPRUCE_LINOLEUM = register("spruce_linoleum", MTWBlocks.SPRUCE_LINOLEUM, Type.MORE_SLAB);
     public static final Item SPRUCE_LARGE_HALL_LINOLEUM = register("spruce_large_hall_linoleum", MTWBlocks.SPRUCE_LARGE_HALL_LINOLEUM, Type.MORE_SLAB);
     public static final Item SPRUCE_RAFTERS = register("spruce_rafters", MTWBlocks.SPRUCE_RAFTERS, Type.MORE_SLAB);
+    public static final Item GRASS_BLOCK_SIDE_R = register("grass_block_side_r", MTWBlocks.GRASS_BLOCK_SIDE_R, Type.MORE_SLAB);
 
     // 울타리 형식 벽
     public static final Item SPRUCE_WALL_PILLAR = register("spruce_wall_pillar", MTWBlocks.SPRUCE_WALL_PILLAR, Type.WALL);
