@@ -113,7 +113,10 @@ public class MTWMod implements ModInitializer {
 						sit.updatePosition((double) hitPos.getX() + 0.5, (double) hitPos.getY() + 0.5, (double) hitPos.getZ() + 0.5);
 						if (SitUtil.addSitEntity(world, hitPos, sit, player.getPos())) {
 							world.spawnEntity(sit);
-							player.startRiding(sit);
+							if (!player.startRiding(sit)) {
+								SitUtil.removeSitEntity(world, hitPos);
+								sit.discard();
+							}
 							return ActionResult.SUCCESS;
 						}
 					}
