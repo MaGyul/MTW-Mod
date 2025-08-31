@@ -25,8 +25,6 @@ public class PlayerData {
     private int lastTick;
     private boolean allMic = false;
     private ItemStack carryItem = ItemStack.EMPTY;
-    private NbtCompound carryState = null;
-    private NbtCompound carryTile = null;
     private final Map<Identifier, Vec3d> moveHere = new HashMap<>();
 
     private PlayerData(@NotNull PlayerEntity player) {
@@ -35,12 +33,6 @@ public class PlayerData {
 
     private void load(NbtCompound nbt) {
         allMic = nbt.getBoolean("allMic");
-        if (nbt.contains("carryState", NbtElement.COMPOUND_TYPE)) {
-            carryState = nbt.getCompound("carryState");
-        }
-        if (nbt.contains("carryTile", NbtElement.COMPOUND_TYPE)) {
-            carryTile = nbt.getCompound("carryTile");
-        }
         if (nbt.contains("carryItem", NbtElement.COMPOUND_TYPE)) {
             carryItem = ItemStack.fromNbt(nbt.getCompound("carryItem"));
         }
@@ -57,12 +49,6 @@ public class PlayerData {
     private NbtCompound save() {
         var nbt = new NbtCompound();
         nbt.putBoolean("allMic", allMic);
-        if (carryState != null) {
-            nbt.put("carryState", carryState);
-        }
-        if (carryTile != null) {
-            nbt.put("carryTile", carryTile);
-        }
         if (carryItem != null) {
             nbt.put("carryItem", carryItem.writeNbt(new NbtCompound()));
         }

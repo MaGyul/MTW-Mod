@@ -1,8 +1,10 @@
 package dev.magyul.network.packets.c2s;
 
+import dev.magyul.bukkit.CarryOn;
 import dev.magyul.data.PlayerData;
 import dev.magyul.network.IPacket;
 import dev.magyul.registers.MTWGameRules;
+import dev.magyul.util.ClassUtils;
 import dev.magyul.util.NetworkUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.entity.ItemEntity;
@@ -42,6 +44,12 @@ public record PickupItemC2SPacket(UUID uuid) implements IPacket {
 
                 if (stack.getItem() instanceof BlockItem && !doPickupMode.get()) {
                     if (!PlayerData.getCarryItem(player).isEmpty()) return;
+                    if (ClassUtils.hasClass("org.bukkit.Bukkit")) {
+                        var event_stack = CarryOn.pickup(player, stack);
+                        if (event_stack == null) return;
+                        stack = event_stack;
+                        itemE.setStack(stack);
+                    }
                     PlayerData.setCarryItem(player, stack.copyWithCount(1));
                     inventory.armor.set(3, addFakeItem(stack.copyWithCount(1)));
 

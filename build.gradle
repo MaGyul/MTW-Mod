@@ -32,6 +32,17 @@ repositories {
 		url = "https://s01.oss.sonatype.org/content/repositories/snapshots"
 	}
 
+	maven {
+		url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+
+		// As of Gradle 5.1, you can limit this to only those
+		// dependencies you expect from it
+		content {
+			includeGroup 'org.bukkit'
+			includeGroup 'org.spigotmc'
+		}
+	}
+
 	flatDir {
 		dirs 'libs'
 	}
@@ -96,6 +107,9 @@ dependencies {
 	modCompileOnly "dev.mtwmod:kyrptconfig:1.5.6-1.20"
 
 	include implementation("dnsjava:dnsjava:3.5.3")
+
+	compileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT' // The Spigot API with no shadowing. Requires the OSS repo.
+	compileOnly 'org.spigotmc:spigot:1.20.1-R0.1-SNAPSHOT' // The full Spigot server with no shadowing. Requires mavenLocal.
 }
 
 processResources {

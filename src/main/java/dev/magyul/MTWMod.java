@@ -1,12 +1,14 @@
 package dev.magyul;
 
 import dev.magyul.blocks.ErrorBlock;
+import dev.magyul.bukkit.CarryOn;
 import dev.magyul.data.PlayerData;
 import dev.magyul.data.RegionRoot;
 import dev.magyul.data.WorldData;
 import dev.magyul.events.PlayerInteractEvents;
 import dev.magyul.network.NetworkHandler;
 import dev.magyul.registers.*;
+import dev.magyul.util.ClassUtils;
 import dev.magyul.util.ServerUtil;
 import dev.magyul.util.SitUtil;
 import dev.magyul.world.DevelopDimensions;
@@ -159,6 +161,14 @@ public class MTWMod implements ModInitializer {
 		var stack = PlayerData.getCarryItem(player);
 		if (stack.getItem() instanceof BlockItem) {
 			if (player.age == PlayerData.lastTick(player)) return ActionResult.PASS;
+			if (ClassUtils.hasClass("org.bukkit.Bukkit")) {
+				var event_stack = CarryOn.drop(player, stack);
+				if (event_stack == null) {
+					return ActionResult.PASS;
+				} else {
+					stack = event_stack;
+				}
+			}
 			player.dropItem(stack, false);
 			player.swingHand(Hand.MAIN_HAND, true);
 
